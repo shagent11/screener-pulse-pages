@@ -43,6 +43,10 @@
   .chip.overlap { background:var(--accent-soft); color:var(--accent); border-color:transparent; }
   .chip.only { color:var(--text-muted); }
   .insight { background:var(--accent-soft); border:1px solid var(--accent); border-radius:10px; padding:14px 16px; font-size:13.5px; color:var(--text); }
+  .sector-row { display:grid; grid-template-columns:120px 1fr; gap:10px; align-items:center; padding:7px 0; border-top:1px dashed var(--border); }
+  .sector-row:first-of-type { border-top:none; }
+  .sector-label { font-size:12px; color:var(--text-muted); font-weight:600; }
+  .chip.sector { color:var(--text); }
   footer { text-align:center; font-size:11.5px; color:var(--text-faint); margin-top:28px; }
   a { color:var(--accent); }
 </style>
@@ -61,9 +65,13 @@
     <div class="stat-card"><div class="label">겹침 비율</div><div class="value num">35%</div></div>
   </div>
 
-  <div class="insight">💡 🔬 겹치는 AEHR·ONTO·ZLAB·P·SE·TXG는 두 방법론이 독립적으로 같이 잡은 만큼 진짜 신호일 확률이 높다 — 특히 반도체 장비(AEHR·ONTO)와 바이오 스파크(ZLAB·TXG)는 개별 갭업이자 ETF(XBI RS91) 강세로도 확인돼 리더십 실체가 있다.
-갈리는 이유는 계층이 달라서다: A는 스캔 raw라 단일 촉매 갭업(SE·MU·MXL·CAKE)과 반도체 내부 조정 종목(AMD·MU 1M 마이너스)까지 무차별 수집하는 반면, B는 ETF/RS로 걸러 "SOXX 1W -6.6% 냉각 속 장비만 반짝, 사이버는 코어에서 밀림"처럼 섹터 강세 vs 종목 쏠림을 판정한다.
-결론적으로 A의 반도체 압도감은 B에서 "코어는 소프트·에너지로 이동, 반도체는 장비 국지"로 교정되므로, 겹치는 8종목을 우선 신뢰하되 A-only 종목은 ETF 교차검증(B) 통과 여부로 추격 여부를 갈라라.</div>
+  <div class="insight">💡 🔬 종목 겹침(AEHR·ONTO·P·SE·ZLAB·TXG·CLDX·XBI)은 A가 스캔 raw로 잡아낸 갭업 리더를 B가 ETF로도 살아있다고 확인해준 진짜 교집합이고, A에만 있는 MU·AMD·MXL·SIMO는 6M 실적은 좋아도 1M 마이너스라 B가 SOXX 1W -6.6% 냉각으로 걸러낸 종목 — A는 순간 신호, B는 추세 필터라 갈린다.
+
+섹터 레벨에서 이름만 다르고 같은 걸 가리키는 건 명확하다: A의 "Electronic Tech(반도체 압도적 강세)" = B의 반도체지만, A가 뭉뚱그린 그 덩어리를 B는 장비(ONTO·FORM·AEHR만 스파크)와 지수·메모리·설계(SOXX -6.6% 냉각)로 쪼개서 "장비만 진짜 강세"로 세분화했다.
+
+마찬가지로 A의 "Health Tech(바이오)"=B의 바이오(XBI RS91·ZLAB·TXG)로 동일 지칭이고, A의 Finance=B의 금융으로 겹친다.
+
+다만 A엔 아예 없는 B의 양대 축(소프트·클라우드 33개 1위, 에너지 정유 신고가 9개)은 갭업·거래량폭발 스캔엔 안 걸리는 응집·순환형 강세라, 개별 촉매만 보는 A의 사각지대를 B의 ETF 교차검증이 메워준 셈이다.</div>
 
   <div class="panel">
     <h2>겹치는 종목 (8개)</h2>
@@ -78,6 +86,15 @@
   <div class="panel">
     <h2>SA 리포트에만 등장</h2>
     <div class="chips"><span class="chip only">ABCL</span><span class="chip only">AMLX</span><span class="chip only">AMZN</span><span class="chip only">BA</span><span class="chip only">BAC</span><span class="chip only">BOTZ</span><span class="chip only">BSP</span><span class="chip only">C</span><span class="chip only">CHYM</span><span class="chip only">CIBR</span><span class="chip only">COP</span><span class="chip only">CRAK</span><span class="chip only">CRWD</span><span class="chip only">CSX</span><span class="chip only">CVX</span><span class="chip only">DUK</span><span class="chip only">EOG</span><span class="chip only">EWT</span><span class="chip only">FANG</span><span class="chip only">FDX</span><span class="chip only">FINX</span><span class="chip only">FORM</span><span class="chip only">GDX</span><span class="chip only">GE</span><span class="chip only">HACK</span><span class="chip only">HZO</span><span class="chip only">IBIT</span><span class="chip only">IGV</span><span class="chip only">IMMX</span><span class="chip only">IOVA</span><span class="chip only">JPM</span><span class="chip only">MMM</span><span class="chip only">MPC</span><span class="chip only">MS</span><span class="chip only">MSFT</span><span class="chip only">NIQ</span><span class="chip only">NVDA</span><span class="chip only">PANW</span><span class="chip only">PLD</span><span class="chip only">PNC</span><span class="chip only">PSX</span><span class="chip only">QQQ</span><span class="chip only">RBRK</span><span class="chip only">RCRUY</span><span class="chip only">RIOT</span><span class="chip only">RTX</span><span class="chip only">SKYY</span><span class="chip only">SLB</span><span class="chip only">SLV</span><span class="chip only">SO</span><span class="chip only">SOXX</span><span class="chip only">SRVR</span><span class="chip only">TEAM</span><span class="chip only">TWLO</span><span class="chip only">URA</span><span class="chip only">URGN</span><span class="chip only">USB</span><span class="chip only">VLO</span><span class="chip only">WFC</span><span class="chip only">XLF</span><span class="chip only">XLK</span><span class="chip only">XOM</span><span class="chip only">XOP</span><span class="chip only">ZETA</span></div>
+  </div>
+
+  <div class="panel">
+    <h2>섹터 · 그룹 언급 비교</h2>
+    <div class="panel-sub" style="font-size:12.5px;color:var(--text-muted);margin-bottom:12px">A(market_screener)와 B(SA)는 영어 GICS식/한국어 테마식으로 이름 짓는 방식이 달라서 문자열은 안 겹쳐도 같은 섹터를 가리킬 수 있음 — 위 해석문 참고</div>
+    <div class="sector-row"><div class="sector-label">A · 섹터 흐름</div><div class="chips"><span class="chip sector">Electronic Tech</span><span class="chip sector">Health Tech</span><span class="chip sector">Finance</span></div></div>
+    <div class="sector-row"><div class="sector-label">B · 계속 강한</div><div class="chips"><span class="chip sector">소프트·클라우드</span><span class="chip sector">에너지</span><span class="chip sector">바이오</span><span class="chip sector">금융</span></div></div>
+    <div class="sector-row"><div class="sector-label">B · 새로 강해진</div><div class="chips"><span class="chip sector">반도체 장비</span><span class="chip sector">소프트 폭 확대</span></div></div>
+    <div class="sector-row"><div class="sector-label">B · 약해진</div><div class="chips"><span class="chip sector">사이버</span><span class="chip sector">금속</span><span class="chip sector">반도체 지수</span><span class="chip sector">크립토·우라늄·핀테크</span></div></div>
   </div>
 
   <footer>매일 자동 갱신 · <a href="./index.html">← 리포트 허브로</a></footer>
