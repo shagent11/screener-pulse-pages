@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SA 리포트 트렌드</title>
+<style>
+  :root {
+    --bg:#eef1f4; --surface:#fff; --surface-alt:#f4f6f9; --border:#d9dfe6;
+    --text:#1b2430; --text-muted:#5b6675; --text-faint:#8993a3;
+    --accent:#a6742f; --accent-soft:#e8dcc3; --up:#2f8f63; --down:#c94a3e;
+    --heat-0:#eef1f4; --heat-1:#ecdfc0; --heat-2:#e0bf82; --heat-3:#cf9a4c; --heat-4:#a6742f;
+    --shadow:0 1px 2px rgba(20,25,35,.06),0 8px 24px -12px rgba(20,25,35,.15);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#11151c; --surface:#1a2029; --surface-alt:#212836; --border:#2c3442;
+      --text:#e8ecf2; --text-muted:#93a0b3; --text-faint:#5f6b7d;
+      --accent:#d9a856; --accent-soft:#3a3120; --up:#4fb286; --down:#e2685c;
+      --heat-0:#1a2029; --heat-1:#3a3423; --heat-2:#5c4c26; --heat-3:#8a6a2c; --heat-4:#d9a856;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.55;
+  }
+  .num { font-family:ui-monospace,"SF Mono","Cascadia Mono","Menlo",monospace; font-variant-numeric:tabular-nums; }
+  .wrap { max-width:900px; margin:0 auto; padding:32px 24px 60px; }
+  header { margin-bottom:24px; }
+  .eyebrow { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:6px; }
+  h1 { font-size:24px; margin:0 0 6px; font-weight:800; }
+  .sub { color:var(--text-muted); font-size:13.5px; }
+  .panel { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px 22px; box-shadow:var(--shadow); margin-bottom:16px; }
+  .panel h2 { font-size:14.5px; margin:0 0 4px; font-weight:700; }
+  .panel-sub { font-size:12.5px; color:var(--text-muted); margin-bottom:14px; }
+  .scroll-x { overflow-x:auto; }
+  .chart-wrap { position:relative; }
+  svg.breadth { width:100%; height:200px; display:block; }
+  .axis-label { font-size:10px; fill:var(--text-faint); }
+  .chart-legend { display:flex; gap:18px; margin-top:10px; font-size:12px; color:var(--text-muted); }
+  .chart-legend .item { display:flex; align-items:center; gap:6px; }
+  .chart-legend .dot { width:9px; height:9px; border-radius:50%; }
+  table.verdicts { border-collapse:collapse; width:100%; font-size:13px; }
+  table.verdicts th { text-align:left; font-size:11px; text-transform:uppercase; color:var(--text-muted); font-weight:600; padding:0 10px 8px; border-bottom:1px solid var(--border); }
+  table.verdicts td { padding:8px 10px; border-bottom:1px solid var(--border); }
+  table.verdicts tr:last-child td { border-bottom:none; }
+  .heatmap { display:grid; gap:3px; }
+  .heatmap .hcell { height:28px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:10.5px; color:var(--text-faint); }
+  .heatmap .rowlabel { font-size:11.5px; color:var(--text-muted); display:flex; align-items:center; padding-right:8px; justify-content:flex-end; text-align:right; }
+  .heatmap .datelabel { font-size:9.5px; color:var(--text-faint); writing-mode:vertical-rl; text-orientation:mixed; display:flex; align-items:flex-end; justify-content:center; padding-bottom:4px; height:34px; }
+  .legend { display:flex; align-items:center; gap:6px; margin-top:12px; font-size:11px; color:var(--text-muted); }
+  .legend .sw { width:14px; height:14px; border-radius:3px; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .chip { font-family:ui-monospace,"SF Mono",monospace; font-size:12px; font-weight:700; padding:4px 9px; border-radius:20px; background:var(--surface-alt); border:1px solid var(--border); color:var(--text); }
+  .chip .cnt { color:var(--accent); margin-left:4px; }
+  .empty-note { font-size:12.5px; color:var(--text-faint); padding:16px 0; text-align:center; }
+  footer { text-align:center; font-size:11.5px; color:var(--text-faint); margin-top:28px; }
+  a { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Situational Awareness · 일별 누적</div>
+    <h1>SA 리포트 트렌드</h1>
+    <div class="sub"><span class="num">1</span>일치 누적 · 2026-08-12 ~ 2026-08-12</div>
+  </header>
+
+  
+  <div class="panel">
+    <div class="empty-note">아직 데이터가 1일치뿐이에요 — tg-screener가 2026-08-12에 막 시작해서 매일 하나씩 쌓이는 중입니다. 며칠 더 지나면 추이가 보이기 시작해요.</div>
+  </div>
+
+  <div class="panel">
+    <h2>장세 판정 히스토리</h2>
+    <div class="scroll-x">
+      <table class="verdicts">
+        <thead><tr><th>날짜</th><th>추세추종 적합도</th><th>과열/공포 체크</th></tr></thead>
+        <tbody><tr><td class="num">2026-08-12</td><td>선별적 공격 유지</td><td>다소 과열 (중복 재응집, 단 하단 건강)</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>섹터·그룹 지속성</h2>
+    <div class="panel-sub">강=계속 강한 섹터 / 신=새로 강해진 섹터 / 약=약해진 섹터 — 여러 날 "강"이 이어지면 진짜 코어일 가능성</div>
+    <div class="scroll-x"><div class="heatmap" style="grid-template-columns:150px repeat(1, 34px)"><div class="hcell"></div><div class="datelabel">2026-08-12</div><div class="rowlabel">소프트·클라우드</div><div class="hcell" style="background:var(--heat-3)" title="소프트·클라우드 · 2026-08-12">강</div><div class="rowlabel">에너지</div><div class="hcell" style="background:var(--heat-3)" title="에너지 · 2026-08-12">강</div><div class="rowlabel">바이오</div><div class="hcell" style="background:var(--heat-3)" title="바이오 · 2026-08-12">강</div><div class="rowlabel">금융</div><div class="hcell" style="background:var(--heat-3)" title="금융 · 2026-08-12">강</div><div class="rowlabel">반도체 장비</div><div class="hcell" style="background:var(--heat-4)" title="반도체 장비 · 2026-08-12">신</div><div class="rowlabel">소프트 폭 확대</div><div class="hcell" style="background:var(--heat-4)" title="소프트 폭 확대 · 2026-08-12">신</div><div class="rowlabel">사이버</div><div class="hcell" style="background:var(--down)" title="사이버 · 2026-08-12">약</div><div class="rowlabel">금속</div><div class="hcell" style="background:var(--down)" title="금속 · 2026-08-12">약</div><div class="rowlabel">반도체 지수</div><div class="hcell" style="background:var(--down)" title="반도체 지수 · 2026-08-12">약</div><div class="rowlabel">크립토·우라늄·핀테크</div><div class="hcell" style="background:var(--down)" title="크립토·우라늄·핀테크 · 2026-08-12">약</div></div></div>
+    <div class="legend">
+      <span class="sw" style="background:var(--down)"></span><span>약</span>
+      <span class="sw" style="background:var(--heat-3)"></span><span>강</span>
+      <span class="sw" style="background:var(--heat-4)"></span><span>신규강세</span>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>우선순위 반복 등장</h2>
+    <div class="panel-sub">"가장 먼저 볼 종목" 랭킹에 누적으로 몇 번 올랐는지</div>
+    <div class="chips"><span class="chip">TEAM<span class="cnt">1</span></span><span class="chip">BSP<span class="cnt">1</span></span><span class="chip">TWLO<span class="cnt">1</span></span><span class="chip">CHYM<span class="cnt">1</span></span><span class="chip">ZETA<span class="cnt">1</span></span><span class="chip">PSX<span class="cnt">1</span></span><span class="chip">MPC<span class="cnt">1</span></span><span class="chip">VLO<span class="cnt">1</span></span><span class="chip">EOG<span class="cnt">1</span></span><span class="chip">FANG<span class="cnt">1</span></span><span class="chip">ZLAB<span class="cnt">1</span></span><span class="chip">TXG<span class="cnt">1</span></span><span class="chip">ABCL<span class="cnt">1</span></span></div>
+  </div>
+
+  <footer>매일 자동 갱신 · <a href="./index.html">← 리포트 허브로</a></footer>
+</div>
+</body>
+</html>
