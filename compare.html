@@ -60,18 +60,14 @@
   </header>
 
   <div class="stat-grid">
-    <div class="stat-card"><div class="label">market_screener 종목</div><div class="value num">18</div></div>
+    <div class="stat-card"><div class="label">market_screener 종목</div><div class="value num">27</div></div>
     <div class="stat-card"><div class="label">SA 리포트 종목</div><div class="value num">85</div></div>
-    <div class="stat-card"><div class="label">겹침 비율</div><div class="value num">44%</div></div>
+    <div class="stat-card"><div class="label">겹침 비율</div><div class="value num">30%</div></div>
   </div>
 
-  <div class="insight">💡 🔎 겹치는 NBIS·CRWV·SMCI·DELL·AEHR·CIEN·LITE·TWST는 오늘 가장 순도 높은 돌파라 raw 스캔(A)에도, ETF 교차검증(B)에도 동시에 잡힌 진짜 리더고, 갈리는 이유는 A가 단일 급등까지 다 주워담아 ATRO·BE·VICR·IREN 같은 숏커버성·국지 froth를 남긴 반면 B는 SOXX 1W 전환·DRAM·EWY 같은 ETF 동반을 봤기에 이걸 걸러내고 대신 A의 7스캔엔 안 잡힌 에너지(MPC·PSX·VLO·EOG)·금융·바이오(ABCL·IOVA)를 로테이션으로 추가했다.
+  <div class="insight">💡 🔬 종목 레벨: 겹치는 NBIS·CRWV·SMCI·DELL·AEHR·CIEN·LITE는 둘 다 잡은 진짜 돌파 코어인데, A는 스캔에 걸린 원시 급등(ATRO·AAOI·AXTI·BE 등 고베타 스냅백)까지 그대로 노출한 반면 B는 SOXX 1W 플러스 전환·DRAM/EWY/EWT ETF 동반을 확인해 "개별 froth가 아닌 실제 로테이션"으로 걸러냈고, 그 결과 A엔 없는 대형·순환(AMZN·AXP·COP·CVX·CRWD)이 B에만 등장한다.
 
-섹터 레벨에서 A의 "Electronic Technology"와 B의 "반도체·AI 인프라"는 영어 GICS/한국어 테마로 이름만 다를 뿐 같은 섹터를 가리키고, A의 "Technology Services"도 B의 "소프트·클라우드"와 동일 대상이다.
-
-결정적 차이는 A가 Electronic Tech를 통째로 강세라 뭉갠 데 반해 B는 그 안을 쪼개서 반도체 장비(AEHR)·광통신(CIEN·LITE)·메모리(DRAM RS92)만 진짜 엔진이라 짚고, 같은 Tech Services 안에서도 클라우드는 살았지만 소프트 지수(IGV 1D -0.81%)는 소강이라며 하위 그룹을 명확히 세분화했다.
-
-즉 A는 "무엇이 튀었나"의 raw 폭, B는 "그 튐이 ETF로 확인되는 섹터 순환인가"의 정밀도를 담당해 서로 보완적이며, 실전 우선순위는 둘 다 겹치는 반도체·AI 인프라 코어에 두는 게 안전하다.</div>
+섹터 레벨: A의 Electronic Technology와 B의 "반도체·AI 인프라"는 사실상 같은 대상을 영어 GICS식 vs 한국어 테마식으로 부른 것이고, A의 Technology Services = B의 소프트·클라우드로 매칭된다. 다만 A는 Electronic Tech를 통째로 강세라 뭉뚱그린 데 비해, B는 그 안에서 메모리(DRAM RS92)·아시아 반도체(EWY·EWT)·사이버(HACK/CIBR RS91)만 진짜 엔진이고 소프트지수(IGV -0.81%)는 오히려 소강이라고 하위 그룹을 갈라줬다 — B의 교차검증이 A의 "묶음 강세"를 실제로 세분화한 셈이다.</div>
 
   <div class="panel">
     <h2>겹치는 종목 (8개)</h2>
@@ -80,7 +76,7 @@
 
   <div class="panel">
     <h2>market_screener에만 등장</h2>
-    <div class="chips"><span class="chip only">ATRO</span><span class="chip only">BE</span><span class="chip only">CBRS</span><span class="chip only">COHR</span><span class="chip only">CRNX</span><span class="chip only">FN</span><span class="chip only">IMVT</span><span class="chip only">IREN</span><span class="chip only">PRAX</span><span class="chip only">VICR</span></div>
+    <div class="chips"><span class="chip only">AAOI</span><span class="chip only">ATRO</span><span class="chip only">AXTI</span><span class="chip only">BE</span><span class="chip only">CAVA</span><span class="chip only">CLDX</span><span class="chip only">COHR</span><span class="chip only">CRNX</span><span class="chip only">FN</span><span class="chip only">IMVT</span><span class="chip only">IREN</span><span class="chip only">MRVL</span><span class="chip only">MU</span><span class="chip only">PATH</span><span class="chip only">PRAX</span><span class="chip only">QNT</span><span class="chip only">SHAZ</span><span class="chip only">VIAV</span><span class="chip only">VICR</span></div>
   </div>
 
   <div class="panel">
@@ -91,7 +87,7 @@
   <div class="panel">
     <h2>섹터 · 그룹 언급 비교</h2>
     <div class="panel-sub" style="font-size:12.5px;color:var(--text-muted);margin-bottom:12px">A(market_screener)와 B(SA)는 영어 GICS식/한국어 테마식으로 이름 짓는 방식이 달라서 문자열은 안 겹쳐도 같은 섹터를 가리킬 수 있음 — 위 해석문 참고</div>
-    <div class="sector-row"><div class="sector-label">A · 섹터 흐름</div><div class="chips"><span class="chip sector">Electronic Technology</span><span class="chip sector">Technology Services</span><span class="chip sector">Health Technology</span></div></div>
+    <div class="sector-row"><div class="sector-label">A · 섹터 흐름</div><div class="chips"><span class="chip sector">Electronic Technology</span><span class="chip sector">Technology Services</span></div></div>
     <div class="sector-row"><div class="sector-label">B · 계속 강한</div><div class="chips"><span class="chip sector">소프트·클라우드</span><span class="chip sector">에너지</span><span class="chip sector">바이오</span><span class="chip sector">금융</span></div></div>
     <div class="sector-row"><div class="sector-label">B · 새로 강해진</div><div class="chips"><span class="chip sector">반도체·AI 인프라</span><span class="chip sector">양자</span></div></div>
     <div class="sector-row"><div class="sector-label">B · 약해진</div><div class="chips"><span class="chip sector">소프트 지수</span><span class="chip sector">금속</span><span class="chip sector">크립토·우라늄·핀테크</span><span class="chip sector">유틸·리츠</span></div></div>
