@@ -306,7 +306,7 @@
   <section>
     <div class="panel">
       <h2>실질 브레드스 트렌드</h2>
-      <div class="panel-sub">52주 신고가(New52W) · 거래량 3배 폭증(BullSnort) 일별 건수 — 확장/수축 흐름</div>
+      <div class="panel-sub">52주 신고가(New52W) · Bull Snort(RelVol10D>2·Chg>3%·종가>200SMA, 8/13 조건변경) 일별 건수 — 확장/수축 흐름</div>
       <div class="chart-wrap">
         <svg class="breadth" id="breadthChart" viewBox="0 0 900 220" preserveAspectRatio="none"></svg>
       </div>
@@ -314,7 +314,7 @@
         <span class="item"><span class="dot" style="background:var(--accent)"></span>New52W</span>
         <span class="item"><span class="dot" style="background:var(--down)"></span>BullSnort</span>
       </div>
-      <div class="cap-note">참고: Doublers·RS·Gappers·OffsetDoublers 4개 스캔은 대부분 30건 한도에 매일 도달해서(포화 상태) 브레드스 변화를 못 보여줌 — 위 두 스캔만 한도 없이 실제 폭을 반영함</div>
+      <div class="cap-note">참고(8/13 갱신): Doublers는 상한 30→50, OffsetDoublers는 Doublers 중복 제외+상한 40으로 조정. RS·Gappers는 기준을 강화(+4%p·4%)해서 상한 도달이 줄었지만, 원래(느슨한) 기준 통과 개수는 별도 로그(scan_breadth_log.json)에만 쌓이는 중이라 아직 이 차트엔 미반영 — 그래서 위 두 스캔(New52W·BullSnort)만 실시간 브레드스로 반영함</div>
     </div>
   </section>
 
