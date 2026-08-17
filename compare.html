@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>스크리너 비교 — 2026-08-15</title>
+<title>스크리너 비교 — 2026-08-18</title>
 <style>
   :root {
     --bg:#eef1f4; --surface:#fff; --surface-alt:#f4f6f9; --border:#d9dfe6;
@@ -56,39 +56,41 @@
   <header>
     <div class="eyebrow">Market Screener · 교차 비교</div>
     <h1>두 스크리너, 얼마나 겹칠까</h1>
-    <div class="sub">market_screener(7-스캔 raw) vs Situational Awareness(ETF/UWL 종합) · <span class="num">2026-08-15</span> 기준</div>
+    <div class="sub">market_screener(7-스캔 raw) vs Situational Awareness(ETF/UWL 종합) · <span class="num">2026-08-18</span> 기준</div>
   </header>
 
   <div class="stat-grid">
-    <div class="stat-card"><div class="label">market_screener 종목</div><div class="value num">26</div></div>
+    <div class="stat-card"><div class="label">market_screener 종목</div><div class="value num">24</div></div>
     <div class="stat-card"><div class="label">SA 리포트 종목</div><div class="value num">87</div></div>
-    <div class="stat-card"><div class="label">겹침 비율</div><div class="value num">27%</div></div>
+    <div class="stat-card"><div class="label">겹침 비율</div><div class="value num">25%</div></div>
   </div>
 
-  
+  <div class="insight">💡 겹치는 6종목(AEHR·AXTI·NBIS·ONTO·SNDK·TER)은 둘 다 반도체·메모리·장비·광학 핵심으로 잡아냈지만, A는 스캔 통과 raw로 "칩 계열 쏠림"까지만 보고 AXTI·LUNR의 3M 마이너스를 되돌림 리스크로만 경고한 반면, B는 DRAM 1W+22.2%·EWY+13.6%·SOXX RS92 ETF 동반을 근거로 "개별 froth가 아니라 실제 로테이션"이라 판정해 더 정밀하다 🔬 A에만 남은 FN·MRVL·MU·LUNR·COHU는 스캔엔 걸렸지만 ETF 교차검증 컷을 안 거친 종목들이고, B에만 있는 COP·CVX·CRWD 등은 A의 7-스캔 조건(갭·거래량 등)엔 안 걸린 에너지·신고가 확산주라 서로 사각지대를 메운다.
+
+섹터 레벨에서 A의 "Electronic Tech(반도체/메모리/칩 장비)"는 B가 세 하위그룹(메모리 SNDK·WDC / 장비 AEHR·TER·ONTO / 광학 CRDO·AXTI)으로 쪼갠 것과 같은 대상을 가리키고, B는 이 안에서 "메모리+반도체 장비·광학"만 새로 강해졌다고 세분화한 반면 소프트·사이버(A가 Offset 지연반등으로 회복 기대한 IGV 계열)는 RS68→62·HACK -2.22%로 오히려 냉각 확정이라 A의 "SaaS 회복" 해석과 정면으로 갈린다.</div>
 
   <div class="panel">
-    <h2>겹치는 종목 (7개)</h2>
-    <div class="chips"><span class="chip overlap">AAOI</span><span class="chip overlap">AEHR</span><span class="chip overlap">GTLB</span><span class="chip overlap">HTFL</span><span class="chip overlap">MXL</span><span class="chip overlap">NBIS</span><span class="chip overlap">RDDT</span></div>
+    <h2>겹치는 종목 (6개)</h2>
+    <div class="chips"><span class="chip overlap">AEHR</span><span class="chip overlap">AXTI</span><span class="chip overlap">NBIS</span><span class="chip overlap">ONTO</span><span class="chip overlap">SNDK</span><span class="chip overlap">TER</span></div>
   </div>
 
   <div class="panel">
     <h2>market_screener에만 등장</h2>
-    <div class="chips"><span class="chip only">AMD</span><span class="chip only">AVAV</span><span class="chip only">BBVA</span><span class="chip only">BLK</span><span class="chip only">CRBG</span><span class="chip only">DIOD</span><span class="chip only">EQH</span><span class="chip only">HIMS</span><span class="chip only">IREN</span><span class="chip only">IVZ</span><span class="chip only">KTOS</span><span class="chip only">MRVL</span><span class="chip only">MU</span><span class="chip only">OKTA</span><span class="chip only">OUST</span><span class="chip only">SIMO</span><span class="chip only">SNDK</span><span class="chip only">TENB</span><span class="chip only">WING</span></div>
+    <div class="chips"><span class="chip only">ACMR</span><span class="chip only">ALAB</span><span class="chip only">BE</span><span class="chip only">BLK</span><span class="chip only">CDE</span><span class="chip only">COHU</span><span class="chip only">CRBG</span><span class="chip only">EQH</span><span class="chip only">FIVN</span><span class="chip only">FN</span><span class="chip only">HL</span><span class="chip only">LUNR</span><span class="chip only">MRVL</span><span class="chip only">MU</span><span class="chip only">OKTA</span><span class="chip only">RDW</span><span class="chip only">SNOW</span><span class="chip only">TENB</span></div>
   </div>
 
   <div class="panel">
     <h2>SA 리포트에만 등장</h2>
-    <div class="chips"><span class="chip only">AAPL</span><span class="chip only">ABBV</span><span class="chip only">ABCL</span><span class="chip only">AEP</span><span class="chip only">AMGN</span><span class="chip only">AMZN</span><span class="chip only">ARX</span><span class="chip only">ATRO</span><span class="chip only">AVAH</span><span class="chip only">BA</span><span class="chip only">BAC</span><span class="chip only">BMY</span><span class="chip only">BOTZ</span><span class="chip only">C</span><span class="chip only">CIBR</span><span class="chip only">CLMT</span><span class="chip only">COP</span><span class="chip only">CRAK</span><span class="chip only">CRWD</span><span class="chip only">CSX</span><span class="chip only">CVX</span><span class="chip only">DUK</span><span class="chip only">EOG</span><span class="chip only">EROC</span><span class="chip only">ESTC</span><span class="chip only">EUV</span><span class="chip only">EWT</span><span class="chip only">EWY</span><span class="chip only">FDX</span><span class="chip only">FSLY</span><span class="chip only">GDX</span><span class="chip only">GE</span><span class="chip only">GS</span><span class="chip only">HACK</span><span class="chip only">HON</span><span class="chip only">HUBS</span><span class="chip only">IBIT</span><span class="chip only">IGV</span><span class="chip only">IOVA</span><span class="chip only">JNJ</span><span class="chip only">JPM</span><span class="chip only">LLY</span><span class="chip only">MDB</span><span class="chip only">MMM</span><span class="chip only">MPC</span><span class="chip only">MRK</span><span class="chip only">MS</span><span class="chip only">MSFT</span><span class="chip only">NIQ</span><span class="chip only">NVDA</span><span class="chip only">P</span><span class="chip only">PARR</span><span class="chip only">PATH</span><span class="chip only">PBF</span><span class="chip only">PLD</span><span class="chip only">PSX</span><span class="chip only">QQQ</span><span class="chip only">QTUM</span><span class="chip only">RBRK</span><span class="chip only">RTX</span><span class="chip only">SKYY</span><span class="chip only">SLB</span><span class="chip only">SLV</span><span class="chip only">SMCI</span><span class="chip only">SMCIP</span><span class="chip only">SO</span><span class="chip only">STDN</span><span class="chip only">UMAC</span><span class="chip only">URA</span><span class="chip only">USB</span><span class="chip only">USO</span><span class="chip only">VLO</span><span class="chip only">WDAY</span><span class="chip only">WFC</span><span class="chip only">XBI</span><span class="chip only">XLE</span><span class="chip only">XLF</span><span class="chip only">XLK</span><span class="chip only">XOM</span><span class="chip only">XOP</span></div>
+    <div class="chips"><span class="chip only">ABBV</span><span class="chip only">AEP</span><span class="chip only">AMGN</span><span class="chip only">AMZN</span><span class="chip only">ARKK</span><span class="chip only">ARX</span><span class="chip only">BAC</span><span class="chip only">BMY</span><span class="chip only">C</span><span class="chip only">COP</span><span class="chip only">CRAK</span><span class="chip only">CRDO</span><span class="chip only">CRWD</span><span class="chip only">CSX</span><span class="chip only">CVX</span><span class="chip only">DRAM</span><span class="chip only">DUK</span><span class="chip only">DVN</span><span class="chip only">EOG</span><span class="chip only">EROC</span><span class="chip only">ESTC</span><span class="chip only">EUV</span><span class="chip only">EWT</span><span class="chip only">EWY</span><span class="chip only">FANG</span><span class="chip only">FSLY</span><span class="chip only">GE</span><span class="chip only">GILD</span><span class="chip only">GLD</span><span class="chip only">GS</span><span class="chip only">HACK</span><span class="chip only">HBM</span><span class="chip only">HTFL</span><span class="chip only">HUBS</span><span class="chip only">IBIT</span><span class="chip only">IGV</span><span class="chip only">JNJ</span><span class="chip only">JPM</span><span class="chip only">KRE</span><span class="chip only">LIT</span><span class="chip only">LLY</span><span class="chip only">LYTE</span><span class="chip only">MDB</span><span class="chip only">MMM</span><span class="chip only">MPC</span><span class="chip only">MRK</span><span class="chip only">MS</span><span class="chip only">NASA</span><span class="chip only">NET</span><span class="chip only">NIQ</span><span class="chip only">NVDA</span><span class="chip only">P</span><span class="chip only">PBF</span><span class="chip only">PSX</span><span class="chip only">QQQ</span><span class="chip only">QTUM</span><span class="chip only">RBRK</span><span class="chip only">REMX</span><span class="chip only">RTX</span><span class="chip only">SHAZ</span><span class="chip only">SKYY</span><span class="chip only">SLB</span><span class="chip only">SMCI</span><span class="chip only">SO</span><span class="chip only">SOXX</span><span class="chip only">STX</span><span class="chip only">UNH</span><span class="chip only">URA</span><span class="chip only">USB</span><span class="chip only">USO</span><span class="chip only">VLO</span><span class="chip only">WDAY</span><span class="chip only">WDC</span><span class="chip only">WFC</span><span class="chip only">XLE</span><span class="chip only">XLF</span><span class="chip only">XLK</span><span class="chip only">XLRE</span><span class="chip only">XLU</span><span class="chip only">XOM</span><span class="chip only">XOP</span></div>
   </div>
 
   <div class="panel">
     <h2>섹터 · 그룹 언급 비교</h2>
     <div class="panel-sub" style="font-size:12.5px;color:var(--text-muted);margin-bottom:12px">A(market_screener)와 B(SA)는 영어 GICS식/한국어 테마식으로 이름 짓는 방식이 달라서 문자열은 안 겹쳐도 같은 섹터를 가리킬 수 있음 — 위 해석문 참고</div>
-    <div class="sector-row"><div class="sector-label">A · 섹터 흐름</div><div class="chips"><span class="chip sector">Electronic Technology</span><span class="chip sector">Consumer</span><span class="chip sector">GTLB</span></div></div>
-    <div class="sector-row"><div class="sector-label">B · 계속 강한</div><div class="chips"><span class="chip sector">에너지</span><span class="chip sector">바이오</span><span class="chip sector">금융</span><span class="chip sector">아시아 반도체 배경</span></div></div>
-    <div class="sector-row"><div class="sector-label">B · 새로 강해진</div><div class="chips"><span class="chip sector">에너지 순환</span><span class="chip sector">AI 인프라 개별</span></div></div>
-    <div class="sector-row"><div class="sector-label">B · 약해진</div><div class="chips"><span class="chip sector">소프트·클라우드·사이버</span><span class="chip sector">반도체 하드웨어</span><span class="chip sector">크립토·우라늄</span><span class="chip sector">유틸·리츠</span></div></div>
+    <div class="sector-row"><div class="sector-label">A · 섹터 흐름</div><div class="chips"><span class="chip only">없음</span></div></div>
+    <div class="sector-row"><div class="sector-label">B · 계속 강한</div><div class="chips"><span class="chip sector">에너지</span><span class="chip sector">아시아 반도체</span><span class="chip sector">금융</span></div></div>
+    <div class="sector-row"><div class="sector-label">B · 새로 강해진</div><div class="chips"><span class="chip sector">메모리</span><span class="chip sector">반도체 장비·광학</span></div></div>
+    <div class="sector-row"><div class="sector-label">B · 약해진</div><div class="chips"><span class="chip sector">소프트·사이버</span><span class="chip sector">크립토·우라늄</span><span class="chip sector">유틸·리츠</span></div></div>
   </div>
 
   <footer>매일 자동 갱신 · <a href="./index.html">← 리포트 허브로</a></footer>
