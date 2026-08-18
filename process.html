@@ -88,6 +88,12 @@
   .focus-editor-note code { font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; }
   .focus-editor-close { border: none; background: none; color: var(--text-faint); font-size: 20px; line-height: 1; cursor: pointer; padding: 0 2px; }
   .focus-editor-close:hover { color: var(--accent); }
+  .strategy-trigger { display: inline-flex; align-items: center; gap: 7px; padding: 5px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; background: var(--accent-soft); color: var(--accent); border: 1px solid transparent; cursor: pointer; transition: border-color 0.12s ease; }
+  .strategy-trigger:hover, .strategy-trigger:focus { border-color: var(--accent); outline: none; }
+  .strategy-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  .strategy-textarea { width: 100%; min-height: 140px; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 13.5px; line-height: 1.6; font-family: inherit; resize: vertical; box-sizing: border-box; }
+  .strategy-textarea:focus { outline: none; border-color: var(--accent); }
+  .strategy-saved { margin-top: 6px; font-size: 11px; color: var(--text-faint); min-height: 14px; }
   .focus-form { display: flex; gap: 8px; }
   .focus-form input { flex: 1; min-width: 0; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 14px; }
   .focus-form input:focus { outline: none; border-color: var(--accent); }
@@ -120,7 +126,20 @@
     <div class="status-row">
       <div class="status-item"><span class="status-label">Day</span><span class="status-value">8/18</span></div>
       <div class="status-item"><span class="status-label">Market Condition</span><span class="pill good">&#9679; Green</span></div>
+      <button type="button" class="strategy-trigger" onclick="toggleStrategyEditor()" aria-expanded="false" aria-controls="strategy-editor">
+        <span class="strategy-dot"></span>Strategy
+      </button>
     </div>
+  </div>
+
+  <div id="strategy-editor" class="focus-editor hidden">
+    <div class="focus-editor-head">
+      <h3>내 Strategy</h3>
+      <span class="focus-editor-note">이 브라우저에만 저장됩니다 &middot; 텔레그램/Log탭과 별개</span>
+      <button type="button" class="focus-editor-close" onclick="toggleStrategyEditor()" aria-label="닫기">&times;</button>
+    </div>
+    <textarea id="strategy-textarea" class="strategy-textarea" placeholder="오늘/이번 구간 전략을 자유롭게 적어두세요&#10;예: 장세=Green, 반도체·AI인프라 중심, 눌림목만 매수, 신규 진입 최대 2종목"></textarea>
+    <div class="strategy-saved" id="strategy-saved"></div>
   </div>
 
   <section>
@@ -351,6 +370,8 @@
     });
     var focusEditor = document.getElementById('focus-editor');
     if (focusEditor) focusEditor.classList.add('hidden');
+    var strategyEditor = document.getElementById('strategy-editor');
+    if (strategyEditor) strategyEditor.classList.add('hidden');
     panel.classList.toggle('hidden', !willShow);
     document.querySelectorAll('.flow-node[aria-controls]').forEach(function (n) {
       n.setAttribute('aria-expanded', n.getAttribute('aria-controls') === panelId && willShow ? 'true' : 'false');
@@ -448,6 +469,8 @@
     if (!panel) return;
     var willShow = panel.classList.contains('hidden');
     document.querySelectorAll('.node-panel').forEach(function (p) { p.classList.add('hidden'); });
+    var strategyEditor = document.getElementById('strategy-editor');
+    if (strategyEditor) strategyEditor.classList.add('hidden');
     panel.classList.toggle('hidden', !willShow);
     var trigger = document.querySelector('.flow-node[aria-controls="focus-editor"]');
     if (trigger) trigger.setAttribute('aria-expanded', willShow ? 'true' : 'false');
@@ -456,6 +479,41 @@
       var input = document.getElementById('focus-input');
       if (input) input.focus();
     }
+  }
+
+  function toggleStrategyEditor() {
+    var panel = document.getElementById('strategy-editor');
+    if (!panel) return;
+    var willShow = panel.classList.contains('hidden');
+    document.querySelectorAll('.node-panel').forEach(function (p) { p.classList.add('hidden'); });
+    var focusEditor = document.getElementById('focus-editor');
+    if (focusEditor) focusEditor.classList.add('hidden');
+    panel.classList.toggle('hidden', !willShow);
+    var trigger = document.querySelector('.strategy-trigger');
+    if (trigger) trigger.setAttribute('aria-expanded', willShow ? 'true' : 'false');
+    if (willShow) {
+      panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      var ta = document.getElementById('strategy-textarea');
+      if (ta) ta.focus();
+    }
+  }
+
+  var STRATEGY_KEY = 'strategyNotes';
+
+  function loadStrategy() {
+    var ta = document.getElementById('strategy-textarea');
+    if (!ta) return;
+    ta.value = localStorage.getItem(STRATEGY_KEY) || '';
+    var saveMsg = document.getElementById('strategy-saved');
+    var t;
+    ta.addEventListener('input', function () {
+      localStorage.setItem(STRATEGY_KEY, ta.value);
+      if (saveMsg) {
+        saveMsg.textContent = '저장됨';
+        clearTimeout(t);
+        t = setTimeout(function () { saveMsg.textContent = ''; }, 1500);
+      }
+    });
   }
 
   var focusForm = document.getElementById('focus-form');
@@ -477,6 +535,7 @@
   }
 
   renderFocusChips();
+  loadStrategy();
 </script>
 </body>
 </html>
