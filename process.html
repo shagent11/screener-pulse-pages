@@ -80,6 +80,30 @@
   .flow-figure { margin: 0; }
   .flow-figure svg { width: 100%; height: auto; display: block; }
   .flow-figure figcaption { margin-top: 10px; font-size: 12px; color: var(--text-muted); }
+  .focus-editor { margin-top: 20px; background: var(--surface); border: 1px solid var(--accent); border-radius: 10px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .focus-editor.hidden { display: none; }
+  .focus-editor-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+  .focus-editor-head h3 { margin: 0; font-size: 14px; font-weight: 700; }
+  .focus-editor-note { font-size: 11px; color: var(--text-faint); }
+  .focus-editor-note code { font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; }
+  .focus-editor-close { border: none; background: none; color: var(--text-faint); font-size: 20px; line-height: 1; cursor: pointer; padding: 0 2px; }
+  .focus-editor-close:hover { color: var(--accent); }
+  .focus-form { display: flex; gap: 8px; }
+  .focus-form input { flex: 1; min-width: 0; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 14px; }
+  .focus-form input:focus { outline: none; border-color: var(--accent); }
+  .focus-form button { padding: 8px 16px; border-radius: 6px; border: none; background: var(--accent); color: var(--surface); font-weight: 700; font-size: 13px; cursor: pointer; }
+  .focus-form button:hover { opacity: 0.9; }
+  .focus-rows { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .focus-rows:empty::after { content: '아직 담은 종목 없음'; font-size: 12.5px; color: var(--text-faint); }
+  .focus-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--border); flex-wrap: wrap; }
+  .focus-row .focus-ticker { font-weight: 700; font-size: 13px; font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; color: var(--accent); min-width: 56px; }
+  .focus-field { display: flex; align-items: center; gap: 5px; }
+  .focus-field label { font-size: 10.5px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.04em; }
+  .focus-field input { width: 74px; padding: 5px 7px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 13px; font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; }
+  .focus-field input:focus { outline: none; border-color: var(--accent); }
+  .focus-row-remove { margin-left: auto; border: none; background: none; color: var(--text-faint); cursor: pointer; font-size: 15px; line-height: 1; opacity: 0.65; padding: 0 2px; }
+  .focus-row-remove:hover { opacity: 1; color: var(--bad); }
+  .focus-chip button:hover { opacity: 1; }
   footer.note { font-size: 11.5px; color: var(--text-faint); border-top: 1px solid var(--border); padding-top: 14px; }
 </style>
 </head>
@@ -247,8 +271,13 @@
 
         <line class="line-accent" x1="855" y1="200" x2="855" y2="396" marker-end="url(#arrow)"></line>
 
-        <rect class="pillnode-warm" x="770" y="396" width="170" height="40" rx="5"></rect>
-        <text class="lbl-b" x="855" y="420" text-anchor="middle">Focus list</text>
+        <g class="flow-node" onclick="toggleFocusEditor()" tabindex="0" role="button" aria-expanded="false" aria-controls="focus-editor">
+          <title>클릭하면 내 Focus List 입력창 열기</title>
+          <rect class="pillnode-warm" x="770" y="396" width="170" height="40" rx="5"></rect>
+          <text class="lbl-b" x="855" y="420" text-anchor="middle">Focus list</text>
+          <circle class="node-badge" cx="932" cy="404" r="6"></circle>
+          <text class="node-badge-glyph" x="932" y="407" text-anchor="middle">+</text>
+        </g>
 
         <line class="line" x1="770" y1="416" x2="600" y2="416" marker-end="url(#arrow)"></line>
         <rect class="box" x="450" y="396" width="150" height="40" rx="5"></rect>
@@ -294,6 +323,19 @@
       </svg>
       <figcaption>Top&#8594;down pipeline from market condition to individual entries, with the two feedback loops (sector&#8594;market condition, unconfirmed setup&#8594;screener) that keep the process circular rather than linear.</figcaption>
     </figure>
+
+    <div id="focus-editor" class="focus-editor hidden">
+      <div class="focus-editor-head">
+        <h3>내 Focus List</h3>
+        <span class="focus-editor-note">이 브라우저에만 저장됩니다 &middot; 텔레그램 <code>/focus</code>가 정식 기록</span>
+        <button type="button" class="focus-editor-close" onclick="toggleFocusEditor()" aria-label="닫기">&times;</button>
+      </div>
+      <form id="focus-form" class="focus-form">
+        <input id="focus-input" type="text" placeholder="티커 입력 (예: NVDA)" autocomplete="off" maxlength="10">
+        <button type="submit">추가</button>
+      </form>
+      <ul id="focus-chips" class="focus-rows"></ul>
+    </div>
   </section>
 
   <footer class="note">2026_Invest.xlsx &middot; process 탭 &middot; 화~토 07:30 KST 자동 갱신 &middot; 점(●) 표시된 단계는 클릭하면 상세 현황이 펼쳐집니다</footer>
@@ -307,6 +349,8 @@
     document.querySelectorAll('.node-panel').forEach(function (p) {
       if (p !== panel) p.classList.add('hidden');
     });
+    var focusEditor = document.getElementById('focus-editor');
+    if (focusEditor) focusEditor.classList.add('hidden');
     panel.classList.toggle('hidden', !willShow);
     document.querySelectorAll('.flow-node[aria-controls]').forEach(function (n) {
       n.setAttribute('aria-expanded', n.getAttribute('aria-controls') === panelId && willShow ? 'true' : 'false');
@@ -320,6 +364,119 @@
       }
     });
   });
+
+  var FOCUS_KEY = 'focusListTickers';
+  var FOCUS_FIELDS = [
+    { key: 'entry', label: 'Entry $' },
+    { key: 'size', label: 'Size %' },
+    { key: 'sl', label: 'S/L %' }
+  ];
+
+  function readFocusList() {
+    var list;
+    try {
+      list = JSON.parse(localStorage.getItem(FOCUS_KEY) || '[]');
+    } catch (e) {
+      list = [];
+    }
+    // 구버전(문자열 배열) 데이터 호환
+    return list.map(function (item) {
+      if (typeof item === 'string') {
+        return { ticker: item, entry: '', size: '', sl: '' };
+      }
+      return item;
+    });
+  }
+
+  function writeFocusList(list) {
+    localStorage.setItem(FOCUS_KEY, JSON.stringify(list));
+  }
+
+  function renderFocusChips() {
+    var ul = document.getElementById('focus-chips');
+    if (!ul) return;
+    var list = readFocusList();
+    ul.innerHTML = '';
+    list.forEach(function (item) {
+      var li = document.createElement('li');
+      li.className = 'focus-row';
+
+      var tickerSpan = document.createElement('span');
+      tickerSpan.className = 'focus-ticker';
+      tickerSpan.textContent = item.ticker;
+      li.appendChild(tickerSpan);
+
+      FOCUS_FIELDS.forEach(function (f) {
+        var wrap = document.createElement('span');
+        wrap.className = 'focus-field';
+        var label = document.createElement('label');
+        label.textContent = f.label;
+        var inp = document.createElement('input');
+        inp.type = 'text';
+        inp.inputMode = 'decimal';
+        inp.value = item[f.key] || '';
+        inp.addEventListener('change', function () {
+          var cur = readFocusList();
+          var target = cur.find(function (x) { return x.ticker === item.ticker; });
+          if (target) {
+            target[f.key] = inp.value.trim();
+            writeFocusList(cur);
+          }
+        });
+        wrap.appendChild(label);
+        wrap.appendChild(inp);
+        li.appendChild(wrap);
+      });
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'focus-row-remove';
+      btn.setAttribute('aria-label', item.ticker + ' 제거');
+      btn.textContent = '×';
+      btn.addEventListener('click', function () {
+        writeFocusList(readFocusList().filter(function (x) { return x.ticker !== item.ticker; }));
+        renderFocusChips();
+      });
+      li.appendChild(btn);
+
+      ul.appendChild(li);
+    });
+  }
+
+  function toggleFocusEditor() {
+    var panel = document.getElementById('focus-editor');
+    if (!panel) return;
+    var willShow = panel.classList.contains('hidden');
+    document.querySelectorAll('.node-panel').forEach(function (p) { p.classList.add('hidden'); });
+    panel.classList.toggle('hidden', !willShow);
+    var trigger = document.querySelector('.flow-node[aria-controls="focus-editor"]');
+    if (trigger) trigger.setAttribute('aria-expanded', willShow ? 'true' : 'false');
+    if (willShow) {
+      panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      var input = document.getElementById('focus-input');
+      if (input) input.focus();
+    }
+  }
+
+  var focusForm = document.getElementById('focus-form');
+  if (focusForm) {
+    focusForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = document.getElementById('focus-input');
+      var raw = (input.value || '').trim().toUpperCase();
+      if (!raw) return;
+      var list = readFocusList();
+      if (!list.some(function (x) { return x.ticker === raw; })) {
+        list.push({ ticker: raw, entry: '', size: '', sl: '' });
+        writeFocusList(list);
+        renderFocusChips();
+      }
+      input.value = '';
+      input.focus();
+    });
+  }
+
+  renderFocusChips();
 </script>
 </body>
 </html>
