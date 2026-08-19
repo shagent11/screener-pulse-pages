@@ -419,7 +419,8 @@
   // ---- generic heatmap renderer (재사용: 섹터 히트맵 + 테크 세부그룹 히트맵) ----
   const VERDICT_CLASS = { '섹터강세':'strong', '종목쏠림':'weak', '혼조':'mixed' };
 
-  function renderHeatmapGeneric(targetId, allSrc, curSrc, mode, topN, dates, verdicts) {
+  function renderHeatmapGeneric(targetId, allSrc, curSrc, mode, topN, datesAsc, verdicts) {
+    const dates = [...datesAsc].reverse(); // 최신 날짜가 왼쪽에 오도록(2026-08-19, 사용자 요청 — 원래는 과거→최신 왼쪽에서 오른쪽)
     const el = document.getElementById(targetId);
     el.style.gridTemplateColumns = `150px repeat(${dates.length}, 34px)`;
     el.style.minWidth = `${150 + dates.length * 37}px`;
