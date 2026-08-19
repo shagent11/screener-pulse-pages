@@ -622,16 +622,18 @@
       return 'var(--heat-4)';
     };
 
+    const bDatesDesc = [...bDates].reverse(); // 최신 날짜가 왼쪽(2026-08-19, 사용자 요청 — 정렬용 latestD 계산은 원본 bDates 그대로 유지)
+
     function renderBetaHeatmap(targetId, src, cntSrc) {
       const el = document.getElementById(targetId);
-      el.style.gridTemplateColumns = `150px repeat(${bDates.length}, 34px)`;
-      el.style.minWidth = `${150 + bDates.length * 37}px`;
+      el.style.gridTemplateColumns = `150px repeat(${bDatesDesc.length}, 34px)`;
+      el.style.minWidth = `${150 + bDatesDesc.length * 37}px`;
       let hm = `<div class="hcell"></div>`;
-      bDates.forEach(d => { hm += `<div class="datelabel">${fmtDate(d)}</div>`; });
+      bDatesDesc.forEach(d => { hm += `<div class="datelabel">${fmtDate(d)}</div>`; });
       rowOrder.forEach(s => {
         const label = s.replace(' Technology', '').replace(' Services', '');
         hm += `<div class="rowlabel">${label}</div>`;
-        bDates.forEach(d => {
+        bDatesDesc.forEach(d => {
           const v = src[s][d];
           const filled = v / maxPct > 0.45;
           hm += `<div class="hcell${filled ? ' filled' : ''}" style="background:${heatColor(v)}" title="${s} · ${fmtDate(d)} · ${v}%(${cntSrc[s][d]}종목)">${v}</div>`;
