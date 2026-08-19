@@ -631,7 +631,7 @@
       let hm = `<div class="hcell"></div>`;
       bDatesDesc.forEach(d => { hm += `<div class="datelabel">${fmtDate(d)}</div>`; });
       rowOrder.forEach(s => {
-        const label = s.replace(' Technology', '').replace(' Services', '');
+        const label = s === 'Technology Services' ? 'Technology Services' : s.replace(' Technology', '').replace(' Services', ''); // 2026-08-19: 'Technology'만 있으면 애매해서 'Technology Services' 풀네임 유지
         hm += `<div class="rowlabel">${label}</div>`;
         bDatesDesc.forEach(d => {
           const v = src[s][d];
