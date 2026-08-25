@@ -119,12 +119,12 @@
   <div class="masthead">
     <div>
       <a class="back" href="./index.html">&larr; 펄스 허브</a>
-      <div class="eyebrow" style="margin-top:8px;">Process &middot; 8/25</div>
+      <div class="eyebrow" style="margin-top:8px;">Process &middot; 8/26</div>
       <h1>Trading Process</h1>
       <p class="sub">Market condition rules(M01&ndash;M07) + top&#8594;down decision pipeline</p>
     </div>
     <div class="status-row">
-      <div class="status-item"><span class="status-label">Day</span><span class="status-value">8/25</span></div>
+      <div class="status-item"><span class="status-label">Day</span><span class="status-value">8/26</span></div>
       <div class="status-item"><span class="status-label">Market Condition</span><span class="pill warn">&#9679; Yellow</span></div>
       <button type="button" class="strategy-trigger" onclick="toggleStrategyEditor()" aria-expanded="false" aria-controls="strategy-editor">
         <span class="strategy-dot"></span>Strategy
@@ -150,12 +150,12 @@
         <table class="rules">
           <thead><tr><th>Rule</th><th>Ticker</th><th>Condition</th><th>Result</th></tr></thead>
           <tbody>
-<tr><td class="rid">M01</td><td class="ticker">QQQ (growth)</td><td><span class="dot-flow">3d<span class="dot good"></span><span class="arrow">&rarr;</span><span class="dot warn"></span></span></td><td><span class="dot warn"></span></td></tr>
-<tr><td class="rid">M02</td><td class="ticker">SPY (value)</td><td><span class="dot-flow">2d<span class="dot warn"></span><span class="arrow">&rarr;</span><span class="dot good"></span></span></td><td><span class="dot good"></span></td></tr>
-<tr><td class="rid">M03</td><td class="ticker">RSP (equal weight)</td><td><span class="cond">22d</span></td><td><span class="dot good"></span></td></tr>
-<tr><td class="rid">M04</td><td class="ticker">MDYG (mid cap)</td><td><span class="dot-flow">3d<span class="dot good"></span><span class="arrow">&rarr;</span><span class="dot warn"></span></span></td><td><span class="dot warn"></span></td></tr>
-<tr><td class="rid">M05</td><td class="ticker">VB (small cap)</td><td><span class="dot-flow">1d<span class="dot good"></span><span class="arrow">&rarr;</span><span class="dot warn"></span></span></td><td><span class="dot warn"></span></td></tr>
-<tr><td class="rid">M06</td><td class="ticker">SOXX</td><td><span class="cond">4d</span></td><td><span class="dot bad"></span></td></tr>
+<tr><td class="rid">M01</td><td class="ticker">QQQ (growth)</td><td><span class="cond">4d</span></td><td><span class="dot warn"></span></td></tr>
+<tr><td class="rid">M02</td><td class="ticker">SPY (value)</td><td><span class="dot-flow">3d<span class="dot warn"></span><span class="arrow">&rarr;</span><span class="dot good"></span></span></td><td><span class="dot good"></span></td></tr>
+<tr><td class="rid">M03</td><td class="ticker">RSP (equal weight)</td><td><span class="cond">23d</span></td><td><span class="dot good"></span></td></tr>
+<tr><td class="rid">M04</td><td class="ticker">MDYG (mid cap)</td><td><span class="cond">4d</span></td><td><span class="dot warn"></span></td></tr>
+<tr><td class="rid">M05</td><td class="ticker">VB (small cap)</td><td><span class="dot-flow">2d<span class="dot good"></span><span class="arrow">&rarr;</span><span class="dot warn"></span></span></td><td><span class="dot warn"></span></td></tr>
+<tr><td class="rid">M06</td><td class="ticker">SOXX</td><td><span class="cond">5d</span></td><td><span class="dot bad"></span></td></tr>
           </tbody>
         </table>
       </div>
@@ -163,15 +163,15 @@
         <div class="panel-title">M07 &middot; GICS Sector ETFs <span class="note">10&gt;20EMA &amp; 21&gt;above</span></div>
         <table class="rules">
           <tbody>
-<tr class="g1"><td class="rid">M07</td><td class="ticker">XLK</td><td class="cond">4d</td><td><span class="dot warn"></span></td></tr>
-<tr class="g1"><td class="rid"></td><td class="ticker">XLC</td><td class="cond">2d(🟡→🟢)</td><td><span class="dot good"></span></td></tr>
-<tr class="g1"><td class="rid"></td><td class="ticker">XLI</td><td class="cond">2d(🟡→🔴)</td><td><span class="dot bad"></span></td></tr>
-<tr class="g2"><td class="rid"></td><td class="ticker">XLY</td><td class="cond">2d(🟡→🟢)</td><td><span class="dot good"></span></td></tr>
-<tr class="g2"><td class="rid"></td><td class="ticker">XLF</td><td class="cond">2d(🟡→🟢)</td><td><span class="dot good"></span></td></tr>
-<tr class="g2"><td class="rid"></td><td class="ticker">XLB</td><td class="cond">4d</td><td><span class="dot good"></span></td></tr>
-<tr class="g3"><td class="rid"></td><td class="ticker">XLV</td><td class="cond">45d</td><td><span class="dot good"></span></td></tr>
-<tr class="g3"><td class="rid"></td><td class="ticker">XLU</td><td class="cond">17d</td><td><span class="dot bad"></span></td></tr>
-<tr class="g3"><td class="rid"></td><td class="ticker">XLE</td><td class="cond">11d</td><td><span class="dot good"></span></td></tr>
+<tr class="g1"><td class="rid">M07</td><td class="ticker">XLK</td><td class="cond">5d</td><td><span class="dot warn"></span></td></tr>
+<tr class="g1"><td class="rid"></td><td class="ticker">XLC</td><td class="cond">3d(🟡→🟢)</td><td><span class="dot good"></span></td></tr>
+<tr class="g1"><td class="rid"></td><td class="ticker">XLI</td><td class="cond">3d(🟡→🔴)</td><td><span class="dot bad"></span></td></tr>
+<tr class="g2"><td class="rid"></td><td class="ticker">XLY</td><td class="cond">3d(🟡→🟢)</td><td><span class="dot good"></span></td></tr>
+<tr class="g2"><td class="rid"></td><td class="ticker">XLF</td><td class="cond">3d(🟡→🟢)</td><td><span class="dot good"></span></td></tr>
+<tr class="g2"><td class="rid"></td><td class="ticker">XLB</td><td class="cond">5d</td><td><span class="dot good"></span></td></tr>
+<tr class="g3"><td class="rid"></td><td class="ticker">XLV</td><td class="cond">46d</td><td><span class="dot good"></span></td></tr>
+<tr class="g3"><td class="rid"></td><td class="ticker">XLU</td><td class="cond">18d</td><td><span class="dot bad"></span></td></tr>
+<tr class="g3"><td class="rid"></td><td class="ticker">XLE</td><td class="cond">12d</td><td><span class="dot good"></span></td></tr>
           </tbody>
         </table>
         <div class="m07-legend">
@@ -250,7 +250,7 @@
           <line class="line" x1="515" y1="200" x2="515" y2="225" marker-end="url(#arrow)"></line>
           <rect class="grp" x="475" y="225" width="480" height="90" rx="8"></rect>
           <text class="lbl-tag" x="490" y="218">STRONG ETFs &middot; live</text>
-<text class="lbl"><tspan x="490" y="280"><tspan fill="var(--good)">&#9679;</tspan> GDX</tspan><tspan x="580" y="280"><tspan fill="var(--good)">&#9679;</tspan> SKYY</tspan><tspan x="670" y="280"><tspan fill="var(--good)">&#9679;</tspan> XBI</tspan><tspan x="760" y="280"><tspan fill="var(--good)">&#9679;</tspan> CRAK</tspan><tspan x="850" y="280"><tspan fill="var(--good)">&#9679;</tspan> XOP</tspan></text>
+<text class="lbl"><tspan x="490" y="280"><tspan fill="var(--good)">&#9679;</tspan> GDX</tspan><tspan x="580" y="280"><tspan fill="var(--good)">&#9679;</tspan> SKYY</tspan><tspan x="670" y="280"><tspan fill="var(--good)">&#9679;</tspan> XBI</tspan><tspan x="760" y="280"><tspan fill="var(--good)">&#9679;</tspan> EWY</tspan><tspan x="850" y="280"><tspan fill="var(--good)">&#9679;</tspan> EWT</tspan></text>
         </g>
 
         <line class="line" x1="570" y1="170" x2="610" y2="170" marker-end="url(#arrow)"></line>
@@ -267,8 +267,8 @@
           <line class="line" x1="680" y1="200" x2="680" y2="225" marker-end="url(#arrow)"></line>
           <rect class="grp" x="475" y="225" width="480" height="150" rx="8"></rect>
           <text class="lbl-tag" x="490" y="218">STRONG STOCKS &middot; UWL live</text>
-<text class="lbl"><tspan x="490" y="280"><tspan fill="var(--good)">&#9679;</tspan> TEAM</tspan><tspan x="580" y="280"><tspan fill="var(--good)">&#9679;</tspan> RNG</tspan><tspan x="670" y="280"><tspan fill="var(--good)">&#9679;</tspan> U</tspan><tspan x="760" y="280"><tspan fill="var(--good)">&#9679;</tspan> CHYM</tspan><tspan x="850" y="280"><tspan fill="var(--good)">&#9679;</tspan> ABNB</tspan></text>
-<text class="lbl"><tspan x="490" y="318"><tspan fill="var(--good)">&#9679;</tspan> GTLB</tspan><tspan x="580" y="318"><tspan fill="var(--good)">&#9679;</tspan> RBRK</tspan><tspan x="670" y="318"><tspan fill="var(--good)">&#9679;</tspan> PLTR</tspan><tspan x="760" y="318"><tspan fill="var(--good)">&#9679;</tspan> MRVL</tspan><tspan x="850" y="318"><tspan fill="var(--good)">&#9679;</tspan> AXTI</tspan></text>
+<text class="lbl"><tspan x="490" y="280"><tspan fill="var(--good)">&#9679;</tspan> TEAM</tspan><tspan x="580" y="280"><tspan fill="var(--good)">&#9679;</tspan> RNG</tspan><tspan x="670" y="280"><tspan fill="var(--good)">&#9679;</tspan> CHYM</tspan><tspan x="760" y="280"><tspan fill="var(--good)">&#9679;</tspan> U</tspan><tspan x="850" y="280"><tspan fill="var(--good)">&#9679;</tspan> ABNB</tspan></text>
+<text class="lbl"><tspan x="490" y="318"><tspan fill="var(--good)">&#9679;</tspan> MRVL</tspan><tspan x="580" y="318"><tspan fill="var(--good)">&#9679;</tspan> GTLB</tspan><tspan x="670" y="318"><tspan fill="var(--good)">&#9679;</tspan> AXTI</tspan><tspan x="760" y="318"><tspan fill="var(--good)">&#9679;</tspan> PLTR</tspan><tspan x="850" y="318"><tspan fill="var(--good)">&#9679;</tspan> RBRK</tspan></text>
         </g>
 
         <line class="line" x1="750" y1="170" x2="785" y2="170" marker-end="url(#arrow)"></line>
