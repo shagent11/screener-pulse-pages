@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Setup Channel</title>
+<style>
+  :root {
+    --bg: #eef1f4; --surface: #ffffff; --surface-alt: #f4f6f9; --border: #d9dfe6;
+    --text: #1b2430; --text-muted: #5b6675; --text-faint: #8993a3;
+    --accent: #a6742f; --accent-soft: #e8dcc3;
+    --up: #1c8a5c; --down: #c23b45; --info: #2d6ca8; --rev: #7a4fc9;
+    --teal: #1f8a7a; --orange: #c76b1f; --pink: #b8447a;
+    --shadow: 0 1px 2px rgba(20,25,35,.06), 0 8px 24px -12px rgba(20,25,35,.15);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d1117; --surface: #151b26; --surface-alt: #1c2431; --border: #2a3341;
+      --text: #e7ecf3; --text-muted: #93a0b3; --text-faint: #5f6b7d;
+      --accent: #d9a856; --accent-soft: #3a3120;
+      --up: #3ecf8e; --down: #e0616b; --info: #6ea8dc; --rev: #b48cf0;
+      --teal: #4fd1c0; --orange: #e8934f; --pink: #e07fb0;
+      --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d1117; --surface: #151b26; --surface-alt: #1c2431; --border: #2a3341;
+    --text: #e7ecf3; --text-muted: #93a0b3; --text-faint: #5f6b7d;
+    --accent: #d9a856; --accent-soft: #3a3120;
+    --up: #3ecf8e; --down: #e0616b; --info: #6ea8dc; --rev: #b48cf0;
+    --teal: #4fd1c0; --orange: #e8934f; --pink: #e07fb0;
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px -14px rgba(0,0,0,.6);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased; padding: 40px 20px 60px;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  .back { font-size: 12px; color: var(--text-faint); text-decoration: none; display: inline-block; margin-bottom: 10px; }
+  .back:hover { color: var(--accent); }
+  .eyebrow {
+    font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin-bottom: 8px;
+  }
+  h1 { font-size: 27px; margin: 0 0 6px; font-weight: 800; letter-spacing: -.01em; }
+  .sub { font-size: 13.5px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.55; }
+
+  .test-note {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 10px;
+    padding: 11px 16px; font-size: 12.5px; line-height: 1.6; color: var(--text); margin-bottom: 28px;
+  }
+  .test-note b { color: var(--accent); }
+  .test-badge {
+    flex-shrink: 0; font-size: 10.5px; font-weight: 800; letter-spacing: .04em;
+    color: var(--bg); background: var(--accent); border-radius: 5px; padding: 3px 7px;
+  }
+
+  .setup-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
+  @media (max-width: 720px) { .setup-grid { grid-template-columns: 1fr; } }
+
+  .setup-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 20px 22px 18px; box-shadow: var(--shadow); border-top: 3px solid var(--dot);
+  }
+  .setup-head { display: flex; align-items: baseline; gap: 9px; margin-bottom: 3px; }
+  .setup-head .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dot); flex-shrink: 0; transform: translateY(-1px); }
+  .setup-name { font-size: 17px; font-weight: 800; letter-spacing: -.005em; }
+  .setup-full { font-size: 11.5px; color: var(--text-faint); font-weight: 500; }
+  .setup-def { font-size: 12.5px; color: var(--text-muted); line-height: 1.55; margin: 6px 0 14px; }
+  .setup-def b { color: var(--text); font-weight: 600; }
+
+  figure { margin: 0; }
+  figure svg { display: block; width: 100%; height: auto; }
+  figcaption { font-size: 11px; color: var(--text-faint); margin-top: 8px; line-height: 1.5; }
+  figcaption b { color: var(--text-muted); }
+
+  .wick { stroke: var(--text-faint); stroke-width: 0.9; }
+  .vcp-up, .base-up, .htf-up, .up-up, .cs-up { fill: var(--surface); stroke: var(--up); stroke-width: 1.2; }
+  .vcp-down, .base-down, .htf-down, .up-down, .cs-down { fill: var(--down); stroke: var(--down); stroke-width: 1; }
+
+
+  footer { text-align: center; font-size: 11.5px; color: var(--text-faint); margin-top: 8px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./index.html">&larr; 펄스 허브</a>
+  <div class="eyebrow">SH Trading System · Setup Channel</div>
+  <h1>Setup Library</h1>
+  <div class="sub">셋업 이름 + 차트 패턴 원형(archetype) 다이어그램 카탈로그 — 진입 근거로 삼는 셋업들의 전형적인 가격 움직임 모양을 정리</div>
+
+  <div class="test-note">
+    <span class="test-badge">TEST MODE</span>
+    <span><b>디자인 프로토타입 단계</b> — 실제 종목 매칭이나 스캔 로직 없이, 셋업 7종의 원형 다이어그램(교육용 개념도)만 배치해봄. 방향 확정되면 실제 스크리너 연동 여부는 별도 논의.</span>
+  </div>
+
+  <div class="setup-grid">
+
+    <div class="setup-card" style="--dot: var(--up)">
+      <div class="setup-head"><span class="dot"></span><span class="setup-name">VCP</span></div>
+      <div class="setup-full">Volatility Contraction Pattern</div>
+      <div class="setup-def"><b>점점 좁아지는 되돌림</b>이 2~4차례 반복되며 피벗 근처로 수렴 — 각 되돌림 폭이 이전보다 얕아지는 게 핵심(변동성 수축 = 매도세 소진). 마지막 타이트한 구간을 거래량 동반 돌파.</div>
+      <figure role="img" aria-label="가격이 상승 후 조정하는 파동을 3번 반복하며, 각 조정 폭이 이전보다 점점 얕아지다 피벗선 위로 돌파하는 VCP 패턴 다이어그램">
+        <svg viewBox="0 0 320 160">
+          <line x1="195" y1="38" x2="320" y2="38" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="3 3"/>
+          <line class="wick" x1="10.0" y1="132.7" x2="10.0" y2="143.3"/>
+          <rect class="vcp-up" x="6.0" y="135.1" width="8" height="4.9"/>
+          <line class="wick" x1="25.8" y1="112.5" x2="25.8" y2="136.8"/>
+          <rect class="vcp-up" x="21.8" y="112.7" width="8" height="22.4"/>
+          <line class="wick" x1="41.6" y1="87.9" x2="41.6" y2="112.7"/>
+          <rect class="vcp-up" x="37.6" y="91.4" width="8" height="21.3"/>
+          <line class="wick" x1="57.4" y1="56.2" x2="57.4" y2="93.9"/>
+          <rect class="vcp-up" x="53.4" y="59.0" width="8" height="32.3"/>
+          <line class="wick" x1="73.2" y1="55.8" x2="73.2" y2="84.2"/>
+          <rect class="vcp-down" x="69.2" y="59.0" width="8" height="23.5"/>
+          <line class="wick" x1="88.9" y1="76.9" x2="88.9" y2="96.5"/>
+          <rect class="vcp-down" x="84.9" y="82.6" width="8" height="12.5"/>
+          <line class="wick" x1="104.7" y1="95.0" x2="104.7" y2="101.7"/>
+          <rect class="vcp-down" x="100.7" y="95.1" width="8" height="4.7"/>
+          <line class="wick" x1="120.5" y1="78.5" x2="120.5" y2="101.5"/>
+          <rect class="vcp-up" x="116.5" y="79.8" width="8" height="20.0"/>
+          <line class="wick" x1="136.3" y1="53.8" x2="136.3" y2="83.2"/>
+          <rect class="vcp-up" x="132.3" y="56.6" width="8" height="23.2"/>
+          <line class="wick" x1="152.1" y1="55.7" x2="152.1" y2="70.6"/>
+          <rect class="vcp-down" x="148.1" y="56.6" width="8" height="11.2"/>
+          <line class="wick" x1="167.9" y1="66.2" x2="167.9" y2="75.4"/>
+          <rect class="vcp-down" x="163.9" y="67.8" width="8" height="7.2"/>
+          <line class="wick" x1="183.7" y1="56.3" x2="183.7" y2="77.1"/>
+          <rect class="vcp-up" x="179.7" y="57.0" width="8" height="18.0"/>
+          <line class="wick" x1="199.5" y1="55.3" x2="199.5" y2="60.3"/>
+          <rect class="vcp-down" x="195.5" y="57.0" width="8" height="1.5"/>
+          <line class="wick" x1="215.3" y1="51.0" x2="215.3" y2="60.0"/>
+          <rect class="vcp-up" x="211.3" y="52.3" width="8" height="4.9"/>
+          <line class="wick" x1="231.1" y1="32.7" x2="231.1" y2="54.3"/>
+          <rect class="vcp-up" x="227.1" y="35.1" width="8" height="17.3"/>
+          <line class="wick" x1="246.8" y1="20.3" x2="246.8" y2="35.6"/>
+          <rect class="vcp-up" x="242.8" y="23.0" width="8" height="12.1"/>
+          <line class="wick" x1="262.6" y1="22.0" x2="262.6" y2="29.5"/>
+          <rect class="vcp-down" x="258.6" y="23.0" width="8" height="3.7"/>
+          <line class="wick" x1="278.4" y1="11.3" x2="278.4" y2="27.6"/>
+          <rect class="vcp-up" x="274.4" y="14.5" width="8" height="12.2"/>
+          <line class="wick" x1="294.2" y1="12.1" x2="294.2" y2="18.2"/>
+          <rect class="vcp-up" x="290.2" y="13.7" width="8" height="1.5"/>
+          <line class="wick" x1="310.0" y1="6.0" x2="310.0" y2="14.4"/>
+          <rect class="vcp-up" x="306.0" y="8.0" width="8" height="5.7"/>
+          <circle cx="230" cy="36" r="3" fill="var(--up)"/>
+        </svg>
+        <figcaption><b>피벗선</b> = 되돌림 고점들이 만드는 저항 — 좁아지는 3개 파동(<b>①②③</b>) 후 거래량 실린 돌파(●)</figcaption>
+      </figure>
+    </div>
+
+    <div class="setup-card" style="--dot: var(--info)">
+      <div class="setup-head"><span class="dot"></span><span class="setup-name">Big Base BO</span></div>
+      <div class="setup-full">Big Base Breakout (ATH)</div>
+      <div class="setup-def">신고가 부근에서 <b>수개월 이상 넓고 완만한 베이스</b>를 다진 뒤 저항선을 뚫는 돌파. VCP보다 베이스 기간이 길고 조정 폭도 더 완만 — "오래 쉰 만큼 크게 간다"는 전제.</div>
+      <figure role="img" aria-label="장기 상승 후 완만하고 넓은 베이스를 형성하다가 저항선을 뚫고 신고가로 돌파하는 Big Base Breakout 패턴 다이어그램">
+        <svg viewBox="0 0 320 160">
+          <line x1="40" y1="55" x2="320" y2="55" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="3 3"/>
+          <line class="wick" x1="10.0" y1="148.4" x2="10.0" y2="159.0"/>
+          <rect class="base-down" x="6.0" y="150.0" width="8" height="1.9"/>
+          <line class="wick" x1="25.8" y1="101.4" x2="25.8" y2="154.4"/>
+          <rect class="base-up" x="21.8" y="103.5" width="8" height="48.4"/>
+          <line class="wick" x1="41.6" y1="57.0" x2="41.6" y2="106.1"/>
+          <rect class="base-up" x="37.6" y="57.7" width="8" height="45.8"/>
+          <line class="wick" x1="57.4" y1="54.6" x2="57.4" y2="75.2"/>
+          <rect class="base-down" x="53.4" y="57.7" width="8" height="16.0"/>
+          <line class="wick" x1="73.2" y1="73.5" x2="73.2" y2="82.8"/>
+          <rect class="base-down" x="69.2" y="73.7" width="8" height="8.6"/>
+          <line class="wick" x1="88.9" y1="80.7" x2="88.9" y2="87.5"/>
+          <rect class="base-down" x="84.9" y="82.4" width="8" height="3.7"/>
+          <line class="wick" x1="104.7" y1="85.7" x2="104.7" y2="102.8"/>
+          <rect class="base-down" x="100.7" y="86.1" width="8" height="15.2"/>
+          <line class="wick" x1="120.5" y1="94.5" x2="120.5" y2="101.6"/>
+          <rect class="base-up" x="116.5" y="97.4" width="8" height="3.9"/>
+          <line class="wick" x1="136.3" y1="96.6" x2="136.3" y2="101.9"/>
+          <rect class="base-down" x="132.3" y="97.4" width="8" height="1.5"/>
+          <line class="wick" x1="152.1" y1="91.1" x2="152.1" y2="98.4"/>
+          <rect class="base-up" x="148.1" y="92.3" width="8" height="5.9"/>
+          <line class="wick" x1="167.9" y1="86.7" x2="167.9" y2="95.5"/>
+          <rect class="base-down" x="163.9" y="92.3" width="8" height="2.4"/>
+          <line class="wick" x1="183.7" y1="90.8" x2="183.7" y2="99.8"/>
+          <rect class="base-down" x="179.7" y="94.7" width="8" height="3.9"/>
+          <line class="wick" x1="199.5" y1="87.7" x2="199.5" y2="100.0"/>
+          <rect class="base-up" x="195.5" y="91.7" width="8" height="7.0"/>
+          <line class="wick" x1="215.3" y1="74.9" x2="215.3" y2="94.1"/>
+          <rect class="base-up" x="211.3" y="78.4" width="8" height="13.3"/>
+          <line class="wick" x1="231.1" y1="74.9" x2="231.1" y2="78.5"/>
+          <rect class="base-up" x="227.1" y="77.4" width="8" height="1.5"/>
+          <line class="wick" x1="246.8" y1="59.5" x2="246.8" y2="80.4"/>
+          <rect class="base-up" x="242.8" y="59.6" width="8" height="17.8"/>
+          <line class="wick" x1="262.6" y1="56.1" x2="262.6" y2="60.0"/>
+          <rect class="base-up" x="258.6" y="57.3" width="8" height="2.3"/>
+          <line class="wick" x1="278.4" y1="36.8" x2="278.4" y2="61.0"/>
+          <rect class="base-up" x="274.4" y="38.0" width="8" height="19.3"/>
+          <line class="wick" x1="294.2" y1="12.8" x2="294.2" y2="38.9"/>
+          <rect class="base-up" x="290.2" y="14.2" width="8" height="23.8"/>
+          <line class="wick" x1="310.0" y1="0.5" x2="310.0" y2="18.6"/>
+          <rect class="base-up" x="306.0" y="5.5" width="8" height="8.6"/>
+          <circle cx="260" cy="58" r="3" fill="var(--info)"/>
+        </svg>
+        <figcaption><b>저항선</b> = 베이스 상단 — 넓은 U자형 다지기 후 신고가 돌파(●), VCP 대비 완만하고 긴 구간</figcaption>
+      </figure>
+    </div>
+
+    <div class="setup-card" style="--dot: var(--rev)">
+      <div class="setup-head"><span class="dot"></span><span class="setup-name">HTF</span></div>
+      <div class="setup-full">High Tight Flag</div>
+      <div class="setup-def"><b>단기간 급등(폴대)</b> 후 고점 부근에서 <b>얕고 타이트한 조정(깃발)</b>만 거치고 바로 재상승. 조정 중 되돌림이 크지 않아야(대략 &lt;25%) 유효 — 급등 강도 자체가 강한 수급의 증거.</div>
+      <figure role="img" aria-label="가파른 급등(폴대) 후 고점 부근에서 얕고 타이트한 깃발형 조정을 거치고 다시 급등하는 High Tight Flag 패턴 다이어그램">
+        <svg viewBox="0 0 320 160">
+          <line x1="90" y1="20" x2="185" y2="20" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="3 3"/>
+          <line class="wick" x1="10.0" y1="144.6" x2="10.0" y2="152.3"/>
+          <rect class="htf-up" x="6.0" y="145.5" width="8" height="4.5"/>
+          <line class="wick" x1="27.6" y1="118.7" x2="27.6" y2="146.3"/>
+          <rect class="htf-up" x="23.6" y="118.7" width="8" height="26.8"/>
+          <line class="wick" x1="45.3" y1="93.3" x2="45.3" y2="119.3"/>
+          <rect class="htf-up" x="41.3" y="94.5" width="8" height="24.2"/>
+          <line class="wick" x1="62.9" y1="57.9" x2="62.9" y2="96.3"/>
+          <rect class="htf-up" x="58.9" y="60.0" width="8" height="34.5"/>
+          <line class="wick" x1="80.6" y1="30.0" x2="80.6" y2="63.8"/>
+          <rect class="htf-up" x="76.6" y="31.6" width="8" height="28.5"/>
+          <line class="wick" x1="98.2" y1="22.1" x2="98.2" y2="34.6"/>
+          <rect class="htf-up" x="94.2" y="23.5" width="8" height="8.0"/>
+          <line class="wick" x1="115.9" y1="21.7" x2="115.9" y2="31.0"/>
+          <rect class="htf-down" x="111.9" y="23.5" width="8" height="7.4"/>
+          <line class="wick" x1="133.5" y1="20.5" x2="133.5" y2="34.0"/>
+          <rect class="htf-up" x="129.5" y="21.3" width="8" height="9.6"/>
+          <line class="wick" x1="151.2" y1="20.4" x2="151.2" y2="41.0"/>
+          <rect class="htf-down" x="147.2" y="21.3" width="8" height="18.2"/>
+          <line class="wick" x1="168.8" y1="20.3" x2="168.8" y2="42.8"/>
+          <rect class="htf-up" x="164.8" y="26.0" width="8" height="13.5"/>
+          <line class="wick" x1="186.5" y1="23.2" x2="186.5" y2="34.7"/>
+          <rect class="htf-down" x="182.5" y="26.0" width="8" height="4.9"/>
+          <line class="wick" x1="204.1" y1="18.1" x2="204.1" y2="33.6"/>
+          <rect class="htf-up" x="200.1" y="20.8" width="8" height="10.1"/>
+          <line class="wick" x1="221.8" y1="14.4" x2="221.8" y2="24.5"/>
+          <rect class="htf-up" x="217.8" y="17.4" width="8" height="3.4"/>
+          <line class="wick" x1="239.4" y1="11.0" x2="239.4" y2="20.6"/>
+          <rect class="htf-up" x="235.4" y="12.3" width="8" height="5.1"/>
+          <line class="wick" x1="257.1" y1="6.8" x2="257.1" y2="17.1"/>
+          <rect class="htf-up" x="253.1" y="9.3" width="8" height="3.0"/>
+          <line class="wick" x1="274.7" y1="4.7" x2="274.7" y2="9.4"/>
+          <rect class="htf-up" x="270.7" y="6.5" width="8" height="2.7"/>
+          <line class="wick" x1="292.4" y1="2.4" x2="292.4" y2="9.3"/>
+          <rect class="htf-up" x="288.4" y="4.8" width="8" height="1.7"/>
+          <line class="wick" x1="310.0" y1="1.7" x2="310.0" y2="7.0"/>
+          <rect class="htf-up" x="306.0" y="4.6" width="8" height="1.5"/>
+          <circle cx="185" cy="32" r="3" fill="var(--rev)"/>
+        </svg>
+        <figcaption><b>폴대</b>(가파른 급등) → <b>깃발</b>(고점 근처 타이트 횡보) → 재상승, 조정 저점(●)이 얕게 유지되는지가 핵심</figcaption>
+      </figure>
+    </div>
+
+    <div class="setup-card" style="--dot: var(--accent)">
+      <div class="setup-head"><span class="dot"></span><span class="setup-name">Uptrend Pullback</span></div>
+      <div class="setup-full">추세 눌림목</div>
+      <div class="setup-def">이미 <b>고점·저점을 계속 높여가는 상승추세</b>에서, 이동평균선(10/21/50EMA)이나 상승 추세선까지 눌린 뒤 다시 추세 방향으로 반등하는 지점을 매수 — 신규 돌파가 아니라 <b>기존 추세 편승</b>이 핵심.</div>
+      <figure role="img" aria-label="고점과 저점을 계속 높여가며 상승하는 추세에서, 각 조정이 상승 추세선까지 눌렸다가 다시 반등하는 Uptrend Pullback 패턴 다이어그램">
+        <svg viewBox="0 0 320 160">
+          <line x1="40" y1="138" x2="300" y2="56" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="3 3"/>
+          <line class="wick" x1="10.0" y1="143.5" x2="10.0" y2="152.4"/>
+          <rect class="up-up" x="6.0" y="146.3" width="8" height="3.7"/>
+          <line class="wick" x1="25.8" y1="130.7" x2="25.8" y2="148.5"/>
+          <rect class="up-up" x="21.8" y="132.5" width="8" height="13.8"/>
+          <line class="wick" x1="41.6" y1="116.8" x2="41.6" y2="135.3"/>
+          <rect class="up-up" x="37.6" y="118.8" width="8" height="13.8"/>
+          <line class="wick" x1="57.4" y1="113.1" x2="57.4" y2="120.4"/>
+          <rect class="up-up" x="53.4" y="117.2" width="8" height="1.6"/>
+          <line class="wick" x1="73.2" y1="114.3" x2="73.2" y2="120.3"/>
+          <rect class="up-down" x="69.2" y="117.2" width="8" height="1.8"/>
+          <line class="wick" x1="88.9" y1="109.7" x2="88.9" y2="122.1"/>
+          <rect class="up-up" x="84.9" y="114.0" width="8" height="5.0"/>
+          <line class="wick" x1="104.7" y1="100.2" x2="104.7" y2="116.5"/>
+          <rect class="up-up" x="100.7" y="101.5" width="8" height="12.6"/>
+          <line class="wick" x1="120.5" y1="86.7" x2="120.5" y2="103.1"/>
+          <rect class="up-up" x="116.5" y="89.2" width="8" height="12.3"/>
+          <line class="wick" x1="136.3" y1="76.7" x2="136.3" y2="92.4"/>
+          <rect class="up-up" x="132.3" y="77.7" width="8" height="11.5"/>
+          <line class="wick" x1="152.1" y1="76.2" x2="152.1" y2="97.8"/>
+          <rect class="up-down" x="148.1" y="77.7" width="8" height="17.8"/>
+          <line class="wick" x1="167.9" y1="91.0" x2="167.9" y2="97.3"/>
+          <rect class="up-up" x="163.9" y="93.9" width="8" height="1.6"/>
+          <line class="wick" x1="183.7" y1="79.3" x2="183.7" y2="94.6"/>
+          <rect class="up-up" x="179.7" y="79.8" width="8" height="14.1"/>
+          <line class="wick" x1="199.5" y1="61.6" x2="199.5" y2="81.0"/>
+          <rect class="up-up" x="195.5" y="63.6" width="8" height="16.2"/>
+          <line class="wick" x1="215.3" y1="51.9" x2="215.3" y2="64.3"/>
+          <rect class="up-up" x="211.3" y="52.9" width="8" height="10.6"/>
+          <line class="wick" x1="231.1" y1="52.9" x2="231.1" y2="71.6"/>
+          <rect class="up-down" x="227.1" y="52.9" width="8" height="18.5"/>
+          <line class="wick" x1="246.8" y1="65.0" x2="246.8" y2="74.9"/>
+          <rect class="up-up" x="242.8" y="67.0" width="8" height="4.5"/>
+          <line class="wick" x1="262.6" y1="57.2" x2="262.6" y2="67.2"/>
+          <rect class="up-up" x="258.6" y="57.6" width="8" height="9.4"/>
+          <line class="wick" x1="278.4" y1="46.3" x2="278.4" y2="59.0"/>
+          <rect class="up-up" x="274.4" y="48.3" width="8" height="9.3"/>
+          <line class="wick" x1="294.2" y1="28.5" x2="294.2" y2="52.6"/>
+          <rect class="up-up" x="290.2" y="31.2" width="8" height="17.1"/>
+          <line class="wick" x1="310.0" y1="19.9" x2="310.0" y2="31.5"/>
+          <rect class="up-up" x="306.0" y="20.5" width="8" height="10.7"/>
+          <circle cx="80" cy="125" r="3" fill="var(--accent)"/>
+          <circle cx="160" cy="100" r="3" fill="var(--accent)"/>
+          <circle cx="240" cy="75" r="3" fill="var(--accent)"/>
+        </svg>
+        <figcaption><b>상승 추세선</b>에 세 번(●) 닿았다가 반등 — 매번 이전 저점보다 높은 곳에서 지지</figcaption>
+      </figure>
+    </div>
+
+
+    <div class="setup-card" style="--dot: var(--teal)">
+      <div class="setup-head"><span class="dot"></span><span class="setup-name">Cup &amp; Handle</span></div>
+      <div class="setup-full">컵앤핸들</div>
+      <div class="setup-def">고점에서 <b>완만한 U자형 조정(컵)</b>을 거쳐 원래 고점 근처까지 회복한 뒤, 우측 상단에서 <b>작고 얕은 되돌림(핸들)</b>을 한 번 더 만들고 돌파. 컵이 너무 V자로 뾰족하면 무효 — 둥글게 다지는 시간이 핵심.</div>
+      <figure role="img" aria-label="완만한 U자형 컵 모양으로 조정한 뒤 원래 고점까지 회복하고, 우측 상단에서 작은 핸들 되돌림을 거쳐 돌파하는 Cup and Handle 패턴 다이어그램">
+        <svg viewBox="0 0 320 160">
+          <line x1="10" y1="38" x2="245" y2="38" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="3 3"/>
+          <line class="wick" x1="10.0" y1="31.9" x2="10.0" y2="43.9"/>
+          <rect class="cs-down" x="6.0" y="35.0" width="8" height="6.2"/>
+          <line class="wick" x1="24.3" y1="38.6" x2="24.3" y2="48.7"/>
+          <rect class="cs-down" x="20.3" y="41.2" width="8" height="7.3"/>
+          <line class="wick" x1="38.6" y1="45.9" x2="38.6" y2="54.1"/>
+          <rect class="cs-down" x="34.6" y="48.5" width="8" height="4.6"/>
+          <line class="wick" x1="52.9" y1="52.5" x2="52.9" y2="60.4"/>
+          <rect class="cs-down" x="48.9" y="53.2" width="8" height="7.0"/>
+          <line class="wick" x1="67.1" y1="57.9" x2="67.1" y2="81.1"/>
+          <rect class="cs-down" x="63.1" y="60.2" width="8" height="19.6"/>
+          <line class="wick" x1="81.4" y1="79.6" x2="81.4" y2="91.8"/>
+          <rect class="cs-down" x="77.4" y="79.8" width="8" height="10.8"/>
+          <line class="wick" x1="95.7" y1="89.4" x2="95.7" y2="105.9"/>
+          <rect class="cs-down" x="91.7" y="90.6" width="8" height="13.5"/>
+          <line class="wick" x1="110.0" y1="103.5" x2="110.0" y2="116.5"/>
+          <rect class="cs-down" x="106.0" y="104.1" width="8" height="11.9"/>
+          <line class="wick" x1="124.3" y1="114.2" x2="124.3" y2="118.7"/>
+          <rect class="cs-down" x="120.3" y="116.0" width="8" height="2.2"/>
+          <line class="wick" x1="138.6" y1="114.0" x2="138.6" y2="121.7"/>
+          <rect class="cs-up" x="134.6" y="116.2" width="8" height="1.9"/>
+          <line class="wick" x1="152.9" y1="109.2" x2="152.9" y2="118.0"/>
+          <rect class="cs-up" x="148.9" y="111.3" width="8" height="5.0"/>
+          <line class="wick" x1="167.1" y1="103.0" x2="167.1" y2="112.3"/>
+          <rect class="cs-up" x="163.1" y="105.5" width="8" height="5.8"/>
+          <line class="wick" x1="181.4" y1="92.8" x2="181.4" y2="106.4"/>
+          <rect class="cs-up" x="177.4" y="95.0" width="8" height="10.5"/>
+          <line class="wick" x1="195.7" y1="83.7" x2="195.7" y2="98.0"/>
+          <rect class="cs-up" x="191.7" y="85.4" width="8" height="9.5"/>
+          <line class="wick" x1="210.0" y1="65.7" x2="210.0" y2="88.3"/>
+          <rect class="cs-up" x="206.0" y="67.6" width="8" height="17.8"/>
+          <line class="wick" x1="224.3" y1="59.3" x2="224.3" y2="69.9"/>
+          <rect class="cs-up" x="220.3" y="59.6" width="8" height="8.0"/>
+          <line class="wick" x1="238.6" y1="41.4" x2="238.6" y2="62.2"/>
+          <rect class="cs-up" x="234.6" y="42.5" width="8" height="17.1"/>
+          <line class="wick" x1="252.9" y1="40.2" x2="252.9" y2="46.3"/>
+          <rect class="cs-up" x="248.9" y="41.7" width="8" height="1.5"/>
+          <line class="wick" x1="267.1" y1="41.2" x2="267.1" y2="57.1"/>
+          <rect class="cs-down" x="263.1" y="41.7" width="8" height="14.0"/>
+          <line class="wick" x1="281.4" y1="54.3" x2="281.4" y2="57.9"/>
+          <rect class="cs-up" x="277.4" y="54.7" width="8" height="1.5"/>
+          <line class="wick" x1="295.7" y1="27.7" x2="295.7" y2="55.6"/>
+          <rect class="cs-up" x="291.7" y="29.3" width="8" height="25.4"/>
+          <line class="wick" x1="310.0" y1="14.3" x2="310.0" y2="32.4"/>
+          <rect class="cs-up" x="306.0" y="16.0" width="8" height="13.3"/>
+        </svg>
+        <figcaption><b>컵</b>(좌측 고점→완만한 U자 조정→우측 고점 회복) → <b>핸들</b>(고점 근처 작은 되돌림) → 돌파. Big Base보다 조정 폭이 깊고 뚜렷한 U자형</figcaption>
+      </figure>
+    </div>
+
+    <div class="setup-card" style="--dot: var(--orange)">
+      <div class="setup-head"><span class="dot"></span><span class="setup-name">Episodic Pivot</span></div>
+      <div class="setup-full">이벤트성 갭업 (EP)</div>
+      <div class="setup-def">어닝 서프라이즈 등 <b>강한 촉매로 하루 만에 크게 갭상승</b>하며 새로운 상승추세의 출발점이 되는 지점. 조용하던 구간에서 거래량 폭증 동반 — 기존 베이스/추세 여부와 무관하게 그 자체로 매수 트리거가 됨.</div>
+      <figure role="img" aria-label="조용한 횡보 구간 이후 갭을 두고 하루 만에 급등하는 캔들 하나가 나타난 뒤 그 상승분을 유지하며 이어가는 Episodic Pivot 패턴 다이어그램">
+        <svg viewBox="0 0 320 160">
+          <line x1="10" y1="105" x2="115" y2="105" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="3 3"/>
+          <line class="wick" x1="10" y1="104" x2="10" y2="116"/>
+          <rect class="cs-down" x="6" y="108" width="8" height="4"/>
+          <line class="wick" x1="25" y1="99" x2="25" y2="113"/>
+          <rect class="cs-up" x="21" y="106" width="8" height="6"/>
+          <line class="wick" x1="40" y1="102" x2="40" y2="112"/>
+          <rect class="cs-down" x="36" y="106" width="8" height="4"/>
+          <line class="wick" x1="55" y1="100" x2="55" y2="111"/>
+          <rect class="cs-up" x="51" y="105" width="8" height="5"/>
+          <line class="wick" x1="70" y1="102" x2="70" y2="113"/>
+          <rect class="cs-down" x="66" y="105" width="8" height="6"/>
+          <line class="wick" x1="85" y1="103" x2="85" y2="113"/>
+          <rect class="cs-up" x="81" y="107" width="8" height="4"/>
+          <line class="wick" x1="100" y1="104" x2="100" y2="114"/>
+          <rect class="cs-down" x="96" y="107" width="8" height="5"/>
+          <line class="wick" x1="115" y1="105" x2="115" y2="114"/>
+          <rect class="cs-up" x="111" y="108" width="8" height="4"/>
+          <line class="wick" x1="140" y1="30" x2="140" y2="55"/>
+          <rect class="cs-up" x="136" y="35" width="8" height="25"/>
+          <line class="wick" x1="160" y1="30" x2="160" y2="46"/>
+          <rect class="cs-down" x="156" y="35" width="8" height="7"/>
+          <line class="wick" x1="180" y1="29" x2="180" y2="46"/>
+          <rect class="cs-up" x="176" y="33" width="8" height="9"/>
+          <line class="wick" x1="200" y1="30" x2="200" y2="42"/>
+          <rect class="cs-down" x="196" y="33" width="8" height="5"/>
+          <line class="wick" x1="220" y1="22" x2="220" y2="40"/>
+          <rect class="cs-up" x="216" y="25" width="8" height="13"/>
+          <line class="wick" x1="245" y1="21" x2="245" y2="31"/>
+          <rect class="cs-down" x="241" y="25" width="8" height="3"/>
+          <line class="wick" x1="270" y1="13" x2="270" y2="30"/>
+          <rect class="cs-up" x="266" y="16" width="8" height="12"/>
+          <line class="wick" x1="295" y1="12" x2="295" y2="23"/>
+          <rect class="cs-down" x="291" y="16" width="8" height="4"/>
+          <line class="wick" x1="320" y1="5" x2="320" y2="22"/>
+          <rect class="cs-up" x="316" y="8" width="8" height="12"/>
+        </svg>
+        <figcaption>조용한 <b>베이스</b> 구간 → 갭을 둔 <b>단일 급등 캔들</b>(전 캔들 고점과 겹치지 않음) → 상승분 유지하며 지속. 다른 셋업과 달리 형성 기간이 하루~며칠로 매우 짧음</figcaption>
+      </figure>
+    </div>
+
+    <div class="setup-card" style="--dot: var(--pink)">
+      <div class="setup-head"><span class="dot"></span><span class="setup-name">Flat Base</span></div>
+      <div class="setup-full">플랫 베이스</div>
+      <div class="setup-def">상승 후(또는 이전 베이스 위에) <b>기울기 거의 없이 좁은 폭(대략 15% 이내)으로 최소 5~6주</b> 다지는 구간 — VCP·Cup&amp;Handle보다 훨씬 얕고 평평함. 신고가 근처를 계속 유지한다는 것 자체가 강한 수급의 신호.</div>
+      <figure role="img" aria-label="상승 후 거의 기울기 없이 좁은 폭으로 여러 주 다지다가 상단을 돌파하는 Flat Base 패턴 다이어그램">
+        <svg viewBox="0 0 320 160">
+          <line x1="70" y1="55" x2="250" y2="55" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="3 3"/>
+          <line class="wick" x1="10.0" y1="138.2" x2="10.0" y2="143.8"/>
+          <rect class="cs-down" x="6.0" y="140.0" width="8" height="2.4"/>
+          <line class="wick" x1="24.3" y1="117.7" x2="24.3" y2="145.9"/>
+          <rect class="cs-up" x="20.3" y="118.9" width="8" height="23.5"/>
+          <line class="wick" x1="38.6" y1="87.9" x2="38.6" y2="121.4"/>
+          <rect class="cs-up" x="34.6" y="88.5" width="8" height="30.4"/>
+          <line class="wick" x1="52.9" y1="74.2" x2="52.9" y2="90.0"/>
+          <rect class="cs-up" x="48.9" y="75.0" width="8" height="13.6"/>
+          <line class="wick" x1="67.1" y1="60.3" x2="67.1" y2="75.9"/>
+          <rect class="cs-up" x="63.1" y="61.3" width="8" height="13.7"/>
+          <line class="wick" x1="81.4" y1="59.5" x2="81.4" y2="61.4"/>
+          <rect class="cs-up" x="77.4" y="60.7" width="8" height="1.5"/>
+          <line class="wick" x1="95.7" y1="57.1" x2="95.7" y2="63.7"/>
+          <rect class="cs-up" x="91.7" y="58.4" width="8" height="2.3"/>
+          <line class="wick" x1="110.0" y1="53.6" x2="110.0" y2="61.3"/>
+          <rect class="cs-up" x="106.0" y="53.8" width="8" height="4.5"/>
+          <line class="wick" x1="124.3" y1="53.5" x2="124.3" y2="57.4"/>
+          <rect class="cs-down" x="120.3" y="53.8" width="8" height="1.5"/>
+          <line class="wick" x1="138.6" y1="54.6" x2="138.6" y2="58.7"/>
+          <rect class="cs-down" x="134.6" y="55.4" width="8" height="1.5"/>
+          <line class="wick" x1="152.9" y1="54.0" x2="152.9" y2="60.2"/>
+          <rect class="cs-down" x="148.9" y="56.2" width="8" height="1.9"/>
+          <line class="wick" x1="167.1" y1="54.6" x2="167.1" y2="64.8"/>
+          <rect class="cs-down" x="163.1" y="58.1" width="8" height="5.8"/>
+          <line class="wick" x1="181.4" y1="56.2" x2="181.4" y2="64.8"/>
+          <rect class="cs-up" x="177.4" y="56.4" width="8" height="7.5"/>
+          <line class="wick" x1="195.7" y1="54.5" x2="195.7" y2="58.5"/>
+          <rect class="cs-down" x="191.7" y="56.4" width="8" height="1.5"/>
+          <line class="wick" x1="210.0" y1="52.6" x2="210.0" y2="57.6"/>
+          <rect class="cs-up" x="206.0" y="54.1" width="8" height="3.0"/>
+          <line class="wick" x1="224.3" y1="51.1" x2="224.3" y2="56.8"/>
+          <rect class="cs-down" x="220.3" y="54.1" width="8" height="1.5"/>
+          <line class="wick" x1="238.6" y1="48.6" x2="238.6" y2="54.8"/>
+          <rect class="cs-up" x="234.6" y="50.5" width="8" height="3.7"/>
+          <line class="wick" x1="252.9" y1="45.0" x2="252.9" y2="50.6"/>
+          <rect class="cs-up" x="248.9" y="48.9" width="8" height="1.6"/>
+          <line class="wick" x1="267.1" y1="31.5" x2="267.1" y2="51.0"/>
+          <rect class="cs-up" x="263.1" y="35.1" width="8" height="13.8"/>
+          <line class="wick" x1="281.4" y1="14.3" x2="281.4" y2="38.7"/>
+          <rect class="cs-up" x="277.4" y="15.1" width="8" height="20.0"/>
+          <line class="wick" x1="295.7" y1="10.6" x2="295.7" y2="17.7"/>
+          <rect class="cs-up" x="291.7" y="11.3" width="8" height="3.8"/>
+          <line class="wick" x1="310.0" y1="6.9" x2="310.0" y2="13.4"/>
+          <rect class="cs-up" x="306.0" y="8.7" width="8" height="2.7"/>
+        </svg>
+        <figcaption>상승 후 <b>좁고 평평한 다지기</b>(고점 근처 유지, 큰 되돌림 없음) → 상단 돌파. 조정 폭이 VCP·Cup보다 훨씬 얕은 게 핵심 차이</figcaption>
+      </figure>
+    </div>
+
+  </div>
+
+  <footer>SH Trading System · Setup Channel — 2026-08-26 테스트 모드, 다이어그램은 원형(archetype) 개념도(실데이터 아님) · 방향 확정 후 실제 종목 스캔 연동 논의 예정</footer>
+</div>
+</body>
+</html>
