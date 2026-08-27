@@ -52,10 +52,6 @@
   .status-item { display: flex; align-items: center; gap: 10px; }
   .status-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
   .status-value { font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; font-size: 15px; font-weight: 600; }
-  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; }
-  .pill.good { background: var(--good-soft); color: var(--good); }
-  .pill.bad { background: var(--bad-soft); color: var(--bad); }
-  .pill.warn { background: var(--warn-soft); color: var(--warn); }
   .mc-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 20px; align-items: start; }
   @media (max-width: 760px) { .mc-grid { grid-template-columns: 1fr; } }
   .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow); overflow: hidden; }
@@ -125,7 +121,6 @@
     </div>
     <div class="status-row">
       <div class="status-item"><span class="status-label">Day</span><span class="status-value">8/27</span></div>
-      <div class="status-item"><span class="status-label">Market Condition</span><span class="pill warn">&#9679; Yellow</span></div>
       <button type="button" class="strategy-trigger" onclick="toggleStrategyEditor()" aria-expanded="false" aria-controls="strategy-editor">
         <span class="strategy-dot"></span>Strategy
       </button>
