@@ -11,7 +11,6 @@
     --border: #DFD8C3; --accent: #8A6425; --accent-soft: #EEE1C4;
     --good: #3E8B5C; --good-soft: #E3F1E7; --bad: #C1443D; --bad-soft: #FBE7E5;
     --warn: #B98A1F; --warn-soft: #FAF0D6;
-    --band1: #E5EEF6; --band2: #ECE7F4; --band3: #E8F0E6;
     --shadow: 0 1px 2px rgba(30,25,10,0.06), 0 6px 20px rgba(30,25,10,0.05);
   }
   @media (prefers-color-scheme: dark) {
@@ -21,7 +20,6 @@
       --border: #333A45; --accent: #CBA467; --accent-soft: #382E1B;
       --good: #5FBF83; --good-soft: #16281D; --bad: #E2685F; --bad-soft: #2E1917;
       --warn: #E0B84A; --warn-soft: #2E2513;
-      --band1: #1A2531; --band2: #221E2C; --band3: #1C2721;
       --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
     }
   }
@@ -31,7 +29,6 @@
     --border: #333A45; --accent: #CBA467; --accent-soft: #382E1B;
     --good: #5FBF83; --good-soft: #16281D; --bad: #E2685F; --bad-soft: #2E1917;
     --warn: #E0B84A; --warn-soft: #2E2513;
-    --band1: #1A2531; --band2: #221E2C; --band3: #1C2721;
     --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
   }
   * { box-sizing: border-box; }
@@ -52,27 +49,6 @@
   .status-item { display: flex; align-items: center; gap: 10px; }
   .status-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
   .status-value { font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; font-size: 15px; font-weight: 600; }
-  .mc-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 20px; align-items: start; }
-  @media (max-width: 760px) { .mc-grid { grid-template-columns: 1fr; } }
-  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow); overflow: hidden; }
-  .panel-title { padding: 12px 16px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border); background: var(--surface-2); display: flex; justify-content: space-between; align-items: center; }
-  .panel-title .note { font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 11px; color: var(--text-faint); }
-  table.rules { width: 100%; border-collapse: collapse; font-size: 13px; }
-  table.rules th { text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-faint); padding: 8px 16px 6px; font-weight: 600; }
-  table.rules td { padding: 8px 16px; border-top: 1px solid var(--border); vertical-align: middle; }
-  table.rules tr.g1 td { background: var(--band1); }
-  table.rules tr.g2 td { background: var(--band2); }
-  table.rules tr.g3 td { background: var(--band3); }
-  .rid { font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; font-weight: 700; font-size: 12.5px; color: var(--text-muted); }
-  .ticker { font-weight: 600; }
-  .cond { font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; font-size: 12.5px; color: var(--text-muted); }
-  .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
-  .dot.good { background: var(--good); } .dot.bad { background: var(--bad); } .dot.warn { background: var(--warn); }
-  .dot-flow { display: inline-flex; align-items: center; gap: 4px; font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; font-size: 12.5px; color: var(--text-muted); }
-  .dot-flow .arrow { color: var(--text-faint); font-size: 11px; }
-  .m07-legend { padding: 10px 16px; font-size: 11px; color: var(--text-faint); border-top: 1px solid var(--border); display: flex; gap: 16px; flex-wrap: wrap; }
-  .m07-legend span { display: inline-flex; align-items: center; gap: 6px; }
-  .swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
   .flow-figure { margin: 0; }
   .flow-figure svg { width: 100%; height: auto; display: block; }
   .flow-figure figcaption { margin-top: 10px; font-size: 12px; color: var(--text-muted); }
@@ -136,47 +112,6 @@
     <textarea id="strategy-textarea" class="strategy-textarea" placeholder="오늘/이번 구간 전략을 자유롭게 적어두세요&#10;예: 장세=Green, 반도체·AI인프라 중심, 눌림목만 매수, 신규 진입 최대 2종목"></textarea>
     <div class="strategy-saved" id="strategy-saved"></div>
   </div>
-
-  <section>
-    <h2>Market Condition &mdash; Top &rarr; Down (Limit Exposure)</h2>
-    <div class="mc-grid">
-      <div class="panel">
-        <div class="panel-title">M01&ndash;M06 &middot; Index Rules</div>
-        <table class="rules">
-          <thead><tr><th>Rule</th><th>Ticker</th><th>Condition</th><th>Result</th></tr></thead>
-          <tbody>
-<tr><td class="rid">M01</td><td class="ticker">QQQ (growth)</td><td><span class="cond">5d</span></td><td><span class="dot warn"></span></td></tr>
-<tr><td class="rid">M02</td><td class="ticker">SPY (value)</td><td><span class="cond">4d</span></td><td><span class="dot good"></span></td></tr>
-<tr><td class="rid">M03</td><td class="ticker">RSP (equal weight)</td><td><span class="cond">24d</span></td><td><span class="dot good"></span></td></tr>
-<tr><td class="rid">M04</td><td class="ticker">MDYG (mid cap)</td><td><span class="cond">5d</span></td><td><span class="dot warn"></span></td></tr>
-<tr><td class="rid">M05</td><td class="ticker">VB (small cap)</td><td><span class="dot-flow">1d<span class="dot warn"></span><span class="arrow">&rarr;</span><span class="dot good"></span></span></td><td><span class="dot good"></span></td></tr>
-<tr><td class="rid">M06</td><td class="ticker">SOXX</td><td><span class="cond">6d</span></td><td><span class="dot bad"></span></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="panel">
-        <div class="panel-title">M07 &middot; GICS Sector ETFs <span class="note">10&gt;20EMA &amp; 21&gt;above</span></div>
-        <table class="rules">
-          <tbody>
-<tr class="g1"><td class="rid">M07</td><td class="ticker">XLK</td><td class="cond">6d</td><td><span class="dot warn"></span></td></tr>
-<tr class="g1"><td class="rid"></td><td class="ticker">XLC</td><td class="cond">4d</td><td><span class="dot good"></span></td></tr>
-<tr class="g1"><td class="rid"></td><td class="ticker">XLI</td><td class="cond">4d</td><td><span class="dot bad"></span></td></tr>
-<tr class="g2"><td class="rid"></td><td class="ticker">XLY</td><td class="cond">1d(🟢→🟡)</td><td><span class="dot warn"></span></td></tr>
-<tr class="g2"><td class="rid"></td><td class="ticker">XLF</td><td class="cond">4d</td><td><span class="dot good"></span></td></tr>
-<tr class="g2"><td class="rid"></td><td class="ticker">XLB</td><td class="cond">6d</td><td><span class="dot good"></span></td></tr>
-<tr class="g3"><td class="rid"></td><td class="ticker">XLV</td><td class="cond">47d</td><td><span class="dot good"></span></td></tr>
-<tr class="g3"><td class="rid"></td><td class="ticker">XLU</td><td class="cond">19d</td><td><span class="dot bad"></span></td></tr>
-<tr class="g3"><td class="rid"></td><td class="ticker">XLE</td><td class="cond">13d</td><td><span class="dot good"></span></td></tr>
-          </tbody>
-        </table>
-        <div class="m07-legend">
-          <span><span class="swatch" style="background:var(--band1)"></span>XLK&middot;XLC&middot;XLI</span>
-          <span><span class="swatch" style="background:var(--band2)"></span>XLY&middot;XLF&middot;XLB</span>
-          <span><span class="swatch" style="background:var(--band3)"></span>XLV&middot;XLU&middot;XLE</span>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <section>
     <h2>Trading Process</h2>

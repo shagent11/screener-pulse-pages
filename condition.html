@@ -10,6 +10,7 @@
     --text:#1b2430; --text-muted:#5b6675; --text-faint:#8993a3;
     --accent:#a6742f; --accent-soft:#e8dcc3; --up:#2f8f63; --down:#c94a3e;
     --up-soft:#e3f1e7; --down-soft:#fbe7e5;
+    --band1:#e5eef6; --band2:#ece7f4; --band3:#e8f0e6;
     --shadow:0 1px 2px rgba(20,25,35,.06),0 8px 24px -12px rgba(20,25,35,.15);
   }
   @media (prefers-color-scheme: dark) {
@@ -18,6 +19,7 @@
       --text:#e8ecf2; --text-muted:#93a0b3; --text-faint:#5f6b7d;
       --accent:#d9a856; --accent-soft:#3a3120; --up:#4fb286; --down:#e2685c;
       --up-soft:#16281d; --down-soft:#2e1917;
+      --band1:#1a2531; --band2:#221e2c; --band3:#1c2721;
       --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.5);
     }
   }
@@ -42,6 +44,29 @@
   .pill.down { background:var(--down-soft); color:var(--down); }
   .pill.warn { background:var(--accent-soft); color:var(--accent); }
   .scroll-x { overflow-x:auto; }
+
+  .mc-section { margin-bottom:24px; }
+  .mc-section h2 { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin:0 0 14px; }
+  .mc-grid { display:grid; grid-template-columns:1fr; gap:16px; }
+  .panel { background:var(--surface); border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow); overflow:hidden; }
+  .panel-title { padding:12px 16px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); border-bottom:1px solid var(--border); background:var(--surface-alt); display:flex; justify-content:space-between; align-items:center; }
+  .panel-title .note { font-weight:400; text-transform:none; letter-spacing:0; font-size:11px; color:var(--text-faint); }
+  table.rules { width:100%; border-collapse:collapse; font-size:13px; }
+  table.rules th { text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-faint); padding:8px 16px 6px; font-weight:600; }
+  table.rules td { padding:8px 16px; border-top:1px solid var(--border); vertical-align:middle; }
+  table.rules tr.g1 td { background:var(--band1); }
+  table.rules tr.g2 td { background:var(--band2); }
+  table.rules tr.g3 td { background:var(--band3); }
+  .rid { font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,monospace; font-weight:700; font-size:12.5px; color:var(--text-muted); }
+  .ticker { font-weight:600; }
+  .cond { font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,monospace; font-size:12.5px; color:var(--text-muted); }
+  .dot { display:inline-block; width:12px; height:12px; border-radius:50%; }
+  .dot.good { background:var(--up); } .dot.bad { background:var(--down); } .dot.warn { background:var(--accent); }
+  .dot-flow { display:inline-flex; align-items:center; gap:4px; font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,monospace; font-size:12.5px; color:var(--text-muted); }
+  .dot-flow .arrow { color:var(--text-faint); font-size:11px; }
+  .m07-legend { padding:10px 16px; font-size:11px; color:var(--text-faint); border-top:1px solid var(--border); display:flex; gap:16px; flex-wrap:wrap; }
+  .m07-legend span { display:inline-flex; align-items:center; gap:6px; }
+  .swatch { width:10px; height:10px; border-radius:3px; display:inline-block; }
 
   .day-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:6px 22px 18px; box-shadow:var(--shadow); margin-bottom:16px; }
   .day-card summary { cursor:pointer; padding:14px 0; font-size:15px; font-weight:800; list-style:revert; }
@@ -81,6 +106,46 @@
     <div class="eyebrow">Notion 매매일지 · 시장 요약</div>
     <h1>Market Daily Report</h1>
     <div class="mc-row"><span class="mc-label">Market Condition</span><span class="pill warn">&#9679; Yellow</span></div>
+    <section class="mc-section">
+    <h2>Market Condition &mdash; Top &rarr; Down (Limit Exposure)</h2>
+    <div class="mc-grid">
+      <div class="panel">
+        <div class="panel-title">M01&ndash;M06 &middot; Index Rules</div>
+        <table class="rules">
+          <thead><tr><th>Rule</th><th>Ticker</th><th>Condition</th><th>Result</th></tr></thead>
+          <tbody>
+<tr><td class="rid">M01</td><td class="ticker">QQQ (growth)</td><td><span class="cond">5d</span></td><td><span class="dot warn"></span></td></tr>
+<tr><td class="rid">M02</td><td class="ticker">SPY (value)</td><td><span class="cond">4d</span></td><td><span class="dot good"></span></td></tr>
+<tr><td class="rid">M03</td><td class="ticker">RSP (equal weight)</td><td><span class="cond">24d</span></td><td><span class="dot good"></span></td></tr>
+<tr><td class="rid">M04</td><td class="ticker">MDYG (mid cap)</td><td><span class="cond">5d</span></td><td><span class="dot warn"></span></td></tr>
+<tr><td class="rid">M05</td><td class="ticker">VB (small cap)</td><td><span class="dot-flow">1d<span class="dot warn"></span><span class="arrow">&rarr;</span><span class="dot good"></span></span></td><td><span class="dot good"></span></td></tr>
+<tr><td class="rid">M06</td><td class="ticker">SOXX</td><td><span class="cond">6d</span></td><td><span class="dot bad"></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">M07 &middot; GICS Sector ETFs <span class="note">10&gt;20EMA &amp; 21&gt;above</span></div>
+        <table class="rules">
+          <tbody>
+<tr class="g1"><td class="rid">M07</td><td class="ticker">XLK</td><td class="cond">6d</td><td><span class="dot warn"></span></td></tr>
+<tr class="g1"><td class="rid"></td><td class="ticker">XLC</td><td class="cond">4d</td><td><span class="dot good"></span></td></tr>
+<tr class="g1"><td class="rid"></td><td class="ticker">XLI</td><td class="cond">4d</td><td><span class="dot bad"></span></td></tr>
+<tr class="g2"><td class="rid"></td><td class="ticker">XLY</td><td class="cond">1d(🟢→🟡)</td><td><span class="dot warn"></span></td></tr>
+<tr class="g2"><td class="rid"></td><td class="ticker">XLF</td><td class="cond">4d</td><td><span class="dot good"></span></td></tr>
+<tr class="g2"><td class="rid"></td><td class="ticker">XLB</td><td class="cond">6d</td><td><span class="dot good"></span></td></tr>
+<tr class="g3"><td class="rid"></td><td class="ticker">XLV</td><td class="cond">47d</td><td><span class="dot good"></span></td></tr>
+<tr class="g3"><td class="rid"></td><td class="ticker">XLU</td><td class="cond">19d</td><td><span class="dot bad"></span></td></tr>
+<tr class="g3"><td class="rid"></td><td class="ticker">XLE</td><td class="cond">13d</td><td><span class="dot good"></span></td></tr>
+          </tbody>
+        </table>
+        <div class="m07-legend">
+          <span><span class="swatch" style="background:var(--band1)"></span>XLK&middot;XLC&middot;XLI</span>
+          <span><span class="swatch" style="background:var(--band2)"></span>XLY&middot;XLF&middot;XLB</span>
+          <span><span class="swatch" style="background:var(--band3)"></span>XLV&middot;XLU&middot;XLE</span>
+        </div>
+      </div>
+    </div>
+  </section>
     <div class="sub">Sector Rotation · UWL Breadth · UWL 강세종목 · Screener 분석 · Stockbee — 최근 7일 · <span class="num">8/26</span> 기준</div>
   </header>
 
