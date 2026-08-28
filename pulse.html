@@ -274,7 +274,7 @@
   <section>
     <div class="panel">
       <h2>섹터 쏠림 히트맵</h2>
-      <div class="panel-sub">상위 섹터 × 일별 등장 건수(9개 스캔 전체) — 진할수록 그날 그 섹터가 많이 잡혔다는 뜻</div>
+      <div class="panel-sub">상위 섹터 × 일별 고유 종목수(9개 스캔 전체) — 진할수록 그날 그 섹터에 강세 종목이 많았다는 뜻, 툴팁에서 스크리너 건수도 함께 확인 가능</div>
       <div class="scroll-x">
         <div class="heatmap" id="heatmap"></div>
       </div>
@@ -588,7 +588,12 @@
   });
 
   // ---- generic heatmap renderer (재사용: 섹터 히트맵 + 테크 세부그룹 히트맵) ----
-  function renderHeatmapGeneric(targetId, src, topN, datesAsc, verdicts, uniqueSrc) {
+  // 2026-08-28: 메인 셀 숫자를 스크리너 건수((티커,스캔) 쌍이라 한 종목이 여러 스캔에
+  // 걸리면 중복 집계됨)에서 고유 종목수로 교체(사용자 요청) — "몇 종목이 강세인지"가
+  // 히트맵 직관에 더 맞고, 스크리너 건수는 툴팁으로 이동. sector_day/sub_day_unique는
+  // 원본 로그에서 매 빌드마다 전체 날짜 재계산이라 과거 히스토리도 자동으로 같이 바뀜
+  // (캐시된 값이 아님 — 백필 불필요).
+  function renderHeatmapGeneric(targetId, src, topN, datesAsc, verdicts, altSrc) {
     const dates = [...datesAsc].reverse(); // 최신 날짜가 왼쪽에 오도록(2026-08-19, 사용자 요청)
     const recentDates = dates.slice(0, 5); // 정렬 기준을 전체기간 합계 대신 최근 5일 합계로(2026-08-25, 사용자 요청 — 날짜 표시범위는 그대로, 세로 정렬만 최근 활발한 섹터 우선)
     const el = document.getElementById(targetId);
@@ -619,16 +624,16 @@
       dates.forEach(d => {
         const v = src[k][d] || 0;
         const filled = v > 0 && v / maxCount > 0.45;
-        const u = uniqueSrc && uniqueSrc[k] ? uniqueSrc[k][d] : undefined;
-        const uTxt = u !== undefined ? ` · ${u}종목` : '';
-        hm += `<div class="hcell${filled?' filled':''}" style="background:${heatColor(v)}" title="${k} · ${fmtDate(d)} · ${v}건${uTxt}">${v||''}</div>`;
+        const alt = altSrc && altSrc[k] ? altSrc[k][d] : undefined;
+        const altTxt = alt !== undefined ? ` · ${alt}건` : '';
+        hm += `<div class="hcell${filled?' filled':''}" style="background:${heatColor(v)}" title="${k} · ${fmtDate(d)} · ${v}종목${altTxt}">${v||''}</div>`;
       });
     });
     el.innerHTML = hm;
   }
 
-  renderHeatmapGeneric('heatmap', data.sector_day, 8, data.dates, null, data.sector_day_unique);
-  renderHeatmapGeneric('subHeatmap', subData.sub_day, 14, subData.dates, verdictData, subData.sub_day_unique);
+  renderHeatmapGeneric('heatmap', data.sector_day_unique, 8, data.dates, null, data.sector_day);
+  renderHeatmapGeneric('subHeatmap', subData.sub_day_unique, 14, subData.dates, verdictData, subData.sub_day);
 
   // ---- breadth line chart (SVG) ----
   (function(){
