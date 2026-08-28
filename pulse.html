@@ -172,14 +172,16 @@
   .grouptile.filled .gt-pct.pos { color: #0d3d27; }
   .grouptile.filled .gt-pct.neg { color: #4a0f0a; }
 
-  /* 그룹 리더 요약 (2026-08-28) — 타일은 지속성/1D% 그대로 두고, 그룹당 1M% 상위 3개를
-     1W/1M/3M 숫자로 명시하는 별도 요약 줄 추가 */
-  .group-leaders { display: flex; flex-wrap: wrap; gap: 14px; margin: -2px 0 10px; font-size: 11.5px; color: var(--text-muted); }
-  .group-leaders .gl-item { display: inline-flex; align-items: baseline; gap: 5px; }
+  /* 그룹 리더 요약 (2026-08-28) — 타일은 지속성/1D% 그대로 두고, 조건(1M≥5%·ATR%≥4·
+     평균거래량10D≥100만) 통과한 종목 중 3M% 상위 5개를 순위 배지+티커만으로 표기 */
+  .group-leaders { display: flex; flex-wrap: wrap; gap: 10px; margin: -2px 0 10px; font-size: 12px; color: var(--text-muted); }
+  .group-leaders .gl-item { display: inline-flex; align-items: center; gap: 4px; }
+  .group-leaders .gl-rank {
+    display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px;
+    border-radius: 50%; background: var(--accent-soft); color: var(--accent);
+    font-size: 9.5px; font-weight: 700; font-family: ui-monospace, "SF Mono", "Cascadia Mono", "Menlo", monospace;
+  }
   .group-leaders .gl-ticker { font-weight: 700; color: var(--text); }
-  .group-leaders .gl-nums { font-family: ui-monospace, "SF Mono", "Cascadia Mono", "Menlo", monospace; font-size: 11px; }
-  .group-leaders .gl-nums .pos { color: var(--up); }
-  .group-leaders .gl-nums .neg { color: var(--down); }
 
   /* RS 국면 분석 (2026-08-20, 일별 추이 대신 오늘 구성종목 기반) */
   .phase-headline {
@@ -680,14 +682,10 @@
     });
 
     // 2026-08-28: "오늘 걸린 신선한 종목" 위주인 타일과 별개로, 그룹 내에서 3M% 기준
-    // 진짜 리더 3개를 뽑아 1W/1M/3M을 숫자로 명시(사용자 요청, 처음엔 1M% 기준이었다가
-    // 같은 날 "3개월 수익률 기준으로" 재요청받아 변경) — 타일 정렬/숫자는 그대로 두고
-    // 요약 줄만 얹음(맘에 안 들면 이 블록만 되돌리면 되도록 최소침습으로 구현).
-    function fmtPct(v) {
-      if (v === null || v === undefined) return '—';
-      const cls = v > 0 ? 'pos' : v < 0 ? 'neg' : '';
-      return `<span class="${cls}">${v>0?'+':''}${v.toFixed(1)}%</span>`;
-    }
+    // 진짜 리더를 뽑아 순위만 명시(사용자 요청, 처음엔 1M% 기준·숫자 표기였다가 같은 날
+    // "3개월 수익률 기준으로" → "수익률 숫자는 빼고 1~5등 티커만"으로 재요청받아 변경) —
+    // 타일 정렬/숫자는 그대로 두고 요약 줄만 얹음(맘에 안 들면 이 블록만 되돌리면 되도록
+    // 최소침습으로 구현).
     // 2026-08-28 후속: CRNX 사례로 발견 — 3M% 단독 정렬은 "몇 달 전 하루 갭업(M&A 프리미엄
     // 등) 후 완전 횡보"인 종목도 리더로 잡음(CRNX: 1W +0.2%·1M +1.2%인데 3M +137%,
     // 7/7 단하루 $42→$83.5 갭 이후 계속 평평했던 걸 실측 확인). 사용자가 "저렇게 움직임
@@ -706,10 +704,12 @@
         l.p1m !== null && l.p1m !== undefined && l.p1m >= GROUP_LEADER_MIN_1M &&
         l.atrp !== null && l.atrp !== undefined && l.atrp >= GROUP_LEADER_MIN_ATRP &&
         l.avgvol10d !== null && l.avgvol10d !== undefined && l.avgvol10d >= GROUP_LEADER_MIN_AVGVOL
-      ).sort((a,b) => b.p3m - a.p3m).slice(0, 3);
+      ).sort((a,b) => b.p3m - a.p3m).slice(0, 5);
       if (!ranked.length) return '';
-      const parts = ranked.map(l =>
-        `<span class="gl-item"><span class="gl-ticker">${l.ticker}</span><span class="gl-nums">1W ${fmtPct(l.p1w)} · 1M ${fmtPct(l.p1m)} · 3M ${fmtPct(l.p3m)}</span></span>`
+      // 2026-08-28 3차 후속: 사용자가 "수익률 숫자는 빼고 1~5등 티커만 표기"로 요청 —
+      // 수치 대신 순위 배지만 남김(3개→5개로도 확대).
+      const parts = ranked.map((l, i) =>
+        `<span class="gl-item"><span class="gl-rank">${i+1}</span><span class="gl-ticker">${l.ticker}</span></span>`
       );
       return `<div class="group-leaders">🏆 ${parts.join('')}</div>`;
     }
