@@ -679,16 +679,17 @@
       cur.items.push(l);
     });
 
-    // 2026-08-28: "오늘 걸린 신선한 종목" 위주인 타일과 별개로, 그룹 내에서 1M% 기준
-    // 진짜 리더 3개를 뽑아 1W/1M/3M을 숫자로 명시(사용자 요청) — 타일 정렬/숫자는
-    // 그대로 두고 요약 줄만 얹음(맘에 안 들면 이 블록만 되돌리면 되도록 최소침습으로 구현).
+    // 2026-08-28: "오늘 걸린 신선한 종목" 위주인 타일과 별개로, 그룹 내에서 3M% 기준
+    // 진짜 리더 3개를 뽑아 1W/1M/3M을 숫자로 명시(사용자 요청, 처음엔 1M% 기준이었다가
+    // 같은 날 "3개월 수익률 기준으로" 재요청받아 변경) — 타일 정렬/숫자는 그대로 두고
+    // 요약 줄만 얹음(맘에 안 들면 이 블록만 되돌리면 되도록 최소침습으로 구현).
     function fmtPct(v) {
       if (v === null || v === undefined) return '—';
       const cls = v > 0 ? 'pos' : v < 0 ? 'neg' : '';
       return `<span class="${cls}">${v>0?'+':''}${v.toFixed(1)}%</span>`;
     }
     function renderGroupLeaders(items) {
-      const ranked = items.filter(l => l.p1m !== null && l.p1m !== undefined).sort((a,b) => b.p1m - a.p1m).slice(0, 3);
+      const ranked = items.filter(l => l.p3m !== null && l.p3m !== undefined).sort((a,b) => b.p3m - a.p3m).slice(0, 3);
       if (!ranked.length) return '';
       const parts = ranked.map(l =>
         `<span class="gl-item"><span class="gl-ticker">${l.ticker}</span><span class="gl-nums">1W ${fmtPct(l.p1w)} · 1M ${fmtPct(l.p1m)} · 3M ${fmtPct(l.p3m)}</span></span>`
