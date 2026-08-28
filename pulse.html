@@ -688,8 +688,14 @@
       const cls = v > 0 ? 'pos' : v < 0 ? 'neg' : '';
       return `<span class="${cls}">${v>0?'+':''}${v.toFixed(1)}%</span>`;
     }
+    // 2026-08-28 후속: CRNX 사례로 발견 — 3M% 단독 정렬은 "몇 달 전 하루 갭업(M&A 프리미엄
+    // 등) 후 완전 횡보"인 종목도 리더로 잡음(CRNX: 1W +0.2%·1M +1.2%인데 3M +137%,
+    // 7/7 단하루 $42→$83.5 갭 이후 계속 평평했던 걸 실측 확인). 사용자가 "저렇게 움직임
+    // 없는데 리더라고 볼 순 없다"고 지적 — 3M 랭킹 전에 1M도 최소한 살아있는지(문턱
+    // 5%, verdict_for()의 VERDICT_MAG_THRESHOLD와 동일 기준 재사용) 먼저 걸러냄.
+    const GROUP_LEADER_MIN_1M = 5.0;
     function renderGroupLeaders(items) {
-      const ranked = items.filter(l => l.p3m !== null && l.p3m !== undefined).sort((a,b) => b.p3m - a.p3m).slice(0, 3);
+      const ranked = items.filter(l => l.p3m !== null && l.p3m !== undefined && l.p1m !== null && l.p1m !== undefined && l.p1m >= GROUP_LEADER_MIN_1M).sort((a,b) => b.p3m - a.p3m).slice(0, 3);
       if (!ranked.length) return '';
       const parts = ranked.map(l =>
         `<span class="gl-item"><span class="gl-ticker">${l.ticker}</span><span class="gl-nums">1W ${fmtPct(l.p1w)} · 1M ${fmtPct(l.p1m)} · 3M ${fmtPct(l.p3m)}</span></span>`
