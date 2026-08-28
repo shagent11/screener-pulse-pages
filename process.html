@@ -60,6 +60,32 @@
   .focus-editor-note code { font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; }
   .focus-editor-close { border: none; background: none; color: var(--text-faint); font-size: 20px; line-height: 1; cursor: pointer; padding: 0 2px; }
   .focus-editor-close:hover { color: var(--accent); }
+
+  /* 오늘의 섹터강세 리더 드로어 (2026-08-29) — Stocks 노드 클릭 시 옆에서 슬라이드-인,
+     Screener Pulse(pulse.html)의 sectorStrengthPayload를 같은 오리진 fetch로 그대로
+     읽어와서 verdict=섹터강세 그룹만 필터링, 클라이언트에서 리더 재계산 */
+  .leaders-backdrop { position: fixed; inset: 0; background: rgba(10,12,16,0.42); z-index: 49; opacity: 1; transition: opacity 0.18s ease; }
+  .leaders-backdrop.hidden { opacity: 0; pointer-events: none; }
+  .leaders-drawer {
+    position: fixed; top: 0; right: 0; height: 100vh; width: min(420px, 92vw); z-index: 50;
+    background: var(--surface); border-left: 1px solid var(--border); box-shadow: -10px 0 28px rgba(0,0,0,0.18);
+    overflow-y: auto; transform: translateX(0); transition: transform 0.2s ease;
+  }
+  .leaders-drawer.hidden { transform: translateX(100%); pointer-events: none; }
+  .leaders-drawer-head { position: sticky; top: 0; background: var(--surface); padding: 18px 20px 12px; border-bottom: 1px solid var(--border); z-index: 1; }
+  .leaders-drawer-head h3 { margin: 0 0 4px; font-size: 15px; font-weight: 800; }
+  .leaders-drawer-note { font-size: 11px; color: var(--text-faint); line-height: 1.5; }
+  .leaders-drawer-close { position: absolute; top: 14px; right: 16px; border: none; background: none; color: var(--text-faint); font-size: 20px; line-height: 1; cursor: pointer; padding: 2px; }
+  .leaders-drawer-close:hover { color: var(--accent); }
+  .leaders-drawer-body { padding: 14px 20px 28px; }
+  .leaders-loading, .leaders-error, .leaders-empty { font-size: 12.5px; color: var(--text-faint); padding: 20px 0; text-align: center; }
+  .leaders-group { margin-bottom: 18px; }
+  .leaders-group-title { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .leaders-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border-radius: 8px; background: var(--surface-2); margin-bottom: 5px; }
+  .leaders-ticker { font-weight: 700; font-size: 13px; flex-shrink: 0; }
+  .leaders-nums { display: flex; gap: 9px; font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; font-size: 10.5px; color: var(--text-muted); flex-wrap: wrap; justify-content: flex-end; }
+  .leaders-nums .good { color: var(--good); font-weight: 600; }
+  .leaders-nums .bad { color: var(--bad); font-weight: 600; }
   .strategy-trigger { display: inline-flex; align-items: center; gap: 7px; padding: 5px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; background: var(--accent-soft); color: var(--accent); border: 1px solid transparent; cursor: pointer; transition: border-color 0.12s ease; }
   .strategy-trigger:hover, .strategy-trigger:focus { border-color: var(--accent); outline: none; }
   .strategy-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
@@ -185,20 +211,12 @@
 
         <line class="line" x1="605" y1="170" x2="665" y2="170" marker-end="url(#arrow)"></line>
 
-        <g class="flow-node" onclick="toggleNode('stocks-panel')" tabindex="0" role="button" aria-expanded="false" aria-controls="stocks-panel">
-          <title>클릭하면 UWL 실시간 강세 종목 보기</title>
+        <g class="flow-node" onclick="openLeadersDrawer()" tabindex="0" role="button" aria-expanded="false" aria-controls="leaders-drawer">
+          <title>클릭하면 오늘의 섹터강세 리더 보기(Screener Pulse 연동)</title>
           <rect class="box" x="665" y="140" width="140" height="60" rx="5"></rect>
           <text class="lbl-b" x="735" y="174" text-anchor="middle">Stocks</text>
           <circle class="node-badge" cx="797" cy="148" r="6"></circle>
           <text class="node-badge-glyph" x="797" y="151" text-anchor="middle">i</text>
-        </g>
-
-        <g id="stocks-panel" class="node-panel hidden">
-          <line class="line" x1="735" y1="200" x2="735" y2="225" marker-end="url(#arrow)"></line>
-          <rect class="grp" x="520" y="225" width="480" height="150" rx="8"></rect>
-          <text class="lbl-tag" x="535" y="218">STRONG STOCKS &middot; UWL live</text>
-<text class="lbl"><tspan x="535" y="280"><tspan fill="var(--good)">&#9679;</tspan> TEAM</tspan><tspan x="625" y="280"><tspan fill="var(--good)">&#9679;</tspan> LITE</tspan><tspan x="715" y="280"><tspan fill="var(--good)">&#9679;</tspan> AXTI</tspan><tspan x="805" y="280"><tspan fill="var(--good)">&#9679;</tspan> CHYM</tspan><tspan x="895" y="280"><tspan fill="var(--good)">&#9679;</tspan> OKTA</tspan></text>
-<text class="lbl"><tspan x="535" y="318"><tspan fill="var(--good)">&#9679;</tspan> RBRK</tspan><tspan x="625" y="318"><tspan fill="var(--good)">&#9679;</tspan> MRVL</tspan><tspan x="715" y="318"><tspan fill="var(--good)">&#9679;</tspan> PLTR</tspan><tspan x="805" y="318"><tspan fill="var(--good)">&#9679;</tspan> CRWD</tspan><tspan x="895" y="318"><tspan fill="var(--good)">&#9679;</tspan> GTLB</tspan></text>
         </g>
 
         <line class="line" x1="805" y1="170" x2="860" y2="170" marker-end="url(#arrow)"></line>
@@ -285,6 +303,16 @@
       </form>
       <ul id="focus-chips" class="focus-rows"></ul>
     </div>
+
+    <div id="leaders-backdrop" class="leaders-backdrop hidden" onclick="closeLeadersDrawer()"></div>
+    <aside id="leaders-drawer" class="leaders-drawer hidden">
+      <div class="leaders-drawer-head">
+        <h3>🎯 오늘의 섹터강세 리더</h3>
+        <div class="leaders-drawer-note">verdict=섹터강세 그룹의 종목 중 1M%&ge;5 &amp; ATR%&ge;4 &amp; 평균거래량10D&ge;100만주 통과한 3M% 상위 5개 &middot; UWL과 무관, Screener Pulse 실시간 연동</div>
+        <button type="button" class="leaders-drawer-close" onclick="closeLeadersDrawer()" aria-label="닫기">&times;</button>
+      </div>
+      <div id="leaders-drawer-body" class="leaders-drawer-body"></div>
+    </aside>
   </section>
 
   <footer class="note">2026_Invest.xlsx &middot; process 탭 &middot; 화~토 07:30 KST 자동 갱신 &middot; 점(●) 표시된 단계는 클릭하면 상세 현황이 펼쳐집니다</footer>
@@ -302,6 +330,7 @@
     if (focusEditor) focusEditor.classList.add('hidden');
     var strategyEditor = document.getElementById('strategy-editor');
     if (strategyEditor) strategyEditor.classList.add('hidden');
+    closeLeadersDrawer();
     panel.classList.toggle('hidden', !willShow);
     document.querySelectorAll('.flow-node[aria-controls]').forEach(function (n) {
       n.setAttribute('aria-expanded', n.getAttribute('aria-controls') === panelId && willShow ? 'true' : 'false');
@@ -315,6 +344,100 @@
       }
     });
   });
+
+  // ---- 오늘의 섹터강세 리더 드로어 (2026-08-29) — pulse.html의 sectorStrengthPayload를
+  // 같은 오리진 fetch로 읽어와서 verdict=섹터강세 그룹만 추리고, 클라이언트에서 그룹당
+  // 리더(1M%>=5 & ATR%>=4 & 평균거래량10D>=100만, 3M% 상위 5개)를 재계산 — pulse.html의
+  // renderGroupLeaders()와 동일 필터 기준. UWL(2026_Invest.xlsx)과는 완전 무관한 별도
+  // 데이터 소스라 기존 stocks-panel(UWL 강세종목)을 대체함(사용자 요청).
+  var LEADER_MIN_1M = 5.0, LEADER_MIN_ATRP = 4.0, LEADER_MIN_AVGVOL = 1000000;
+  var leadersLoaded = false;
+
+  function closeLeadersDrawer() {
+    var drawer = document.getElementById('leaders-drawer');
+    var backdrop = document.getElementById('leaders-backdrop');
+    if (drawer) drawer.classList.add('hidden');
+    if (backdrop) backdrop.classList.add('hidden');
+    var trigger = document.querySelector('.flow-node[aria-controls="leaders-drawer"]');
+    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+  }
+
+  function openLeadersDrawer() {
+    document.querySelectorAll('.node-panel').forEach(function (p) { p.classList.add('hidden'); });
+    var focusEditor = document.getElementById('focus-editor');
+    if (focusEditor) focusEditor.classList.add('hidden');
+    var strategyEditor = document.getElementById('strategy-editor');
+    if (strategyEditor) strategyEditor.classList.add('hidden');
+    document.getElementById('leaders-drawer').classList.remove('hidden');
+    document.getElementById('leaders-backdrop').classList.remove('hidden');
+    var trigger = document.querySelector('.flow-node[aria-controls="leaders-drawer"]');
+    if (trigger) trigger.setAttribute('aria-expanded', 'true');
+    loadLeaders();
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeLeadersDrawer();
+  });
+
+  function fmtLeaderPct(v) {
+    if (v === null || v === undefined) return '&mdash;';
+    var cls = v > 0 ? 'good' : v < 0 ? 'bad' : '';
+    return '<span class="' + cls + '">' + (v > 0 ? '+' : '') + v.toFixed(1) + '%</span>';
+  }
+
+  function renderLeaders(data) {
+    var byGroup = {};
+    data.forEach(function (item) {
+      if (item.verdict !== '섹터강세') return;
+      (byGroup[item.group] = byGroup[item.group] || []).push(item);
+    });
+    var groups = Object.keys(byGroup);
+    var body = document.getElementById('leaders-drawer-body');
+    if (!groups.length) {
+      body.innerHTML = '<div class="leaders-empty">오늘은 섹터강세로 판정된 그룹이 없습니다.</div>';
+      return;
+    }
+    var html = '';
+    groups.forEach(function (g) {
+      var items = byGroup[g].filter(function (l) {
+        return l.p3m !== null && l.p3m !== undefined &&
+          l.p1m !== null && l.p1m !== undefined && l.p1m >= LEADER_MIN_1M &&
+          l.atrp !== null && l.atrp !== undefined && l.atrp >= LEADER_MIN_ATRP &&
+          l.avgvol10d !== null && l.avgvol10d !== undefined && l.avgvol10d >= LEADER_MIN_AVGVOL;
+      }).sort(function (a, b) { return b.p3m - a.p3m; }).slice(0, 5);
+      if (!items.length) return;
+      html += '<div class="leaders-group"><div class="leaders-group-title">' + g + '</div>';
+      items.forEach(function (l) {
+        html += '<div class="leaders-row"><span class="leaders-ticker">' + l.ticker + '</span>' +
+          '<span class="leaders-nums">' +
+          '<span>1D ' + fmtLeaderPct(l.p1d) + '</span>' +
+          '<span>1W ' + fmtLeaderPct(l.p1w) + '</span>' +
+          '<span>1M ' + fmtLeaderPct(l.p1m) + '</span>' +
+          '<span>3M ' + fmtLeaderPct(l.p3m) + '</span>' +
+          '<span>6M ' + fmtLeaderPct(l.p6m) + '</span>' +
+          '</span></div>';
+      });
+      html += '</div>';
+    });
+    body.innerHTML = html || '<div class="leaders-empty">조건을 통과한 리더가 없습니다.</div>';
+  }
+
+  function loadLeaders() {
+    var body = document.getElementById('leaders-drawer-body');
+    if (leadersLoaded) return;
+    body.innerHTML = '<div class="leaders-loading">불러오는 중&hellip;</div>';
+    fetch('./pulse.html').then(function (r) {
+      if (!r.ok) throw new Error('http ' + r.status);
+      return r.text();
+    }).then(function (html) {
+      var m = html.match(/<script id="sectorStrengthPayload" type="application\/json">([\s\S]*?)<\/script>/);
+      if (!m) throw new Error('payload not found');
+      renderLeaders(JSON.parse(m[1]));
+      leadersLoaded = true;
+    }).catch(function (e) {
+      body.innerHTML = '<div class="leaders-error">불러오기 실패 &mdash; Screener Pulse 페이지를 확인해주세요.</div>';
+    });
+  }
 
   var FOCUS_KEY = 'focusListTickers';
   var FOCUS_FIELDS = [
@@ -401,6 +524,7 @@
     document.querySelectorAll('.node-panel').forEach(function (p) { p.classList.add('hidden'); });
     var strategyEditor = document.getElementById('strategy-editor');
     if (strategyEditor) strategyEditor.classList.add('hidden');
+    closeLeadersDrawer();
     panel.classList.toggle('hidden', !willShow);
     var trigger = document.querySelector('.flow-node[aria-controls="focus-editor"]');
     if (trigger) trigger.setAttribute('aria-expanded', willShow ? 'true' : 'false');
@@ -418,6 +542,7 @@
     document.querySelectorAll('.node-panel').forEach(function (p) { p.classList.add('hidden'); });
     var focusEditor = document.getElementById('focus-editor');
     if (focusEditor) focusEditor.classList.add('hidden');
+    closeLeadersDrawer();
     panel.classList.toggle('hidden', !willShow);
     var trigger = document.querySelector('.strategy-trigger');
     if (trigger) trigger.setAttribute('aria-expanded', willShow ? 'true' : 'false');
