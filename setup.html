@@ -72,6 +72,20 @@
   .setup-def { font-size: 12.5px; color: var(--text-muted); line-height: 1.55; margin: 6px 0 14px; }
   .setup-def b { color: var(--text); font-weight: 600; }
 
+  .criteria {
+    display: flex; flex-direction: column; gap: 6px;
+    background: var(--surface-alt); border: 1px solid var(--border); border-radius: 9px;
+    padding: 11px 13px; margin-bottom: 14px;
+  }
+  .crit-row { display: flex; gap: 10px; font-size: 12px; line-height: 1.5; }
+  .crit-label {
+    flex: 0 0 54px; padding-top: 1px;
+    font-size: 10px; font-weight: 800; letter-spacing: .03em; text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .crit-value { flex: 1; color: var(--text); }
+  .crit-value.warn { color: var(--down); }
+
   figure { margin: 0; }
   figure svg { display: block; width: 100%; height: auto; }
   figcaption { font-size: 11px; color: var(--text-faint); margin-top: 8px; line-height: 1.5; }
@@ -103,6 +117,13 @@
       <div class="setup-head"><span class="dot"></span><span class="setup-name">VCP</span></div>
       <div class="setup-full">Volatility Contraction Pattern</div>
       <div class="setup-def"><b>점점 좁아지는 되돌림</b>이 2~4차례 반복되며 피벗 근처로 수렴 — 각 되돌림 폭이 이전보다 얕아지는 게 핵심(변동성 수축 = 매도세 소진). 마지막 타이트한 구간을 거래량 동반 돌파.</div>
+      <div class="criteria">
+        <div class="crit-row"><span class="crit-label">기간</span><span class="crit-value">5~12주 베이스</span></div>
+        <div class="crit-row"><span class="crit-label">조정폭</span><span class="crit-value">파동마다 축소(예: 25%→15%→8%)</span></div>
+        <div class="crit-row"><span class="crit-label">거래량</span><span class="crit-value">저점 갈수록 감소(드라이업) → 돌파일 평균 대비 +40~50%↑</span></div>
+        <div class="crit-row"><span class="crit-label">트리거</span><span class="crit-value">피벗(마지막 파동 고점) 돌파 + 거래량 급증</span></div>
+        <div class="crit-row"><span class="crit-label">무효</span><span class="crit-value warn">조정폭이 직전보다 커짐(수축 실패) / 피벗 이탈 후 종가 -7~8%↓</span></div>
+      </div>
       <figure role="img" aria-label="가격이 상승 후 조정하는 파동을 3번 반복하며, 각 조정 폭이 이전보다 점점 얕아지다 피벗선 위로 돌파하는 VCP 패턴 다이어그램">
         <svg viewBox="0 0 320 160">
           <line x1="195" y1="38" x2="320" y2="38" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="3 3"/>
@@ -156,6 +177,13 @@
       <div class="setup-head"><span class="dot"></span><span class="setup-name">Big Base BO</span></div>
       <div class="setup-full">Big Base Breakout (ATH)</div>
       <div class="setup-def">신고가 부근에서 <b>수개월 이상 넓고 완만한 베이스</b>를 다진 뒤 저항선을 뚫는 돌파. VCP보다 베이스 기간이 길고 조정 폭도 더 완만 — "오래 쉰 만큼 크게 간다"는 전제.</div>
+      <div class="criteria">
+        <div class="crit-row"><span class="crit-label">기간</span><span class="crit-value">3개월~수년 (멀티이어 베이스도 흔함)</span></div>
+        <div class="crit-row"><span class="crit-label">조정폭</span><span class="crit-value">저항선 대비 -20~30% 이내, 완만한 U자</span></div>
+        <div class="crit-row"><span class="crit-label">거래량</span><span class="crit-value">베이스 내내 감소 → 돌파일 평균 대비 +40%↑</span></div>
+        <div class="crit-row"><span class="crit-label">트리거</span><span class="crit-value">베이스 상단(신고가 저항선) 돌파</span></div>
+        <div class="crit-row"><span class="crit-label">무효</span><span class="crit-value warn">거래량 없는 돌파(false breakout) / 돌파 후 피벗 하회 재진입</span></div>
+      </div>
       <figure role="img" aria-label="장기 상승 후 완만하고 넓은 베이스를 형성하다가 저항선을 뚫고 신고가로 돌파하는 Big Base Breakout 패턴 다이어그램">
         <svg viewBox="0 0 320 160">
           <line x1="40" y1="55" x2="320" y2="55" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="3 3"/>
@@ -209,6 +237,13 @@
       <div class="setup-head"><span class="dot"></span><span class="setup-name">HTF</span></div>
       <div class="setup-full">High Tight Flag</div>
       <div class="setup-def"><b>단기간 급등(폴대)</b> 후 고점 부근에서 <b>얕고 타이트한 조정(깃발)</b>만 거치고 바로 재상승. 조정 중 되돌림이 크지 않아야(대략 &lt;25%) 유효 — 급등 강도 자체가 강한 수급의 증거.</div>
+      <div class="criteria">
+        <div class="crit-row"><span class="crit-label">폴대</span><span class="crit-value">4~8주 내 +90~100%↑ 급등</span></div>
+        <div class="crit-row"><span class="crit-label">깃발</span><span class="crit-value">되돌림 &lt;25%, 기간 1~3주</span></div>
+        <div class="crit-row"><span class="crit-label">거래량</span><span class="crit-value">폴대 구간 폭증 → 깃발 구간 급감</span></div>
+        <div class="crit-row"><span class="crit-label">트리거</span><span class="crit-value">깃발 고점 돌파</span></div>
+        <div class="crit-row"><span class="crit-label">무효</span><span class="crit-value warn">되돌림 25% 초과 / 깃발 기간 5주 이상 장기화</span></div>
+      </div>
       <figure role="img" aria-label="가파른 급등(폴대) 후 고점 부근에서 얕고 타이트한 깃발형 조정을 거치고 다시 급등하는 High Tight Flag 패턴 다이어그램">
         <svg viewBox="0 0 320 160">
           <line x1="90" y1="20" x2="185" y2="20" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="3 3"/>
@@ -258,6 +293,13 @@
       <div class="setup-head"><span class="dot"></span><span class="setup-name">Uptrend Pullback</span></div>
       <div class="setup-full">추세 눌림목</div>
       <div class="setup-def">이미 <b>고점·저점을 계속 높여가는 상승추세</b>에서, 이동평균선(10/21/50EMA)이나 상승 추세선까지 눌린 뒤 다시 추세 방향으로 반등하는 지점을 매수 — 신규 돌파가 아니라 <b>기존 추세 편승</b>이 핵심.</div>
+      <div class="criteria">
+        <div class="crit-row"><span class="crit-label">선행</span><span class="crit-value">고점·저점 절상 2단 이상, 주요 이평선 위 유지</span></div>
+        <div class="crit-row"><span class="crit-label">조정폭</span><span class="crit-value">10/21/50EMA 또는 추세선까지, 통상 -10~20%</span></div>
+        <div class="crit-row"><span class="crit-label">거래량</span><span class="crit-value">눌림 중 감소, 반등일 증가</span></div>
+        <div class="crit-row"><span class="crit-label">트리거</span><span class="crit-value">지지선 반등 캔들 + 거래량 동반</span></div>
+        <div class="crit-row"><span class="crit-label">무효</span><span class="crit-value warn">지지선 종가 이탈 / 직전 저점 하회(추세구조 붕괴)</span></div>
+      </div>
       <figure role="img" aria-label="고점과 저점을 계속 높여가며 상승하는 추세에서, 각 조정이 상승 추세선까지 눌렸다가 다시 반등하는 Uptrend Pullback 패턴 다이어그램">
         <svg viewBox="0 0 320 160">
           <line x1="40" y1="138" x2="300" y2="56" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="3 3"/>
@@ -314,6 +356,13 @@
       <div class="setup-head"><span class="dot"></span><span class="setup-name">Cup &amp; Handle</span></div>
       <div class="setup-full">컵앤핸들</div>
       <div class="setup-def">고점에서 <b>완만한 U자형 조정(컵)</b>을 거쳐 원래 고점 근처까지 회복한 뒤, 우측 상단에서 <b>작고 얕은 되돌림(핸들)</b>을 한 번 더 만들고 돌파. 컵이 너무 V자로 뾰족하면 무효 — 둥글게 다지는 시간이 핵심.</div>
+      <div class="criteria">
+        <div class="crit-row"><span class="crit-label">기간</span><span class="crit-value">컵 최소 7주 + 핸들 1~2주</span></div>
+        <div class="crit-row"><span class="crit-label">조정폭</span><span class="crit-value">컵 12~33%(최대 50%), 핸들은 컵의 절반 이하(대개 &lt;15%)</span></div>
+        <div class="crit-row"><span class="crit-label">거래량</span><span class="crit-value">바닥에서 최저 → 핸들 드라이업 → 돌파일 급증</span></div>
+        <div class="crit-row"><span class="crit-label">트리거</span><span class="crit-value">핸들 고점 돌파</span></div>
+        <div class="crit-row"><span class="crit-label">무효</span><span class="crit-value warn">핸들 조정폭 과대 / V자형(둥근 바닥 없음)</span></div>
+      </div>
       <figure role="img" aria-label="완만한 U자형 컵 모양으로 조정한 뒤 원래 고점까지 회복하고, 우측 상단에서 작은 핸들 되돌림을 거쳐 돌파하는 Cup and Handle 패턴 다이어그램">
         <svg viewBox="0 0 320 160">
           <line x1="10" y1="38" x2="245" y2="38" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="3 3"/>
@@ -370,6 +419,13 @@
       <div class="setup-head"><span class="dot"></span><span class="setup-name">Episodic Pivot</span></div>
       <div class="setup-full">이벤트성 갭업 (EP)</div>
       <div class="setup-def">어닝 서프라이즈 등 <b>강한 촉매로 하루 만에 크게 갭상승</b>하며 새로운 상승추세의 출발점이 되는 지점. 조용하던 구간에서 거래량 폭증 동반 — 기존 베이스/추세 여부와 무관하게 그 자체로 매수 트리거가 됨.</div>
+      <div class="criteria">
+        <div class="crit-row"><span class="crit-label">촉매</span><span class="crit-value">어닝서프라이즈/승인/M&amp;A 등 명확한 뉴스</span></div>
+        <div class="crit-row"><span class="crit-label">갭크기</span><span class="crit-value">+10%↑ 갭 (종목 변동성별 상이)</span></div>
+        <div class="crit-row"><span class="crit-label">거래량</span><span class="crit-value">평소 대비 5~10배 폭증</span></div>
+        <div class="crit-row"><span class="crit-label">트리거</span><span class="crit-value">갭 당일 또는 갭 이후 첫 눌림 매수</span></div>
+        <div class="crit-row"><span class="crit-label">무효</span><span class="crit-value warn">갭 당일 저가 이탈(갭필) / 상승분 대부분 반납</span></div>
+      </div>
       <figure role="img" aria-label="조용한 횡보 구간 이후 갭을 두고 하루 만에 급등하는 캔들 하나가 나타난 뒤 그 상승분을 유지하며 이어가는 Episodic Pivot 패턴 다이어그램">
         <svg viewBox="0 0 320 160">
           <line x1="10" y1="105" x2="115" y2="105" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="3 3"/>
@@ -416,6 +472,13 @@
       <div class="setup-head"><span class="dot"></span><span class="setup-name">Flat Base</span></div>
       <div class="setup-full">플랫 베이스</div>
       <div class="setup-def">상승 후(또는 이전 베이스 위에) <b>기울기 거의 없이 좁은 폭(대략 15% 이내)으로 최소 5~6주</b> 다지는 구간 — VCP·Cup&amp;Handle보다 훨씬 얕고 평평함. 신고가 근처를 계속 유지한다는 것 자체가 강한 수급의 신호.</div>
+      <div class="criteria">
+        <div class="crit-row"><span class="crit-label">선행</span><span class="crit-value">상승 또는 이전 베이스 위(2번째 베이스인 경우 많음)</span></div>
+        <div class="crit-row"><span class="crit-label">기간</span><span class="crit-value">최소 5~6주</span></div>
+        <div class="crit-row"><span class="crit-label">조정폭</span><span class="crit-value">15% 이내, 기울기 거의 없음</span></div>
+        <div class="crit-row"><span class="crit-label">거래량</span><span class="crit-value">낮게 유지(드라이업), 큰 변동 없음</span></div>
+        <div class="crit-row"><span class="crit-label">무효</span><span class="crit-value warn">조정폭 15% 초과 / 피벗 이탈</span></div>
+      </div>
       <figure role="img" aria-label="상승 후 거의 기울기 없이 좁은 폭으로 여러 주 다지다가 상단을 돌파하는 Flat Base 패턴 다이어그램">
         <svg viewBox="0 0 320 160">
           <line x1="70" y1="55" x2="250" y2="55" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="3 3"/>
