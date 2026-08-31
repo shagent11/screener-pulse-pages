@@ -164,7 +164,7 @@
 (function(){
   var HASH='03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
   var KEY='sh_gate_ok';
-  try{ if(localStorage.getItem(KEY)===HASH) return; }catch(e){}
+  try{ if(sessionStorage.getItem(KEY)===HASH) return; }catch(e){}
   var ov=document.createElement('div');
   ov.innerHTML='<style>#sh-gate{position:fixed;inset:0;z-index:2147483647;background:#0c0f14;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif}#sh-gate form{display:flex;flex-direction:column;gap:10px;width:260px}#sh-gate .t{color:#e8ecf2;font-size:15px;text-align:center;margin-bottom:2px}#sh-gate input{padding:10px 12px;border-radius:8px;border:1px solid #2c3442;background:#171c25;color:#e8ecf2;font-size:14px;outline:none}#sh-gate button{padding:10px;border-radius:8px;border:none;background:#d9a856;color:#171c25;font-weight:700;font-size:14px;cursor:pointer}#sh-gate .e{color:#e2685c;font-size:12px;text-align:center;min-height:14px}</style><div id="sh-gate"><form><div class="t">🔒 비밀번호</div><input type="password" id="sh-gate-in" autocomplete="off" autofocus><button type="submit">입장</button><div class="e" id="sh-gate-err"></div></form></div>';
   document.documentElement.appendChild(ov);
@@ -178,7 +178,7 @@
     var v=document.getElementById('sh-gate-in').value;
     sha256(v).then(function(h){
       if(h===HASH){
-        try{localStorage.setItem(KEY,HASH);}catch(err){}
+        try{sessionStorage.setItem(KEY,HASH);}catch(err){}
         ov.remove();
       } else {
         document.getElementById('sh-gate-err').textContent='틀렸습니다';
