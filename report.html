@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monthly Report</title>
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon.png" type="image/png">
+<style>
+  :root {
+    --bg: #eef1f4; --surface: #ffffff; --surface-alt: #f4f6f9; --border: #d9dfe6;
+    --text: #1b2430; --text-muted: #5b6675; --text-faint: #8993a3;
+    --accent: #a6742f; --accent-soft: #e8dcc3;
+    --up: #2f8f63; --down: #c94a3e; --up-soft: #e3f1e7; --down-soft: #fbe7e5;
+    --shadow: 0 1px 2px rgba(20,25,35,.06), 0 8px 24px -12px rgba(20,25,35,.15);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c0f14; --surface: #171c25; --surface-alt: #1d2330; --border: #2c3442;
+      --text: #e8ecf2; --text-muted: #93a0b3; --text-faint: #5f6b7d;
+      --accent: #d9a856; --accent-soft: #3a3120;
+      --up: #4fb286; --down: #e2685c; --up-soft: #16281d; --down-soft: #2e1917;
+      --shadow: 0 1px 2px rgba(0,0,0,.35), 0 8px 28px -12px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c0f14; --surface: #171c25; --surface-alt: #1d2330; --border: #2c3442;
+    --text: #e8ecf2; --text-muted: #93a0b3; --text-faint: #5f6b7d;
+    --accent: #d9a856; --accent-soft: #3a3120;
+    --up: #4fb286; --down: #e2685c; --up-soft: #16281d; --down-soft: #2e1917;
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 8px 28px -12px rgba(0,0,0,.6);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .num { font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 40px 24px 60px; }
+  .back { display: inline-block; font-size: 12.5px; color: var(--text-muted); text-decoration: none; margin-bottom: 14px; }
+  .back:hover { color: var(--accent); }
+  .masthead { margin-bottom: 26px; }
+  .eyebrow { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 6px; }
+  h1 { font-size: 26px; margin: 0 0 6px; font-weight: 800; letter-spacing: -.01em; }
+  .sub { font-size: 13px; color: var(--text-muted); }
+  .badge-manual {
+    display: inline-block; font-size: 9.5px; font-weight: 700; letter-spacing: .05em;
+    padding: 3px 8px; border-radius: 20px; background: var(--surface-alt); color: var(--text-faint);
+    border: 1px solid var(--border); margin-left: 8px; vertical-align: middle;
+  }
+
+  section { margin-bottom: 22px; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px 24px; box-shadow: var(--shadow); }
+  .panel h2 { font-size: 15px; margin: 0 0 12px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .panel h2 .n { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 7px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 800; }
+  .panel p { font-size: 13.5px; line-height: 1.75; color: var(--text); margin: 0 0 10px; }
+  .panel p:last-child { margin-bottom: 0; }
+  .panel ul { margin: 0; padding-left: 18px; font-size: 13.5px; line-height: 1.75; color: var(--text); }
+  .panel li { margin-bottom: 6px; }
+  .panel li:last-child { margin-bottom: 0; }
+  .up { color: var(--up); font-weight: 700; }
+  .down { color: var(--down); font-weight: 700; }
+  .tag { font-weight: 700; color: var(--accent); }
+
+  .summary-line {
+    font-size: 15px; line-height: 1.7; font-weight: 600; color: var(--text);
+    border-left: 3px solid var(--accent); padding-left: 14px;
+  }
+
+  footer { max-width: 640px; margin: 0 auto; padding: 14px 24px; text-align: center; font-size: 11px; color: var(--text-faint); border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<script>
+(function(){
+  var HASH='03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+  var KEY='sh_gate_ok';
+  try{ if(sessionStorage.getItem(KEY)===HASH) return; }catch(e){}
+  var ov=document.createElement('div');
+  ov.innerHTML='<style>#sh-gate{position:fixed;inset:0;z-index:2147483647;background:#0c0f14;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif}#sh-gate form{display:flex;flex-direction:column;gap:10px;width:260px}#sh-gate .t{color:#e8ecf2;font-size:15px;text-align:center;margin-bottom:2px}#sh-gate input{padding:10px 12px;border-radius:8px;border:1px solid #2c3442;background:#171c25;color:#e8ecf2;font-size:14px;outline:none}#sh-gate button{padding:10px;border-radius:8px;border:none;background:#d9a856;color:#171c25;font-weight:700;font-size:14px;cursor:pointer}#sh-gate .e{color:#e2685c;font-size:12px;text-align:center;min-height:14px}</style><div id="sh-gate"><form><div class="t">🔒 비밀번호</div><input type="password" id="sh-gate-in" autocomplete="off" autofocus><button type="submit">입장</button><div class="e" id="sh-gate-err"></div></form></div>';
+  document.documentElement.appendChild(ov);
+  function sha256(s){
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)).then(function(buf){
+      return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+    });
+  }
+  ov.querySelector('form').addEventListener('submit', function(e){
+    e.preventDefault();
+    var v=document.getElementById('sh-gate-in').value;
+    sha256(v).then(function(h){
+      if(h===HASH){
+        try{sessionStorage.setItem(KEY,HASH);}catch(err){}
+        ov.remove();
+      } else {
+        document.getElementById('sh-gate-err').textContent='틀렸습니다';
+        document.getElementById('sh-gate-in').value='';
+      }
+    });
+  });
+})();
+</script>
+
+<div class="wrap">
+  <a class="back" href="./index.html">&larr; 펄스 허브</a>
+  <div class="masthead">
+    <div class="eyebrow">Monthly Report</div>
+    <h1>2026년 8월<span class="badge-manual">TEST · MANUAL</span></h1>
+    <div class="sub">참고 레퍼런스: ETF 탭 · UWL 탭 · Condition Journal · Screener Pulse — 3개 섹션 테스트 버전</div>
+  </div>
+
+  <section>
+    <div class="panel">
+      <h2><span class="n">1</span>한줄총평</h2>
+      <p class="summary-line">8월은 연초 이후 주도했던 반도체(SOXX)·원유·한국/대만 등 YTD 리더가 한풀 꺾이고, 금·은·우라늄 같은 경화자산과 헬스케어·금융·에너지정제 쪽으로 축이 옮겨간 로테이션 장세였다 — 다만 소프트웨어(개발자도구·SaaS·클라우드)와 사이버보안은 연초부터 지금까지 꾸준히 강세를 유지한 몇 안 되는 예외 섹터.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="panel">
+      <h2><span class="n">2</span>시장 국면 변화</h2>
+      <p><span class="tag">월 초반(8/17~19)</span> — 성장주·대형테크 쏠림형 리스크온. QQQ가 SPY를 앞섰지만 소형주(VB)·중형성장(MDYG)·동일가중(RSP)은 소외된 "좁은 브레드스" 장세. SOXX(반도체)조차 리스크온을 못 이끔.</p>
+      <p><span class="tag">월 중후반(8/21~25)</span> — 뚜렷한 전환. XLC/XLY/XLF(소비재·금융) 그린 전환, 반대로 XLK/SOXX는 옐로·레드로 후퇴. XLV(헬스케어)·XLE(에너지) 리더십 부상. 8/25엔 "방어적 순환매 성격의 혼조"로 공식 하향.</p>
+      <p><span class="tag">실측 교차검증</span> — 스크리너 펄스 초단기(1W×1M)는 가속 21 : 꺾이는 중 23으로 조정 국면, 중기(1M×3M)는 가속 22 : 반등초입 22로 여전히 추세추종엔 우호적 — "단기 눌림목, 중기 추세는 유효"인 애매한 국면. ETF MA Condition도 62개 중 25개(약 40%)가 <span class="down">🔴</span>라 폭넓은 상승장은 아님.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="panel">
+      <h2><span class="n">3</span>섹터 로테이션</h2>
+      <ul>
+        <li>YTD 주도(원유 USO <span class="up">+95%</span>, SOXX <span class="up">+66%</span>, 한국 EWY <span class="up">+79%</span>, 대만 EWT <span class="up">+68%</span>) 다수가 최근 1개월엔 자취를 감춤 — SOXX는 MA🔴로 완전 이탈</li>
+        <li>최근 1개월 신규 강세: 금(GDX <span class="up">+32%</span>)·은(SLV <span class="up">+16%</span>)·우라늄(URA <span class="up">+13%</span>) 경화자산, 비트코인(IBIT <span class="up">+24%</span>), 소프트웨어/클라우드(IGV <span class="up">+18%</span>, SKYY <span class="up">+18%</span>)</li>
+        <li>연초~현재 YTD·1M 둘 다 top10을 유지한 유일한 섹터: <span class="tag">사이버보안(HACK)</span></li>
+        <li>UWL 워치리스트 최근 1개월 상승 top10 중 7개가 소프트웨어(TEAM <span class="up">+103%</span>, PLTR <span class="up">+52%</span>, GTLB <span class="up">+39%</span>, RNG <span class="up">+32%</span>, RBRK <span class="up">+29%</span>, U <span class="up">+29%</span>, TWLO <span class="up">+23%</span>) — 스크리너 펄스 섹터강세 판정(개발자도구·SaaS, AI클라우드·데이터인프라)과 정확히 일치</li>
+        <li>펄스 중기 가속그룹(CRAK·XBI·XLV·XLF)은 컨디션저널의 "가치·경기민감·방어 전환" 서사와 방향 일치, 중기 반등초입(REMX·SLV·URA·GLD)은 ETF탭 1M 상위 귀금속군과도 겹침 → <span class="tag">"성장 축소 + 방어/에너지/귀금속 확대"</span>가 8월을 가장 정확히 요약</li>
+      </ul>
+    </div>
+  </section>
+</div>
+<footer>테스트 버전 · 매달 말일 기준 수동 생성 · 2026_Invest.xlsx(ETF/UWL) + Notion 매매일지 + Screener Pulse 기반</footer>
+</body>
+</html>
