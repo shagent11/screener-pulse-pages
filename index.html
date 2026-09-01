@@ -75,7 +75,7 @@
     max-width: 760px; margin: 0 auto; padding: 8px 20px;
     display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
   }
-  .market-status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .04em; color: var(--text-muted); white-space: nowrap; }
+  .market-status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .04em; color: var(--text-muted); white-space: nowrap; margin-left: auto; padding-left: 10px; }
   .market-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-faint); flex-shrink: 0; }
   .market-status.open .dot { background: var(--up); box-shadow: 0 0 0 0 var(--up-a55); animation: pulse-dot 1.8s ease-out infinite; }
   .market-status.pre .dot, .market-status.post .dot { background: var(--accent); }
@@ -91,7 +91,7 @@
   .tk-chg { font-weight: 700; }
   .tk-chg.up { color: var(--up); } .tk-chg.down { color: var(--down); }
   .tk-error { color: var(--text-faint); font-size: 11.5px; }
-  .clock { margin-left: auto; font-size: 11px; color: var(--text-faint); white-space: nowrap; }
+  .clock { font-size: 11px; color: var(--text-faint); white-space: nowrap; }
 
   /* ---- 메인 ---- */
   .wrap { position: relative; z-index: 1; max-width: 640px; width: 100%; padding: 56px 24px 32px; flex: 1; }
@@ -265,10 +265,10 @@
 
 <div class="tapebar">
   <div class="tapebar-inner">
-    <span class="market-status" id="marketStatus"><span class="dot"></span><span class="label">--</span></span>
     <div class="ticker-tape" id="tickerTape">
       <span class="tk-item tk-error">시세 불러오는 중…</span>
     </div>
+    <span class="market-status" id="marketStatus"><span class="dot"></span><span class="label">--</span></span>
     <span class="clock num" id="clock">--:--:--</span>
   </div>
 </div>
