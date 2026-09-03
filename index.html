@@ -146,6 +146,21 @@
   }
   a.card:hover .arrow { transform: translateX(3px); color: var(--accent); }
 
+  /* ---- S.A(Situational Awareness) 진입 카드 — 뷰포트 우상단 고정 ---- */
+  .sa-launcher {
+    position: fixed; top: 68px; right: 28px; z-index: 4;
+    width: 84px; height: 84px; border-radius: 14px;
+    background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+    text-decoration: none; color: inherit;
+    transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+  }
+  .sa-launcher:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--shadow), 0 0 0 1px var(--accent-a20); }
+  .sa-launcher .sa-icon { font-size: 20px; }
+  .sa-launcher .sa-label { font-size: 12.5px; font-weight: 800; letter-spacing: .03em; color: var(--text); }
+  .sa-launcher .sa-sub { font-size: 8.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
+  @media (max-width: 900px) { .sa-launcher { display: none; } }
+
   footer {
     position: relative; z-index: 1; width: 100%; margin-top: 20px;
     border-top: 1px solid var(--border);
@@ -262,6 +277,12 @@
     <rect class="up" x="1134.0" y="168.2" width="16" height="7.6"/>
   </svg>
 </div>
+
+<a class="sa-launcher" href="./awareness.html">
+  <span class="sa-icon">🧭</span>
+  <span class="sa-label">S.A</span>
+  <span class="sa-sub">우위판단</span>
+</a>
 
 <div class="tapebar">
   <div class="tapebar-inner">
