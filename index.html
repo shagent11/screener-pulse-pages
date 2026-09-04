@@ -159,7 +159,17 @@
   .sa-launcher .sa-icon { font-size: 20px; }
   .sa-launcher .sa-label { font-size: 12.5px; font-weight: 800; letter-spacing: .03em; color: var(--text); }
   .sa-launcher .sa-sub { font-size: 8.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
-  @media (max-width: 900px) { .sa-launcher { display: none; } }
+  /* 2026-09-04: 좁은 화면에서 완전히 숨기던 걸 인라인 필(pill)로 전환(사용자 지적 —
+     모바일 웹에서 S.A 채널 진입로가 아예 안 보였음). 데스크톱의 뷰포트 우상단 고정
+     사각 카드는 .wrap 옆 여백을 쓰는 디자인이라 좁은 화면엔 그 여백이 없어서 숨겼던
+     것 — 대신 가로로 눕힌 필 형태로 tapebar 위에 인라인 배치. */
+  @media (max-width: 900px) {
+    .sa-launcher {
+      position: static; width: fit-content; height: auto;
+      flex-direction: row; gap: 8px;
+      margin: 0 auto 14px; padding: 9px 18px; border-radius: 999px;
+    }
+  }
 
   footer {
     position: relative; z-index: 1; width: 100%; margin-top: 20px;
