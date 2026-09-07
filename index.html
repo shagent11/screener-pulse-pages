@@ -400,18 +400,34 @@
     const labelEl = statusEl.querySelector('.label');
     const clockEl = document.getElementById('clock');
 
+    // 2026-09-07: 노동절인데 배지가 '프리마켓'으로 떠서 추가(사용자 지적).
+    // NYSE 정규 휴장일엔 프리/애프터마켓도 안 열리므로 '휴장'으로 못박는다.
+    // pandas_market_calendars(NYSE)로 뽑은 실제 목록 — 2027년까지 커버, 이후 갱신 필요.
+    const US_HOLIDAYS = new Set([
+      '2026-01-01', '2026-01-19', '2026-02-16', '2026-04-03', '2026-05-25', '2026-06-19',
+      '2026-07-03', '2026-09-07', '2026-11-26', '2026-12-25',
+      '2027-01-01', '2027-01-18', '2027-02-15', '2027-03-26', '2027-05-31', '2027-06-18',
+      '2027-07-05', '2027-09-06', '2027-11-25', '2027-12-24',
+    ]);
+    // 조기마감일(ET 13:00 종료) — 이날은 16:00까지 '장중'으로 뜨면 안 됨
+    const US_EARLY_CLOSE = { '2026-11-27': 780, '2026-12-24': 780, '2027-11-26': 780 };
+
     function marketState() {
       const parts = new Intl.DateTimeFormat('en-US', {
         timeZone: 'America/New_York', hour12: false,
-        weekday: 'short', hour: '2-digit', minute: '2-digit',
+        weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit',
       }).formatToParts(new Date());
       const get = t => parts.find(p => p.type === t).value;
       const wd = get('weekday');
-      const mins = (+get('hour')) * 60 + (+get('minute'));
+      const date = `${get('year')}-${get('month')}-${get('day')}`;
+      const mins = ((+get('hour')) % 24) * 60 + (+get('minute'));
       if (wd === 'Sat' || wd === 'Sun') return { label: 'US 장 마감', cls: 'closed' };
-      if (mins >= 570 && mins < 960) return { label: 'US 장중', cls: 'open' };
+      if (US_HOLIDAYS.has(date)) return { label: 'US 휴장', cls: 'closed' };
+      const close = US_EARLY_CLOSE[date] || 960;
+      if (mins >= 570 && mins < close) return { label: 'US 장중', cls: 'open' };
       if (mins >= 240 && mins < 570) return { label: '프리마켓', cls: 'pre' };
-      if (mins >= 960 && mins < 1200) return { label: '애프터마켓', cls: 'post' };
+      if (mins >= close && mins < close + 240) return { label: '애프터마켓', cls: 'post' };
       return { label: 'US 장 마감', cls: 'closed' };
     }
     function tick() {
