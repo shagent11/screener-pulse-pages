@@ -635,6 +635,12 @@
 
     // ---- 궤적(꼬리): 현재 축(xKey/yKey)에서 유효한 과거 점만, 오늘 포함 2개 이상일 때만 ----
     const TRAIL_DEFAULT_N = 12;
+    // 2026-09-10: 사용자가 "중앙에 있는애들 표시가 많네" 지적 — 조용한 날엔 상위 12개를
+    // 억지로 채우다 REMX(원점 바로 옆→원점 바로 옆, 거리 2.67)처럼 사실상 제자리걸음까지
+    // 궤적으로 뽑혀서 중앙 클러스터 안에 꼬리가 낀 것처럼 보이던 문제. 최소 이동거리
+    // 미만이면 top-12에 억지로 안 채우고 그만큼 적게 표시(조용한 날=꼬리 적은 게 정상).
+    const TRAIL_MIN_DIST = 3.0;  // 퍼센트포인트 단위, 잠정값 — 시간축(1W×1M~6M×1Y)별로
+    // 절대 이동폭 스케일이 달라서 추후 축마다 다른 값이 필요해질 수 있음
     const trailPts = ticker => (rsTrailsData.trails[ticker] || [])
       .filter(p => p[xKey] !== null && p[xKey] !== undefined && p[yKey] !== null && p[yKey] !== undefined);
     const moverScore = new Map();
@@ -644,7 +650,11 @@
       const first = pts[0], last = pts[pts.length - 1];
       moverScore.set(d.ticker, Math.hypot(last[xKey]-first[xKey], last[yKey]-first[yKey]));
     });
-    const topMovers = new Set([...moverScore.entries()].sort((a,b) => b[1]-a[1]).slice(0, TRAIL_DEFAULT_N).map(e => e[0]));
+    const topMovers = new Set([...moverScore.entries()]
+      .filter(e => e[1] >= TRAIL_MIN_DIST)
+      .sort((a,b) => b[1]-a[1])
+      .slice(0, TRAIL_DEFAULT_N)
+      .map(e => e[0]));
     const maxTrailLen = Math.max(0, ...[...moverScore.keys()].map(t => trailPts(t).length));
     const ageNote = document.getElementById('trailAgeNote');
     if (ageNote) {
