@@ -1,0 +1,287 @@
+<script>
+(function(){
+  var HASH='03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+  var KEY='sh_gate_ok';
+  try{ if(localStorage.getItem(KEY)===HASH) return; }catch(e){}
+  var ov=document.createElement('div');
+  ov.innerHTML='<style>#sh-gate{position:fixed;inset:0;z-index:2147483647;background:#0c0f14;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif}#sh-gate form{display:flex;flex-direction:column;gap:10px;width:260px}#sh-gate .t{color:#e8ecf2;font-size:15px;text-align:center;margin-bottom:2px}#sh-gate input{padding:10px 12px;border-radius:8px;border:1px solid #2c3442;background:#171c25;color:#e8ecf2;font-size:14px;outline:none}#sh-gate button{padding:10px;border-radius:8px;border:none;background:#d9a856;color:#171c25;font-weight:700;font-size:14px;cursor:pointer}#sh-gate .e{color:#e2685c;font-size:12px;text-align:center;min-height:14px}</style><div id="sh-gate"><form><div class="t">🔒 비밀번호</div><input type="password" id="sh-gate-in" autocomplete="off" autofocus><button type="submit">입장</button><div class="e" id="sh-gate-err"></div></form></div>';
+  document.documentElement.appendChild(ov);
+  function sha256(s){
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)).then(function(buf){
+      return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+    });
+  }
+  ov.querySelector('form').addEventListener('submit', function(e){
+    e.preventDefault();
+    var v=document.getElementById('sh-gate-in').value;
+    sha256(v).then(function(h){
+      if(h===HASH){
+        try{localStorage.setItem(KEY,HASH);}catch(err){}
+        ov.remove();
+      } else {
+        document.getElementById('sh-gate-err').textContent='틀렸습니다';
+        document.getElementById('sh-gate-in').value='';
+      }
+    });
+  });
+})();
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Detail — Screener Pulse</title>
+<style>
+  :root {
+    --bg: #eef1f4; --surface: #ffffff; --surface-alt: #f4f6f9; --border: #d9dfe6;
+    --text: #1b2430; --text-muted: #5b6675; --text-faint: #8993a3;
+    --accent: #a6742f; --up: #2f8f63; --down: #c94a3e;
+    --g1: #a6742f; --g2: #6d5bd0; --g3: #2f8f63; --g4: #2f6fb0;
+    --shadow: 0 1px 2px rgba(20,25,35,.06), 0 8px 24px -12px rgba(20,25,35,.15);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #11151c; --surface: #1a2029; --surface-alt: #212836; --border: #2c3442;
+      --text: #e8ecf2; --text-muted: #93a0b3; --text-faint: #5f6b7d;
+      --accent: #d9a856; --up: #4fb286; --down: #e2685c;
+      --g1: #d9a856; --g2: #9a8cf0; --g3: #4fb286; --g4: #6aa5e0;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #11151c; --surface: #1a2029; --surface-alt: #212836; --border: #2c3442;
+    --text: #e8ecf2; --text-muted: #93a0b3; --text-faint: #5f6b7d;
+    --accent: #d9a856; --up: #4fb286; --down: #e2685c;
+    --g1: #d9a856; --g2: #9a8cf0; --g3: #4fb286; --g4: #6aa5e0;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.45;
+  }
+  .num { font-family: ui-monospace, "SF Mono", "Cascadia Mono", "Menlo", monospace; font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 32px 24px 64px; }
+
+  header { margin-bottom: 22px; }
+  .back { font-size: 12px; color: var(--text-faint); text-decoration: none; display: inline-block; margin-bottom: 10px; }
+  .back:hover { color: var(--accent); }
+  .eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
+  h1 { font-size: 26px; margin: 0 0 4px; font-weight: 700; letter-spacing: -.01em; }
+  header .sub { color: var(--text-muted); font-size: 14px; }
+  header .sub .num { color: var(--text); font-weight: 600; }
+
+  section { margin-bottom: 22px; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; box-shadow: var(--shadow); }
+  .panel h2 { font-size: 15px; margin: 0 0 3px; font-weight: 700; }
+  .panel-sub { font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px; }
+
+  .groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+  .group { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow); }
+  .group .gname { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+  .group .gname .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font: inherit; font-size: 12px; padding: 5px 10px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface-alt); color: var(--text-muted);
+    display: inline-flex; gap: 6px; align-items: baseline;
+  }
+  .chip b { color: var(--text); font-weight: 700; }
+  .chip:hover { border-color: var(--c); color: var(--text); }
+  .chip.on { border-color: var(--c); background: color-mix(in srgb, var(--c) 18%, var(--surface-alt)); color: var(--text); }
+  .chip.soft { font-style: italic; opacity: .8; }
+  .chip.lagging span { text-decoration: underline dotted; text-underline-offset: 3px; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+  .controls input, .controls select {
+    font: inherit; font-size: 13px; padding: 7px 10px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface-alt); color: var(--text); outline: none;
+  }
+  .controls input { min-width: 200px; flex: 1 1 200px; max-width: 320px; }
+  .controls input:focus, .controls select:focus { border-color: var(--accent); }
+  .controls .count { margin-left: auto; font-size: 12px; color: var(--text-faint); }
+  .reset { font: inherit; font-size: 12px; padding: 6px 11px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; }
+  .reset:hover { border-color: var(--accent); color: var(--text); }
+  .active-scans { font-size: 12px; color: var(--text-muted); margin: -4px 0 10px; min-height: 16px; }
+
+  .tablewrap { overflow: auto; max-height: 72vh; border: 1px solid var(--border); border-radius: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th {
+    position: sticky; top: 0; z-index: 1; background: var(--surface-alt); color: var(--text-muted);
+    font-weight: 600; font-size: 11.5px; text-align: right; padding: 8px 10px; white-space: nowrap;
+    border-bottom: 1px solid var(--border); cursor: pointer; user-select: none;
+  }
+  th:hover { color: var(--text); }
+  th.sorted { color: var(--accent); }
+  td { padding: 7px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--border); }
+  th.l, td.l { text-align: left; }
+  tbody tr:hover td { background: var(--surface-alt); }
+  td.tk { font-weight: 700; }
+  td.tk a { color: inherit; text-decoration: none; }
+  td.tk a:hover { color: var(--accent); }
+  td.sec { color: var(--text-muted); max-width: 190px; overflow: hidden; text-overflow: ellipsis; }
+  td.scans { white-space: normal; min-width: 220px; }
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .faint { color: var(--text-faint); }
+  .pill {
+    display: inline-block; margin: 1px 3px 1px 0; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600;
+    background: color-mix(in srgb, var(--c) 18%, var(--surface-alt));
+    color: color-mix(in srgb, var(--c) 80%, var(--text));
+  }
+  .pill.soft { font-style: italic; opacity: .75; }
+  .pill.lagging { text-decoration: underline dotted; text-underline-offset: 2px; }
+  .ncount { display: inline-block; min-width: 22px; padding: 1px 7px; border-radius: 6px; font-weight: 700; text-align: center;
+    background: color-mix(in srgb, var(--accent) calc(var(--k) * 1%), var(--surface-alt)); }
+  .note { font-size: 12px; color: var(--text-faint); margin-top: 12px; }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 20px 16px 48px; }
+    h1 { font-size: 22px; }
+    .controls .count { margin-left: 0; width: 100%; }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <a class="back" href="./pulse.html">← Screener Pulse</a>
+    <div class="eyebrow">Scan Detail</div>
+    <h1>종목별 스캔 매칭</h1>
+    <div class="sub">기준 <span class="num" id="asof">-</span> · <span class="num" id="nTickers">-</span>종목 · 신호 <span class="num" id="nSignals">-</span>건</div>
+  </header>
+
+  <section><div class="groups" id="groups"></div></section>
+
+  <section>
+    <div class="panel">
+      <h2>종목 목록</h2>
+      <div class="panel-sub">위 스캔 칩을 누르면 걸러짐 — <b>여러 개를 고르면 모두 걸린 종목만</b>(겹침 확인용) · 열 제목을 누르면 정렬 · 티커를 누르면 TradingView 차트 · <i>기울임</i> 스캔은 다른 패널에선 왜곡 우려로 제외하는 참고용, 점선 밑줄은 1개월 전 시점 기준이라 후행하는 스캔</div>
+      <div class="controls">
+        <input id="q" type="search" placeholder="티커·섹터 검색" autocomplete="off">
+        <select id="fSector"><option value="">전체 섹터</option></select>
+        <select id="fMin"><option value="1">스캔 1개 이상</option><option value="2">2개 이상 겹침</option><option value="3">3개 이상 겹침</option><option value="4">4개 이상 겹침</option></select>
+        <button class="reset" id="reset" type="button">초기화</button>
+        <span class="count" id="count"></span>
+      </div>
+      <div class="active-scans" id="activeScans"></div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr id="head"></tr></thead>
+          <tbody id="body"></tbody>
+        </table>
+      </div>
+      <div class="note">수익률은 스캔 시점(미국 장 마감 기준) 스냅샷입니다. 스캔 조건은 각자 다르고 공통 필터가 없어서, 섹터 × 스테이지 분포 패널과는 종목 구성이 다를 수 있습니다.</div>
+    </div>
+  </section>
+</div>
+
+<script id="scanDetailPayload" type="application/json">{"asof": "2026-09-11", "soft_excluded": ["Doublers", "HighVolume"], "soft_lagging": ["OffsetDoublers"], "rows": [{"ticker": "DELL", "sector": "Electronic Technology", "scans": ["New52W", "Doublers", "RS", "ATH", "HighVolume", "Trend", "Breakout"], "close": 567.29, "p1d": 11.98, "p1w": 10.4, "p1m": 23.5, "p3m": 47.3, "p6m": 275.7, "ytd": 341.8}, {"ticker": "AVT", "sector": "Distribution Services", "scans": ["New52W", "RS", "ATH", "Breakout"], "close": 99.63, "p1d": 7.16, "p1w": 9.5, "p1m": 1.5, "p3m": 12.6, "p6m": 63.2, "ytd": 105.0}, {"ticker": "BBVA", "sector": "Finance", "scans": ["New52W"], "close": 29.55, "p1d": 2.46, "p1w": 1.0, "p1m": 3.1, "p3m": 27.8, "p6m": 41.8, "ytd": 24.5}, {"ticker": "ATKR", "sector": "Producer Manufacturing", "scans": ["New52W"], "close": 94.15, "p1d": -0.01, "p1w": 0.5, "p1m": 0.2, "p3m": 18.3, "p6m": 63.7, "ytd": 47.7}, {"ticker": "ING", "sector": "Finance", "scans": ["New52W", "ATH", "Breakout"], "close": 37.27, "p1d": 1.64, "p1w": 0.7, "p1m": 4.8, "p3m": 24.4, "p6m": 42.9, "ytd": 30.3}, {"ticker": "ALKT", "sector": "Technology Services", "scans": ["BullSnort", "RS"], "close": 20.51, "p1d": 7.61, "p1w": 3.5, "p1m": 3.5, "p3m": 38.3, "p6m": 11.9, "ytd": -11.3}, {"ticker": "INSP", "sector": "Health Technology", "scans": ["BullSnort", "RS"], "close": 73.0, "p1d": 7.16, "p1w": 19.7, "p1m": 25.8, "p3m": 70.5, "p6m": 24.1, "ytd": -21.1}, {"ticker": "MXL", "sector": "Electronic Technology", "scans": ["Doublers", "RS", "Breakout", "Weekly"], "close": 74.57, "p1d": 7.54, "p1w": 23.8, "p1m": 1.8, "p3m": -7.7, "p6m": 346.5, "ytd": 318.2}, {"ticker": "TXG", "sector": "Health Technology", "scans": ["Doublers", "Trend", "Breakout"], "close": 68.59, "p1d": 3.33, "p1w": 9.7, "p1m": 17.0, "p3m": 132.6, "p6m": 261.6, "ytd": 320.5}, {"ticker": "CORT", "sector": "Health Technology", "scans": ["Doublers"], "close": 112.79, "p1d": -1.85, "p1w": 2.0, "p1m": 1.7, "p3m": 36.0, "p6m": 244.2, "ytd": 215.4}, {"ticker": "LIFE", "sector": "Technology Services", "scans": ["Doublers", "Trend"], "close": 40.25, "p1d": 3.6, "p1w": 6.6, "p1m": 20.1, "p3m": 135.1, "p6m": 213.7, "ytd": 111.8}, {"ticker": "SHAZ", "sector": "Technology Services", "scans": ["Doublers", "RS"], "close": 59.41, "p1d": 5.02, "p1w": 7.2, "p1m": -3.8, "p3m": -20.4, "p6m": 200.1, "ytd": 96.5}, {"ticker": "ASST", "sector": "Finance", "scans": ["Doublers", "Trend"], "close": 27.62, "p1d": 2.68, "p1w": 9.7, "p1m": 114.8, "p3m": 88.3, "p6m": 195.1, "ytd": 81.9}, {"ticker": "TWST", "sector": "Health Technology", "scans": ["Doublers"], "close": 127.22, "p1d": 0.29, "p1w": 1.6, "p1m": 2.6, "p3m": 69.6, "p6m": 189.5, "ytd": 300.9}, {"ticker": "PENG", "sector": "Electronic Technology", "scans": ["Doublers", "RS"], "close": 51.16, "p1d": 5.22, "p1w": 2.3, "p1m": -15.6, "p3m": -20.2, "p6m": 184.2, "ytd": 157.3}, {"ticker": "HPE", "sector": "Electronic Technology", "scans": ["Doublers", "RS", "ATH", "HighVolume", "Trend", "Breakout"], "close": 62.09, "p1d": 12.44, "p1w": 15.3, "p1m": 11.5, "p3m": 33.5, "p6m": 183.8, "ytd": 155.7}, {"ticker": "MRVL", "sector": "Electronic Technology", "scans": ["Doublers", "HighVolume", "Breakout"], "close": 236.1, "p1d": 4.03, "p1w": 11.5, "p1m": 4.5, "p3m": -12.6, "p6m": 169.0, "ytd": 172.2}, {"ticker": "QURE", "sector": "Health Technology", "scans": ["Doublers"], "close": 44.51, "p1d": 0.09, "p1w": -0.9, "p1m": -1.3, "p3m": 65.6, "p6m": 164.5, "ytd": 85.2}, {"ticker": "AMD", "sector": "Electronic Technology", "scans": ["Doublers", "HighVolume", "Breakout"], "close": 516.13, "p1d": 2.49, "p1w": 11.7, "p1m": 5.7, "p3m": 3.3, "p6m": 160.5, "ytd": 135.8}, {"ticker": "SNDK", "sector": "Electronic Technology", "scans": ["Doublers", "HighVolume"], "close": 1633.35, "p1d": -3.5, "p1w": 3.0, "p1m": 20.3, "p3m": -13.6, "p6m": 159.0, "ytd": 568.4}, {"ticker": "OSCR", "sector": "Health Services", "scans": ["Doublers"], "close": 32.77, "p1d": 0.58, "p1w": 1.8, "p1m": 17.0, "p3m": 14.5, "p6m": 148.6, "ytd": 126.8}, {"ticker": "HUM", "sector": "Health Services", "scans": ["Doublers"], "close": 409.8, "p1d": 2.26, "p1w": 1.4, "p1m": 10.2, "p3m": 10.5, "p6m": 147.7, "ytd": 60.1}, {"ticker": "AEHR", "sector": "Electronic Technology", "scans": ["Doublers", "Weekly"], "close": 94.69, "p1d": 0.94, "p1w": 21.4, "p1m": -23.6, "p3m": -8.3, "p6m": 146.7, "ytd": 350.5}, {"ticker": "TEAM", "sector": "Technology Services", "scans": ["Doublers", "Trend"], "close": 179.7, "p1d": 0.07, "p1w": -5.3, "p1m": 18.6, "p3m": 100.3, "p6m": 145.9, "ytd": 10.8}, {"ticker": "ALAB", "sector": "Electronic Technology", "scans": ["Doublers"], "close": 291.22, "p1d": 2.35, "p1w": 1.8, "p1m": -12.9, "p3m": -23.3, "p6m": 140.1, "ytd": 69.6}, {"ticker": "HTFL", "sector": "Technology Services", "scans": ["Doublers", "RS", "Trend"], "close": 49.88, "p1d": 9.65, "p1w": 0.3, "p1m": 68.6, "p3m": 62.1, "p6m": 139.9, "ytd": 69.9}, {"ticker": "UMC", "sector": "Electronic Technology", "scans": ["Doublers", "Breakout"], "close": 22.64, "p1d": 2.35, "p1w": 10.5, "p1m": 15.1, "p3m": 8.8, "p6m": 139.8, "ytd": 188.4}, {"ticker": "NAVN", "sector": "Technology Services", "scans": ["Doublers"], "close": 21.02, "p1d": 3.75, "p1w": -24.7, "p1m": -27.3, "p3m": 1.3, "p6m": 138.3, "ytd": 24.2}, {"ticker": "TVTX", "sector": "Health Technology", "scans": ["Doublers"], "close": 66.17, "p1d": -1.98, "p1w": 0.2, "p1m": 7.9, "p3m": 34.8, "p6m": 137.8, "ytd": 69.2}, {"ticker": "MU", "sector": "Electronic Technology", "scans": ["Doublers", "HighVolume"], "close": 975.26, "p1d": -0.22, "p1w": 0.4, "p1m": 6.8, "p3m": 0.4, "p6m": 135.7, "ytd": 230.5}, {"ticker": "SIMO", "sector": "Electronic Technology", "scans": ["Doublers", "RS"], "close": 284.48, "p1d": 7.25, "p1w": 18.9, "p1m": 23.4, "p3m": 4.7, "p6m": 134.4, "ytd": 200.9}, {"ticker": "ARM", "sector": "Electronic Technology", "scans": ["Doublers"], "close": 264.79, "p1d": 4.17, "p1w": 6.5, "p1m": -5.4, "p3m": -25.0, "p6m": 128.7, "ytd": 134.7}, {"ticker": "INTC", "sector": "Electronic Technology", "scans": ["Doublers", "HighVolume", "Breakout"], "close": 102.94, "p1d": 2.61, "p1w": 11.3, "p1m": 1.6, "p3m": -12.3, "p6m": 123.9, "ytd": 172.5}, {"ticker": "U", "sector": "Technology Services", "scans": ["Doublers", "Breakout"], "close": 43.96, "p1d": 4.49, "p1w": 6.0, "p1m": 0.6, "p3m": 64.5, "p6m": 123.6, "ytd": -2.7}, {"ticker": "URGN", "sector": "Health Technology", "scans": ["Doublers"], "close": 42.31, "p1d": 0.17, "p1w": -5.0, "p1m": -10.9, "p3m": 43.5, "p6m": 123.4, "ytd": 78.5}, {"ticker": "SYRE", "sector": "Health Technology", "scans": ["Doublers"], "close": 90.6, "p1d": 2.13, "p1w": 4.8, "p1m": -13.8, "p3m": 11.7, "p6m": 121.4, "ytd": 176.6}, {"ticker": "STX", "sector": "Electronic Technology", "scans": ["Doublers"], "close": 830.17, "p1d": -3.73, "p1w": 1.4, "p1m": -3.6, "p3m": -5.7, "p6m": 119.6, "ytd": 194.4}, {"ticker": "RVMD", "sector": "Health Technology", "scans": ["Doublers"], "close": 203.77, "p1d": 0.21, "p1w": -2.5, "p1m": -1.6, "p3m": 35.5, "p6m": 111.3, "ytd": 153.8}, {"ticker": "CBZ", "sector": "Commercial Services", "scans": ["Doublers"], "close": 54.54, "p1d": -0.16, "p1w": 0.1, "p1m": 0.0, "p3m": 60.9, "p6m": 110.7, "ytd": 7.0}, {"ticker": "OKTA", "sector": "Technology Services", "scans": ["Doublers", "Trend"], "close": 166.5, "p1d": -2.69, "p1w": -1.1, "p1m": 10.5, "p3m": 41.3, "p6m": 110.3, "ytd": 91.0}, {"ticker": "COHU", "sector": "Electronic Technology", "scans": ["Doublers", "Weekly"], "close": 57.08, "p1d": 4.29, "p1w": 21.1, "p1m": 3.5, "p3m": -2.5, "p6m": 105.2, "ytd": 138.4}, {"ticker": "GTLB", "sector": "Technology Services", "scans": ["Doublers", "Trend"], "close": 46.99, "p1d": -0.66, "p1w": -4.0, "p1m": 13.5, "p3m": 64.6, "p6m": 105.1, "ytd": 23.7}, {"ticker": "NTAP", "sector": "Electronic Technology", "scans": ["Doublers", "RS", "Breakout"], "close": 199.28, "p1d": 8.54, "p1w": 9.1, "p1m": -1.4, "p3m": 24.9, "p6m": 104.3, "ytd": 85.1}, {"ticker": "NBIS", "sector": "Technology Services", "scans": ["Doublers", "HighVolume"], "close": 224.55, "p1d": -1.56, "p1w": 6.8, "p1m": -0.6, "p3m": -4.3, "p6m": 103.3, "ytd": 158.1}, {"ticker": "VICR", "sector": "Electronic Technology", "scans": ["RS"], "close": 197.91, "p1d": 11.15, "p1w": 8.8, "p1m": -11.5, "p3m": -34.2, "p6m": 18.5, "ytd": 77.6}, {"ticker": "FPS", "sector": "Producer Manufacturing", "scans": ["RS"], "close": 31.82, "p1d": 8.97, "p1w": 3.1, "p1m": -19.2, "p3m": -45.9, "p6m": -2.4, "ytd": 22.4}, {"ticker": "HUT", "sector": "Technology Services", "scans": ["RS", "Breakout"], "close": 98.6, "p1d": 8.83, "p1w": 13.3, "p1m": 3.2, "p3m": -15.5, "p6m": 97.2, "ytd": 106.1}, {"ticker": "ON", "sector": "Electronic Technology", "scans": ["RS"], "close": 76.14, "p1d": 8.51, "p1w": 1.2, "p1m": -9.7, "p3m": -34.3, "p6m": 30.4, "ytd": 37.8}, {"ticker": "HPQ", "sector": "Technology Services", "scans": ["RS", "HighVolume", "Trend", "Breakout"], "close": 35.48, "p1d": 8.4, "p1w": 11.0, "p1m": 21.9, "p3m": 43.8, "p6m": 85.8, "ytd": 57.4}, {"ticker": "SYNA", "sector": "Electronic Technology", "scans": ["RS"], "close": 101.03, "p1d": 8.09, "p1w": 2.2, "p1m": -8.2, "p3m": -25.9, "p6m": 34.6, "ytd": 33.4}, {"ticker": "SMCI", "sector": "Electronic Technology", "scans": ["RS", "Breakout"], "close": 40.1, "p1d": 7.28, "p1w": 5.1, "p1m": 14.6, "p3m": 30.4, "p6m": 29.2, "ytd": 33.8}, {"ticker": "FLEX", "sector": "Electronic Technology", "scans": ["RS"], "close": 115.78, "p1d": 7.19, "p1w": 6.8, "p1m": -9.7, "p3m": -22.6, "p6m": 82.9, "ytd": 88.4}, {"ticker": "BE", "sector": "Electronic Technology", "scans": ["RS", "HighVolume", "Breakout"], "close": 275.75, "p1d": 6.68, "p1w": 16.4, "p1m": 16.5, "p3m": 12.1, "p6m": 72.2, "ytd": 204.5}, {"ticker": "CLS", "sector": "Electronic Technology", "scans": ["RS", "Breakout"], "close": 346.55, "p1d": 6.56, "p1w": 9.6, "p1m": 8.3, "p3m": -10.6, "p6m": 31.3, "ytd": 16.3}, {"ticker": "BETA", "sector": "Electronic Technology", "scans": ["RS"], "close": 21.17, "p1d": 6.44, "p1w": 0.1, "p1m": -2.0, "p3m": 24.0, "p6m": 22.9, "ytd": -27.5}, {"ticker": "SANM", "sector": "Electronic Technology", "scans": ["RS"], "close": 216.0, "p1d": 6.24, "p1w": 9.6, "p1m": 2.4, "p3m": -12.5, "p6m": 69.2, "ytd": 40.4}, {"ticker": "VSH", "sector": "Electronic Technology", "scans": ["RS"], "close": 33.21, "p1d": 6.14, "p1w": 7.1, "p1m": -5.7, "p3m": -41.6, "p6m": 92.5, "ytd": 123.9}, {"ticker": "MWH", "sector": "Industrial Services", "scans": ["RS"], "close": 26.0, "p1d": 6.12, "p1w": 5.6, "p1m": -15.9, "p3m": -18.6, "p6m": -9.3, "ytd": -13.3}, {"ticker": "WING", "sector": "Consumer Services", "scans": ["RS"], "close": 117.1, "p1d": 5.95, "p1w": 5.6, "p1m": 3.5, "p3m": -24.1, "p6m": -40.6, "ytd": -51.5}, {"ticker": "LGN", "sector": "Industrial Services", "scans": ["RS"], "close": 56.65, "p1d": 5.79, "p1w": 7.1, "p1m": -15.8, "p3m": -33.9, "p6m": 12.0, "ytd": 31.9}, {"ticker": "ANET", "sector": "Electronic Technology", "scans": ["RS", "OffsetDoublers", "Breakout"], "close": 199.59, "p1d": 5.61, "p1w": 3.5, "p1m": -2.9, "p3m": 24.7, "p6m": 48.0, "ytd": 48.9}, {"ticker": "STRL", "sector": "Industrial Services", "scans": ["RS"], "close": 511.04, "p1d": 5.4, "p1w": 7.3, "p1m": -8.6, "p3m": -40.1, "p6m": 25.8, "ytd": 65.2}, {"ticker": "POWI", "sector": "Electronic Technology", "scans": ["RS"], "close": 52.28, "p1d": 5.21, "p1w": 2.5, "p1m": -20.5, "p3m": -33.0, "p6m": 10.9, "ytd": 43.8}, {"ticker": "SWKS", "sector": "Electronic Technology", "scans": ["RS", "HighVolume", "Trend", "Breakout", "Weekly"], "close": 88.35, "p1d": 5.14, "p1w": 24.3, "p1m": 28.8, "p3m": 22.1, "p6m": 59.4, "ytd": 37.7}, {"ticker": "SEI", "sector": "Industrial Services", "scans": ["RS", "Breakout", "Weekly"], "close": 67.42, "p1d": 5.1, "p1w": 26.0, "p1m": 9.2, "p3m": -13.0, "p6m": 26.2, "ytd": 44.1}, {"ticker": "SMTC", "sector": "Electronic Technology", "scans": ["RS", "Breakout", "Weekly"], "close": 167.24, "p1d": 5.1, "p1w": 20.6, "p1m": 19.7, "p3m": 1.2, "p6m": 97.4, "ytd": 121.9}, {"ticker": "AFRM", "sector": "Finance", "scans": ["RS"], "close": 71.44, "p1d": 5.07, "p1w": -3.1, "p1m": -7.7, "p3m": 6.9, "p6m": 51.1, "ytd": -4.7}, {"ticker": "JBL", "sector": "Producer Manufacturing", "scans": ["RS"], "close": 318.08, "p1d": 5.05, "p1w": 2.8, "p1m": -13.0, "p3m": -16.2, "p6m": 24.9, "ytd": 37.5}, {"ticker": "LSCC", "sector": "Electronic Technology", "scans": ["RS"], "close": 119.76, "p1d": 4.92, "p1w": 3.3, "p1m": -8.9, "p3m": -16.2, "p6m": 36.1, "ytd": 58.6}, {"ticker": "ADI", "sector": "Electronic Technology", "scans": ["RS", "Breakout"], "close": 378.78, "p1d": 4.85, "p1w": 5.3, "p1m": -4.4, "p3m": -8.1, "p6m": 22.2, "ytd": 37.7}, {"ticker": "ORCL", "sector": "Technology Services", "scans": ["Gappers"], "close": 150.28, "p1d": -1.74, "p1w": -5.8, "p1m": -1.7, "p3m": -18.8, "p6m": -5.5, "ytd": -23.9}, {"ticker": "UPST", "sector": "Finance", "scans": ["Gappers"], "close": 25.59, "p1d": 1.95, "p1w": -8.4, "p1m": -14.8, "p3m": -19.4, "p6m": -3.1, "ytd": -41.9}, {"ticker": "ORCL/PD", "sector": "Technology Services", "scans": ["Gappers"], "close": 47.1, "p1d": -1.22, "p1w": -3.6, "p1m": -0.3, "p3m": -12.7, "p6m": -3.8, "ytd": -4.1}, {"ticker": "TTMI", "sector": "Electronic Technology", "scans": ["Gappers"], "close": 126.44, "p1d": 3.35, "p1w": 6.6, "p1m": -8.9, "p3m": -33.1, "p6m": 38.0, "ytd": 81.0}, {"ticker": "SNOW", "sector": "Technology Services", "scans": ["OffsetDoublers"], "close": 328.99, "p1d": -0.22, "p1w": -7.0, "p1m": -0.0, "p3m": 36.8, "p6m": 84.6, "ytd": 49.6}, {"ticker": "VSXY", "sector": "Retail Trade", "scans": ["OffsetDoublers"], "close": 75.65, "p1d": 3.08, "p1w": 2.7, "p1m": -20.3, "p3m": -4.0, "p6m": 66.0, "ytd": 37.7}, {"ticker": "CAKE", "sector": "Consumer Services", "scans": ["OffsetDoublers"], "close": 102.7, "p1d": 1.52, "p1w": -3.8, "p1m": -9.8, "p3m": 36.1, "p6m": 78.5, "ytd": 102.9}, {"ticker": "MGNI", "sector": "Technology Services", "scans": ["OffsetDoublers"], "close": 23.77, "p1d": 0.93, "p1w": -2.7, "p1m": -2.1, "p3m": 46.3, "p6m": 93.4, "ytd": 46.0}, {"ticker": "PANW", "sector": "Technology Services", "scans": ["OffsetDoublers"], "close": 330.65, "p1d": -2.32, "p1w": 0.3, "p1m": -13.2, "p3m": 19.4, "p6m": 95.8, "ytd": 78.9}, {"ticker": "ZBRA", "sector": "Electronic Technology", "scans": ["OffsetDoublers"], "close": 350.37, "p1d": 1.85, "p1w": -2.0, "p1m": -8.8, "p3m": 57.3, "p6m": 68.9, "ytd": 42.2}, {"ticker": "TENB", "sector": "Technology Services", "scans": ["OffsetDoublers"], "close": 30.11, "p1d": -5.99, "p1w": -11.2, "p1m": -19.2, "p3m": 11.8, "p6m": 48.7, "ytd": 27.0}, {"ticker": "CHYM", "sector": "Technology Services", "scans": ["OffsetDoublers"], "close": 33.0, "p1d": 1.01, "p1w": -1.2, "p1m": 4.3, "p3m": 90.9, "p6m": 52.5, "ytd": 30.6}, {"ticker": "SN", "sector": "Consumer Durables", "scans": ["OffsetDoublers"], "close": 160.8, "p1d": -1.09, "p1w": -7.7, "p1m": -14.9, "p3m": 17.4, "p6m": 57.2, "ytd": 43.4}, {"ticker": "ZETA", "sector": "Technology Services", "scans": ["OffsetDoublers"], "close": 30.18, "p1d": -1.24, "p1w": -7.6, "p1m": 4.1, "p3m": 50.7, "p6m": 67.2, "ytd": 46.9}, {"ticker": "OUST", "sector": "Electronic Technology", "scans": ["OffsetDoublers"], "close": 35.33, "p1d": 0.28, "p1w": -1.2, "p1m": -24.1, "p3m": -9.2, "p6m": 53.9, "ytd": 58.5}, {"ticker": "CRL", "sector": "Commercial Services", "scans": ["OffsetDoublers"], "close": 278.26, "p1d": 1.93, "p1w": -3.5, "p1m": -1.6, "p3m": 48.9, "p6m": 78.8, "ytd": 39.0}, {"ticker": "ELF", "sector": "Consumer Non-Durables", "scans": ["OffsetDoublers"], "close": 96.91, "p1d": 1.2, "p1w": -9.5, "p1m": 3.0, "p3m": 59.3, "p6m": 34.1, "ytd": 26.3}, {"ticker": "W", "sector": "Retail Trade", "scans": ["OffsetDoublers"], "close": 98.57, "p1d": 1.15, "p1w": 1.6, "p1m": -5.9, "p3m": 28.0, "p6m": 32.6, "ytd": -7.0}, {"ticker": "CRWD", "sector": "Technology Services", "scans": ["OffsetDoublers"], "close": 206.74, "p1d": -1.02, "p1w": -2.7, "p1m": -6.0, "p3m": 19.7, "p6m": 86.3, "ytd": 74.5}, {"ticker": "VAC", "sector": "Consumer Services", "scans": ["OffsetDoublers"], "close": 103.59, "p1d": 2.47, "p1w": 4.0, "p1m": -11.5, "p3m": 11.0, "p6m": 55.2, "ytd": 78.2}, {"ticker": "NTRA", "sector": "Health Technology", "scans": ["OffsetDoublers"], "close": 328.93, "p1d": 0.86, "p1w": 1.5, "p1m": 4.9, "p3m": 47.0, "p6m": 71.9, "ytd": 43.7}, {"ticker": "HNGE", "sector": "Technology Services", "scans": ["OffsetDoublers"], "close": 88.59, "p1d": 0.37, "p1w": -1.6, "p1m": -0.6, "p3m": 33.9, "p6m": 96.9, "ytd": 90.8}, {"ticker": "RBRK", "sector": "Technology Services", "scans": ["OffsetDoublers"], "close": 86.65, "p1d": -2.54, "p1w": -6.0, "p1m": -10.0, "p3m": 21.4, "p6m": 55.0, "ytd": 11.6}, {"ticker": "ANF", "sector": "Retail Trade", "scans": ["OffsetDoublers", "Trend", "Breakout"], "close": 145.23, "p1d": 1.61, "p1w": 0.2, "p1m": 23.7, "p3m": 58.2, "p6m": 72.5, "ytd": 15.4}, {"ticker": "BAX", "sector": "Health Technology", "scans": ["OffsetDoublers"], "close": 23.8, "p1d": -1.57, "p1w": -6.0, "p1m": -12.5, "p3m": 15.1, "p6m": 29.3, "ytd": 23.3}, {"ticker": "ESTC", "sector": "Technology Services", "scans": ["OffsetDoublers", "Trend"], "close": 83.39, "p1d": -0.11, "p1w": -12.4, "p1m": 11.4, "p3m": 38.5, "p6m": 61.8, "ytd": 10.5}, {"ticker": "PAYC", "sector": "Technology Services", "scans": ["OffsetDoublers"], "close": 218.91, "p1d": 1.33, "p1w": -8.1, "p1m": 2.5, "p3m": 65.5, "p6m": 72.3, "ytd": 37.3}, {"ticker": "TTAN", "sector": "Technology Services", "scans": ["OffsetDoublers"], "close": 54.68, "p1d": -2.37, "p1w": -40.3, "p1m": -36.5, "p3m": -19.5, "p6m": -27.7, "ytd": -48.5}, {"ticker": "AXON", "sector": "Electronic Technology", "scans": ["OffsetDoublers"], "close": 479.34, "p1d": 0.1, "p1w": -9.8, "p1m": -23.8, "p3m": 7.3, "p6m": -5.3, "ytd": -16.4}, {"ticker": "PAY", "sector": "Commercial Services", "scans": ["OffsetDoublers"], "close": 36.38, "p1d": 0.28, "p1w": 0.7, "p1m": -10.4, "p3m": 75.1, "p6m": 50.5, "ytd": 15.7}, {"ticker": "JHX", "sector": "Non-Energy Minerals", "scans": ["OffsetDoublers"], "close": 28.47, "p1d": 0.99, "p1w": -3.5, "p1m": -8.8, "p3m": 20.2, "p6m": 43.6, "ytd": 37.1}, {"ticker": "SE", "sector": "Retail Trade", "scans": ["OffsetDoublers"], "close": 106.24, "p1d": -1.35, "p1w": -6.5, "p1m": -18.9, "p3m": 23.4, "p6m": 24.5, "ytd": -19.2}, {"ticker": "ARXS", "sector": "Electronic Technology", "scans": ["OffsetDoublers"], "close": 52.45, "p1d": 0.9, "p1w": -1.5, "p1m": -10.7, "p3m": 25.2, "p6m": 38.0, "ytd": 38.0}, {"ticker": "KMX", "sector": "Retail Trade", "scans": ["OffsetDoublers"], "close": 61.32, "p1d": 1.32, "p1w": -1.5, "p1m": 4.5, "p3m": 18.6, "p6m": 48.3, "ytd": 58.2}, {"ticker": "ACVA", "sector": "Technology Services", "scans": ["HighVolume"], "close": 10.41, "p1d": 44.18, "p1w": 56.3, "p1m": 41.4, "p3m": 61.4, "p6m": 113.8, "ytd": 28.5}, {"ticker": "NOK", "sector": "Electronic Technology", "scans": ["HighVolume", "Breakout"], "close": 11.13, "p1d": 4.8, "p1w": 11.3, "p1m": 7.1, "p3m": -22.4, "p6m": 32.6, "ytd": 68.9}, {"ticker": "HL", "sector": "Non-Energy Minerals", "scans": ["HighVolume"], "close": 19.78, "p1d": -1.2, "p1w": -4.1, "p1m": 8.4, "p3m": 32.0, "p6m": -3.0, "ytd": 0.7}, {"ticker": "PURR", "sector": "Finance", "scans": ["HighVolume", "Trend"], "close": 11.61, "p1d": 5.45, "p1w": -6.3, "p1m": 71.2, "p3m": 35.3, "p6m": 111.5, "ytd": 228.9}, {"ticker": "VG", "sector": "Industrial Services", "scans": ["HighVolume", "Breakout"], "close": 15.8, "p1d": 1.94, "p1w": 10.2, "p1m": 19.2, "p3m": 26.4, "p6m": 26.8, "ytd": 130.3}, {"ticker": "CDE", "sector": "Non-Energy Minerals", "scans": ["HighVolume"], "close": 20.58, "p1d": 1.18, "p1w": -2.3, "p1m": 8.1, "p3m": 24.1, "p6m": -4.5, "ytd": 11.2}, {"ticker": "CNH", "sector": "Producer Manufacturing", "scans": ["HighVolume"], "close": 13.58, "p1d": 0.59, "p1w": -2.2, "p1m": 27.3, "p3m": 29.5, "p6m": 25.7, "ytd": 45.9}, {"ticker": "MRNA", "sector": "Health Technology", "scans": ["HighVolume", "Trend", "Breakout"], "close": 143.97, "p1d": 5.38, "p1w": -6.3, "p1m": 137.7, "p3m": 188.1, "p6m": 165.1, "ytd": 382.6}, {"ticker": "GGB", "sector": "Non-Energy Minerals", "scans": ["HighVolume"], "close": 5.15, "p1d": 0.98, "p1w": 3.2, "p1m": 7.5, "p3m": 9.1, "p6m": 49.3, "ytd": 37.3}, {"ticker": "SBET", "sector": "Commercial Services", "scans": ["HighVolume"], "close": 8.88, "p1d": 5.34, "p1w": 3.3, "p1m": 39.6, "p3m": 66.0, "p6m": 13.3, "ytd": -2.8}, {"ticker": "BTE", "sector": "Energy Minerals", "scans": ["HighVolume"], "close": 5.03, "p1d": -0.2, "p1w": 2.7, "p1m": 15.6, "p3m": 8.9, "p6m": 26.1, "ytd": 58.2}, {"ticker": "IBRX", "sector": "Health Technology", "scans": ["HighVolume"], "close": 7.91, "p1d": 2.46, "p1w": -2.1, "p1m": 2.6, "p3m": 9.3, "p6m": -3.7, "ytd": 291.6}, {"ticker": "IOVA", "sector": "Health Technology", "scans": ["HighVolume"], "close": 8.6, "p1d": 5.65, "p1w": -1.6, "p1m": 32.5, "p3m": 117.7, "p6m": 104.8, "ytd": 209.4}, {"ticker": "FCX", "sector": "Non-Energy Minerals", "scans": ["HighVolume"], "close": 71.07, "p1d": -0.2, "p1w": -0.9, "p1m": 1.4, "p3m": 5.7, "p6m": 20.4, "ytd": 37.4}, {"ticker": "HAL", "sector": "Industrial Services", "scans": ["HighVolume"], "close": 35.84, "p1d": -0.64, "p1w": -2.9, "p1m": 6.7, "p3m": -8.9, "p6m": 3.8, "ytd": 26.5}, {"ticker": "CRM", "sector": "Technology Services", "scans": ["HighVolume", "Breakout"], "close": 247.72, "p1d": 1.94, "p1w": -5.9, "p1m": 29.0, "p3m": 50.4, "p6m": 24.0, "ytd": -6.5}, {"ticker": "AG", "sector": "Non-Energy Minerals", "scans": ["HighVolume"], "close": 19.56, "p1d": -2.93, "p1w": -5.6, "p1m": -1.1, "p3m": 14.1, "p6m": -19.9, "ytd": 14.8}, {"ticker": "EXK", "sector": "Non-Energy Minerals", "scans": ["HighVolume"], "close": 10.18, "p1d": -3.23, "p1w": -8.8, "p1m": -7.5, "p3m": 24.1, "p6m": -5.2, "ytd": 4.7}, {"ticker": "ROIV", "sector": "Health Technology", "scans": ["Trend"], "close": 40.82, "p1d": -0.29, "p1w": 19.4, "p1m": 15.9, "p3m": 36.1, "p6m": 41.4, "ytd": 88.0}, {"ticker": "CVI", "sector": "Energy Minerals", "scans": ["Trend"], "close": 49.66, "p1d": 2.18, "p1w": 15.8, "p1m": 48.0, "p3m": 65.3, "p6m": 75.2, "ytd": 97.7}, {"ticker": "QRVO", "sector": "Electronic Technology", "scans": ["Trend", "Breakout"], "close": 116.65, "p1d": 3.82, "p1w": 15.5, "p1m": 19.8, "p3m": 20.3, "p6m": 47.1, "ytd": 36.6}, {"ticker": "IOND", "sector": "Technology Services", "scans": ["Trend"], "close": 83.39, "p1d": 4.39, "p1w": 11.2, "p1m": 41.3, "p3m": 66.8, "p6m": 66.8, "ytd": 66.8}, {"ticker": "TNK", "sector": "Transportation", "scans": ["Trend"], "close": 100.83, "p1d": 2.63, "p1w": 9.6, "p1m": 30.4, "p3m": 40.0, "p6m": 56.4, "ytd": 88.5}, {"ticker": "DHT", "sector": "Transportation", "scans": ["Trend"], "close": 22.0, "p1d": 2.66, "p1w": 9.0, "p1m": 21.2, "p3m": 31.9, "p6m": 31.0, "ytd": 81.5}, {"ticker": "FRO", "sector": "Transportation", "scans": ["Trend", "Breakout"], "close": 49.21, "p1d": 1.67, "p1w": 7.3, "p1m": 28.7, "p3m": 37.8, "p6m": 61.7, "ytd": 132.0}, {"ticker": "DK", "sector": "Energy Minerals", "scans": ["Trend"], "close": 76.1, "p1d": 1.62, "p1w": 6.4, "p1m": 19.5, "p3m": 64.2, "p6m": 82.7, "ytd": 156.7}, {"ticker": "CLMT", "sector": "Energy Minerals", "scans": ["Trend"], "close": 56.8, "p1d": 0.64, "p1w": 6.4, "p1m": 23.5, "p3m": 64.4, "p6m": 98.0, "ytd": 187.3}, {"ticker": "VLO", "sector": "Energy Minerals", "scans": ["Trend"], "close": 390.42, "p1d": 1.29, "p1w": 5.9, "p1m": 21.5, "p3m": 55.1, "p6m": 68.1, "ytd": 139.2}, {"ticker": "SMCIP", "sector": "Electronic Technology", "scans": ["Trend", "Breakout"], "close": 67.34, "p1d": 6.32, "p1w": 5.6, "p1m": 12.6, "p3m": 32.0, "p6m": 32.7, "ytd": 32.7}, {"ticker": "PBF", "sector": "Energy Minerals", "scans": ["Trend", "Breakout"], "close": 78.3, "p1d": 1.58, "p1w": 5.1, "p1m": 13.6, "p3m": 92.3, "p6m": 85.0, "ytd": 186.5}, {"ticker": "PARR", "sector": "Energy Minerals", "scans": ["Trend"], "close": 84.65, "p1d": 1.27, "p1w": 4.8, "p1m": 13.3, "p3m": 53.9, "p6m": 62.5, "ytd": 139.7}, {"ticker": "ATRC", "sector": "Health Technology", "scans": ["Trend"], "close": 54.54, "p1d": 2.98, "p1w": 4.8, "p1m": 28.8, "p3m": 91.6, "p6m": 83.9, "ytd": 37.3}, {"ticker": "AVAH", "sector": "Health Services", "scans": ["Trend"], "close": 14.08, "p1d": 1.59, "p1w": 3.7, "p1m": 58.2, "p3m": 100.9, "p6m": 100.3, "ytd": 71.9}, {"ticker": "TALO", "sector": "Energy Minerals", "scans": ["Trend"], "close": 17.68, "p1d": 0.8, "p1w": 3.4, "p1m": 14.0, "p3m": 21.7, "p6m": 31.9, "ytd": 61.3}, {"ticker": "SM", "sector": "Energy Minerals", "scans": ["Trend"], "close": 38.1, "p1d": -0.21, "p1w": 3.2, "p1m": 17.5, "p3m": 25.7, "p6m": 52.0, "ytd": 104.5}, {"ticker": "PSX", "sector": "Energy Minerals", "scans": ["Trend"], "close": 259.47, "p1d": 0.37, "p1w": 3.1, "p1m": 17.3, "p3m": 46.1, "p6m": 50.1, "ytd": 101.1}, {"ticker": "DINO", "sector": "Energy Minerals", "scans": ["Trend"], "close": 107.84, "p1d": 0.11, "p1w": 2.6, "p1m": 24.5, "p3m": 54.1, "p6m": 91.1, "ytd": 134.4}, {"ticker": "MPC", "sector": "Energy Minerals", "scans": ["Trend"], "close": 395.93, "p1d": 0.89, "p1w": 2.5, "p1m": 18.2, "p3m": 51.7, "p6m": 73.5, "ytd": 143.1}, {"ticker": "APA", "sector": "Energy Minerals", "scans": ["Trend"], "close": 44.73, "p1d": 0.45, "p1w": 2.4, "p1m": 11.5, "p3m": 23.3, "p6m": 34.1, "ytd": 82.0}, {"ticker": "LPG", "sector": "Transportation", "scans": ["Trend"], "close": 55.18, "p1d": 1.42, "p1w": 2.4, "p1m": 28.1, "p3m": 28.0, "p6m": 85.7, "ytd": 124.3}, {"ticker": "SLDE", "sector": "Technology Services", "scans": ["Trend"], "close": 24.84, "p1d": 1.6, "p1w": 1.9, "p1m": 20.5, "p3m": 45.4, "p6m": 43.5, "ytd": 27.5}, {"ticker": "TRMD", "sector": "Transportation", "scans": ["Trend"], "close": 35.08, "p1d": 1.39, "p1w": 1.7, "p1m": 23.3, "p3m": 21.8, "p6m": 43.8, "ytd": 76.5}, {"ticker": "TBBB", "sector": "Retail Trade", "scans": ["Trend"], "close": 50.46, "p1d": -1.71, "p1w": 1.5, "p1m": 22.2, "p3m": 21.0, "p6m": 55.3, "ytd": 50.4}, {"ticker": "BWLP", "sector": "Transportation", "scans": ["Trend"], "close": 25.13, "p1d": 0.52, "p1w": 1.5, "p1m": 17.2, "p3m": 23.2, "p6m": 82.8, "ytd": 95.0}, {"ticker": "INSW", "sector": "Transportation", "scans": ["Trend", "Breakout"], "close": 103.65, "p1d": 1.48, "p1w": 1.4, "p1m": 16.5, "p3m": 34.5, "p6m": 56.2, "ytd": 115.0}, {"ticker": "HAE", "sector": "Health Technology", "scans": ["Trend"], "close": 102.69, "p1d": 1.61, "p1w": 1.1, "p1m": 18.9, "p3m": 28.7, "p6m": 70.3, "ytd": 27.9}, {"ticker": "LFST", "sector": "Health Services", "scans": ["Trend"], "close": 12.97, "p1d": -0.23, "p1w": 0.9, "p1m": 12.2, "p3m": 50.8, "p6m": 103.9, "ytd": 84.8}, {"ticker": "CMBT", "sector": "Transportation", "scans": ["Trend"], "close": 19.48, "p1d": 0.52, "p1w": 0.9, "p1m": 20.9, "p3m": 31.3, "p6m": 61.7, "ytd": 97.6}, {"ticker": "MTCH", "sector": "Technology Services", "scans": ["Trend"], "close": 42.39, "p1d": 1.36, "p1w": 0.3, "p1m": 15.5, "p3m": 21.7, "p6m": 39.4, "ytd": 30.6}, {"ticker": "ARX", "sector": "Finance", "scans": ["Trend"], "close": 19.84, "p1d": 0.0, "p1w": 0.2, "p1m": 59.7, "p3m": 51.1, "p6m": 81.7, "ytd": 21.6}, {"ticker": "SPSC", "sector": "Technology Services", "scans": ["Trend"], "close": 82.68, "p1d": 7.06, "p1w": -0.5, "p1m": 12.7, "p3m": 49.4, "p6m": 36.3, "ytd": -7.2}, {"ticker": "PLSE", "sector": "Health Technology", "scans": ["Trend"], "close": 53.11, "p1d": -2.43, "p1w": -1.1, "p1m": 19.6, "p3m": 96.0, "p6m": 145.7, "ytd": 284.0}, {"ticker": "DOCU", "sector": "Technology Services", "scans": ["Trend"], "close": 65.65, "p1d": -0.23, "p1w": -4.2, "p1m": 12.4, "p3m": 47.8, "p6m": 41.7, "ytd": -4.3}, {"ticker": "AMLX", "sector": "Health Technology", "scans": ["Trend"], "close": 31.62, "p1d": -1.46, "p1w": -5.3, "p1m": 32.5, "p3m": 127.5, "p6m": 118.1, "ytd": 163.5}, {"ticker": "ABCL", "sector": "Health Technology", "scans": ["Trend"], "close": 10.89, "p1d": 4.11, "p1w": -5.3, "p1m": 18.1, "p3m": 105.5, "p6m": 209.4, "ytd": 218.4}, {"ticker": "MMED", "sector": "Health Technology", "scans": ["Trend"], "close": 22.5, "p1d": 0.27, "p1w": -5.6, "p1m": 14.8, "p3m": 46.4, "p6m": 35.8, "ytd": 21.6}, {"ticker": "VEEV", "sector": "Technology Services", "scans": ["Trend"], "close": 262.4, "p1d": 0.54, "p1w": -6.1, "p1m": 12.8, "p3m": 61.5, "p6m": 43.9, "ytd": 17.5}, {"ticker": "HOOD", "sector": "Finance", "scans": ["Trend"], "close": 112.57, "p1d": -0.67, "p1w": -6.6, "p1m": 16.1, "p3m": 21.4, "p6m": 46.7, "ytd": -2.5}, {"ticker": "RNG", "sector": "Technology Services", "scans": ["Trend"], "close": 68.92, "p1d": -0.17, "p1w": -8.5, "p1m": 10.8, "p3m": 82.1, "p6m": 76.2, "ytd": 137.7}, {"ticker": "NCNO", "sector": "Technology Services", "scans": ["Trend"], "close": 21.25, "p1d": -0.84, "p1w": -8.6, "p1m": 12.4, "p3m": 43.8, "p6m": 39.1, "ytd": -17.5}, {"ticker": "CDW", "sector": "Technology Services", "scans": ["Breakout"], "close": 153.79, "p1d": 7.85, "p1w": 0.5, "p1m": 13.2, "p3m": 19.1, "p6m": 34.0, "ytd": 12.1}, {"ticker": "NVT", "sector": "Electronic Technology", "scans": ["Breakout"], "close": 162.38, "p1d": 4.65, "p1w": 5.8, "p1m": -5.1, "p3m": -2.4, "p6m": 48.5, "ytd": 57.9}, {"ticker": "APH", "sector": "Electronic Technology", "scans": ["Breakout"], "close": 83.92, "p1d": 4.57, "p1w": 1.3, "p1m": -2.5, "p3m": 9.2, "p6m": 27.2, "ytd": 22.4}, {"ticker": "AXSM", "sector": "Health Technology", "scans": ["Breakout"], "close": 220.75, "p1d": 4.56, "p1w": 6.6, "p1m": 1.8, "p3m": -12.8, "p6m": 42.8, "ytd": 20.4}, {"ticker": "DKNG", "sector": "Consumer Services", "scans": ["Breakout"], "close": 24.74, "p1d": 4.34, "p1w": 3.1, "p1m": -1.7, "p3m": -17.3, "p6m": -3.4, "ytd": -28.5}, {"ticker": "P", "sector": "Electronic Technology", "scans": ["Breakout"], "close": 98.18, "p1d": 4.34, "p1w": 0.2, "p1m": -12.7, "p3m": 40.3, "p6m": 59.1, "ytd": 43.5}, {"ticker": "CGNX", "sector": "Electronic Technology", "scans": ["Breakout"], "close": 64.22, "p1d": 4.1, "p1w": 5.3, "p1m": -0.0, "p3m": 3.0, "p6m": 31.1, "ytd": 76.3}, {"ticker": "RAL", "sector": "Electronic Technology", "scans": ["Breakout"], "close": 67.25, "p1d": 3.97, "p1w": 7.5, "p1m": -7.1, "p3m": 2.2, "p6m": 55.1, "ytd": 30.7}, {"ticker": "ETN", "sector": "Producer Manufacturing", "scans": ["Breakout"], "close": 425.37, "p1d": 3.96, "p1w": 6.1, "p1m": -10.6, "p3m": 7.3, "p6m": 21.1, "ytd": 31.6}, {"ticker": "IBM", "sector": "Technology Services", "scans": ["Breakout"], "close": 243.29, "p1d": 3.96, "p1w": 4.3, "p1m": 2.7, "p3m": -12.8, "p6m": -1.8, "ytd": -18.2}, {"ticker": "NOKBF", "sector": "Electronic Technology", "scans": ["Breakout"], "close": 11.0, "p1d": 3.91, "p1w": 10.2, "p1m": 4.1, "p3m": -22.2, "p6m": 35.4, "ytd": 70.3}, {"ticker": "GME", "sector": "Retail Trade", "scans": ["Breakout"], "close": 21.15, "p1d": 3.73, "p1w": 9.4, "p1m": 12.4, "p3m": -4.1, "p6m": -13.0, "ytd": 4.4}, {"ticker": "BLSH", "sector": "Technology Services", "scans": ["Breakout"], "close": 35.12, "p1d": 3.66, "p1w": 1.2, "p1m": 41.7, "p3m": 28.7, "p6m": -6.6, "ytd": -8.6}, {"ticker": "TEL", "sector": "Electronic Technology", "scans": ["Breakout"], "close": 211.96, "p1d": 3.58, "p1w": 1.8, "p1m": -4.1, "p3m": 0.7, "p6m": 6.5, "ytd": -8.0}, {"ticker": "MFG", "sector": "Finance", "scans": ["Breakout"], "close": 11.45, "p1d": 3.53, "p1w": 1.6, "p1m": 6.2, "p3m": 19.3, "p6m": 47.4, "ytd": 54.5}, {"ticker": "BMNR", "sector": "Finance", "scans": ["Breakout"], "close": 25.03, "p1d": 3.43, "p1w": -1.2, "p1m": 36.3, "p3m": 53.5, "p6m": 15.0, "ytd": -10.6}, {"ticker": "ACN", "sector": "Technology Services", "scans": ["Breakout"], "close": 183.9, "p1d": 3.37, "p1w": -4.2, "p1m": 4.5, "p3m": 9.2, "p6m": -6.8, "ytd": -31.6}, {"ticker": "AME", "sector": "Producer Manufacturing", "scans": ["Breakout"], "close": 241.87, "p1d": 3.26, "p1w": 3.3, "p1m": -6.6, "p3m": 5.9, "p6m": 11.3, "ytd": 17.4}, {"ticker": "SMMT", "sector": "Health Technology", "scans": ["Breakout"], "close": 17.55, "p1d": 3.24, "p1w": 3.6, "p1m": 13.9, "p3m": 35.0, "p6m": 11.8, "ytd": -1.1}, {"ticker": "ARMK", "sector": "Consumer Services", "scans": ["Breakout"], "close": 58.55, "p1d": 3.15, "p1w": 2.9, "p1m": -3.7, "p3m": 6.8, "p6m": 45.3, "ytd": 58.8}, {"ticker": "SCI", "sector": "Consumer Services", "scans": ["Breakout"], "close": 82.21, "p1d": 3.11, "p1w": 0.5, "p1m": -1.6, "p3m": 10.5, "p6m": 4.6, "ytd": 5.9}, {"ticker": "BBY", "sector": "Retail Trade", "scans": ["Breakout"], "close": 90.8, "p1d": 3.08, "p1w": 3.8, "p1m": 9.8, "p3m": 16.7, "p6m": 43.6, "ytd": 34.7}, {"ticker": "DLB", "sector": "Technology Services", "scans": ["Breakout"], "close": 64.48, "p1d": 2.97, "p1w": 4.9, "p1m": 6.1, "p3m": 22.4, "p6m": 2.4, "ytd": 0.0}, {"ticker": "GFL", "sector": "Industrial Services", "scans": ["Breakout"], "close": 42.85, "p1d": 2.93, "p1w": -0.1, "p1m": 4.4, "p3m": 20.1, "p6m": -1.9, "ytd": -0.5}, {"ticker": "TMUS", "sector": "Communications", "scans": ["Breakout"], "close": 182.33, "p1d": 2.92, "p1w": -2.7, "p1m": 2.6, "p3m": -2.3, "p6m": -15.0, "ytd": -9.8}, {"ticker": "QCOM", "sector": "Electronic Technology", "scans": ["Breakout"], "close": 181.97, "p1d": 2.88, "p1w": 7.1, "p1m": 9.0, "p3m": -9.8, "p6m": 38.7, "ytd": 4.7}, {"ticker": "GAP", "sector": "Retail Trade", "scans": ["Breakout"], "close": 21.51, "p1d": 2.87, "p1w": -2.8, "p1m": 4.0, "p3m": -2.6, "p6m": -7.4, "ytd": -16.6}, {"ticker": "AMT", "sector": "Finance", "scans": ["Breakout"], "close": 177.85, "p1d": 2.82, "p1w": 0.8, "p1m": 5.1, "p3m": -5.3, "p6m": -2.3, "ytd": 1.5}, {"ticker": "REXR", "sector": "Finance", "scans": ["Breakout"], "close": 38.04, "p1d": 2.81, "p1w": 3.5, "p1m": 5.3, "p3m": 9.1, "p6m": 7.8, "ytd": -1.8}, {"ticker": "SMFG", "sector": "Finance", "scans": ["Breakout"], "close": 27.29, "p1d": 2.79, "p1w": 0.2, "p1m": 4.8, "p3m": 13.0, "p6m": 40.7, "ytd": 40.2}, {"ticker": "RVTY", "sector": "Health Technology", "scans": ["Breakout"], "close": 124.31, "p1d": 2.79, "p1w": -4.4, "p1m": 7.9, "p3m": 21.5, "p6m": 45.1, "ytd": 27.9}, {"ticker": "KR", "sector": "Retail Trade", "scans": ["Breakout"], "close": 58.49, "p1d": 2.7, "p1w": 0.2, "p1m": 5.8, "p3m": -8.7, "p6m": -21.8, "ytd": -6.2}, {"ticker": "TAL", "sector": "Commercial Services", "scans": ["Breakout"], "close": 11.81, "p1d": 2.7, "p1w": -2.4, "p1m": -1.3, "p3m": 24.3, "p6m": 8.2, "ytd": 5.4}, {"ticker": "KEP", "sector": "Utilities", "scans": ["Breakout"], "close": 12.21, "p1d": 2.69, "p1w": 3.5, "p1m": -0.9, "p3m": -2.4, "p6m": -25.0, "ytd": -25.4}, {"ticker": "EBAY", "sector": "Retail Trade", "scans": ["Breakout"], "close": 107.75, "p1d": 2.59, "p1w": 3.4, "p1m": 2.6, "p3m": -2.2, "p6m": 18.7, "ytd": 23.9}, {"ticker": "MUFG", "sector": "Finance", "scans": ["Breakout"], "close": 23.89, "p1d": 2.58, "p1w": -0.5, "p1m": 4.7, "p3m": 19.9, "p6m": 43.1, "ytd": 50.0}, {"ticker": "TER", "sector": "Electronic Technology", "scans": ["Breakout"], "close": 379.72, "p1d": 2.57, "p1w": 9.8, "p1m": -4.2, "p3m": -0.6, "p6m": 30.9, "ytd": 90.5}, {"ticker": "NWG", "sector": "Finance", "scans": ["Breakout"], "close": 18.89, "p1d": 2.55, "p1w": 0.2, "p1m": -1.7, "p3m": 15.0, "p6m": 23.2, "ytd": 5.9}, {"ticker": "RIOT", "sector": "Technology Services", "scans": ["Breakout"], "close": 21.47, "p1d": 2.48, "p1w": 3.5, "p1m": -0.5, "p3m": -19.5, "p6m": 43.1, "ytd": 65.0}, {"ticker": "SAN", "sector": "Finance", "scans": ["Breakout"], "close": 14.96, "p1d": 2.26, "p1w": 0.4, "p1m": 0.5, "p3m": 18.6, "p6m": 35.4, "ytd": 25.3}, {"ticker": "EGO", "sector": "Non-Energy Minerals", "scans": ["Breakout"], "close": 43.75, "p1d": 2.24, "p1w": 2.4, "p1m": 8.7, "p3m": 43.8, "p6m": 13.3, "ytd": 19.8}, {"ticker": "JCI", "sector": "Producer Manufacturing", "scans": ["Breakout"], "close": 146.01, "p1d": 2.24, "p1w": 2.7, "p1m": -6.7, "p3m": 0.1, "p6m": 10.4, "ytd": 21.2}, {"ticker": "HMY", "sector": "Non-Energy Minerals", "scans": ["Breakout"], "close": 20.64, "p1d": 2.23, "p1w": 2.1, "p1m": 2.2, "p3m": 31.8, "p6m": 30.9, "ytd": 2.1}, {"ticker": "ICLR", "sector": "Commercial Services", "scans": ["Breakout"], "close": 169.31, "p1d": 2.18, "p1w": 5.9, "p1m": 2.4, "p3m": 12.8, "p6m": 72.1, "ytd": -8.0}, {"ticker": "TTEK", "sector": "Industrial Services", "scans": ["Breakout"], "close": 36.49, "p1d": 2.18, "p1w": 1.5, "p1m": 3.3, "p3m": 30.6, "p6m": 9.3, "ytd": 8.5}, {"ticker": "KGS", "sector": "Industrial Services", "scans": ["Breakout"], "close": 63.85, "p1d": 2.16, "p1w": 3.1, "p1m": 2.5, "p3m": -5.0, "p6m": 17.4, "ytd": 71.0}, {"ticker": "PSKY", "sector": "Consumer Services", "scans": ["Breakout"], "close": 10.6, "p1d": 2.12, "p1w": -3.3, "p1m": 13.6, "p3m": 1.4, "p6m": 7.6, "ytd": -20.9}, {"ticker": "WPM", "sector": "Non-Energy Minerals", "scans": ["Breakout"], "close": 154.12, "p1d": 2.08, "p1w": -0.6, "p1m": 11.7, "p3m": 35.0, "p6m": 5.9, "ytd": 29.5}, {"ticker": "TRV", "sector": "Finance", "scans": ["Breakout"], "close": 375.2, "p1d": 2.08, "p1w": 0.8, "p1m": 0.7, "p3m": 24.5, "p6m": 22.9, "ytd": 30.0}, {"ticker": "SFTBY", "sector": "Miscellaneous", "scans": ["Breakout"], "close": 21.65, "p1d": 2.07, "p1w": 22.2, "p1m": 21.8, "p3m": 5.3, "p6m": 89.2, "ytd": 52.0}, {"ticker": "SPCX", "sector": "Communications", "scans": ["Breakout"], "close": 151.21, "p1d": 2.04, "p1w": 1.8, "p1m": 12.0, "p3m": 0.8, "p6m": 0.8, "ytd": 0.8}, {"ticker": "TEVA", "sector": "Health Technology", "scans": ["Breakout"], "close": 37.09, "p1d": 2.04, "p1w": 1.9, "p1m": 0.8, "p3m": 6.5, "p6m": 26.2, "ytd": 19.0}, {"ticker": "GLW", "sector": "Electronic Technology", "scans": ["Breakout"], "close": 166.4, "p1d": 2.01, "p1w": 12.0, "p1m": -1.4, "p3m": -6.5, "p6m": 26.8, "ytd": 87.2}, {"ticker": "T", "sector": "Communications", "scans": ["Breakout"], "close": 26.06, "p1d": 2.0, "p1w": -0.2, "p1m": 7.1, "p3m": 12.8, "p6m": -5.2, "ytd": 5.1}, {"ticker": "CLF", "sector": "Non-Energy Minerals", "scans": ["Breakout"], "close": 12.06, "p1d": 1.94, "p1w": -1.1, "p1m": -3.9, "p3m": -13.5, "p6m": 35.5, "ytd": -10.7}, {"ticker": "MSTR", "sector": "Technology Services", "scans": ["Breakout"], "close": 130.97, "p1d": 1.87, "p1w": -4.6, "p1m": 34.8, "p3m": 9.6, "p6m": -9.0, "ytd": -15.3}, {"ticker": "AEM", "sector": "Non-Energy Minerals", "scans": ["Breakout"], "close": 200.36, "p1d": 1.87, "p1w": -0.7, "p1m": 7.3, "p3m": 26.9, "p6m": -7.7, "ytd": 17.7}, {"ticker": "GDDY", "sector": "Technology Services", "scans": ["Breakout"], "close": 98.07, "p1d": 1.76, "p1w": -4.1, "p1m": 10.3, "p3m": 31.5, "p6m": 20.1, "ytd": -20.7}, {"ticker": "WMG", "sector": "Commercial Services", "scans": ["Breakout"], "close": 28.33, "p1d": 1.76, "p1w": -3.0, "p1m": 13.0, "p3m": -1.0, "p6m": 4.7, "ytd": -7.6}, {"ticker": "AAPL", "sector": "Electronic Technology", "scans": ["Breakout"], "close": 332.27, "p1d": 1.75, "p1w": 1.2, "p1m": 8.9, "p3m": 12.2, "p6m": 30.1, "ytd": 22.0}, {"ticker": "IQV", "sector": "Health Technology", "scans": ["Breakout"], "close": 261.77, "p1d": 1.74, "p1w": -2.5, "p1m": 9.2, "p3m": 44.5, "p6m": 59.0, "ytd": 16.1}, {"ticker": "COIN", "sector": "Finance", "scans": ["Breakout"], "close": 175.26, "p1d": 1.73, "p1w": -5.2, "p1m": 16.8, "p3m": 9.2, "p6m": -14.0, "ytd": -24.0}, {"ticker": "INSM", "sector": "Health Technology", "scans": ["Breakout"], "close": 129.41, "p1d": 1.67, "p1w": 2.7, "p1m": -2.2, "p3m": 36.0, "p6m": -8.0, "ytd": -26.4}, {"ticker": "SONY", "sector": "Electronic Technology", "scans": ["Breakout"], "close": 23.9, "p1d": 1.62, "p1w": -3.3, "p1m": 1.4, "p3m": 14.6, "p6m": 10.3, "ytd": -7.8}, {"ticker": "CNC", "sector": "Health Services", "scans": ["Breakout"], "close": 66.42, "p1d": 1.56, "p1w": -0.5, "p1m": 3.0, "p3m": 3.5, "p6m": 93.9, "ytd": 61.3}, {"ticker": "CTAS", "sector": "Commercial Services", "scans": ["Breakout"], "close": 201.5, "p1d": 1.54, "p1w": 1.6, "p1m": -0.6, "p3m": 10.8, "p6m": 3.7, "ytd": 7.4}, {"ticker": "KT", "sector": "Communications", "scans": ["Breakout"], "close": 19.9, "p1d": 1.53, "p1w": 0.5, "p1m": 6.4, "p3m": 8.5, "p6m": -9.6, "ytd": 5.6}, {"ticker": "PAA", "sector": "Industrial Services", "scans": ["Breakout"], "close": 26.1, "p1d": 1.5, "p1w": 2.3, "p1m": 12.5, "p3m": 16.1, "p6m": 23.8, "ytd": 45.0}, {"ticker": "ASO", "sector": "Retail Trade", "scans": ["Weekly"], "close": 55.36, "p1d": 2.11, "p1w": 26.7, "p1m": 11.6, "p3m": 3.9, "p6m": -0.9, "ytd": 9.3}, {"ticker": "SIG", "sector": "Retail Trade", "scans": ["Weekly"], "close": 100.26, "p1d": 2.61, "p1w": 23.1, "p1m": 6.7, "p3m": 7.7, "p6m": 20.7, "ytd": 19.4}]}</script>
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById('scanDetailPayload').textContent);
+  const $ = s => document.querySelector(s);
+  const rows = D.rows || [];
+  const GROUPS = [
+    { name: '가격 레벨 돌파', c: 'var(--g1)', scans: ['ATH', 'New52W', 'Breakout'] },
+    { name: '급등·거래량 이벤트', c: 'var(--g2)', scans: ['BullSnort', 'HighVolume', 'Gappers', 'Weekly'] },
+    { name: '추세 지속', c: 'var(--g3)', scans: ['RS', 'Trend'] },
+    { name: '연장된 상승폭', c: 'var(--g4)', scans: ['Doublers', 'OffsetDoublers'] },
+  ];
+  const LABEL = { New52W: 'New 52W', BullSnort: 'Bull Snort', HighVolume: 'High Volume', OffsetDoublers: 'Offset Doublers' };
+  const softEx = new Set(D.soft_excluded || []), softLag = new Set(D.soft_lagging || []);
+  const colorOf = {};
+  GROUPS.forEach(g => g.scans.forEach(s => { colorOf[s] = g.c; }));
+  const ORDER = GROUPS.flatMap(g => g.scans);
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+  const flag = s => (softEx.has(s) ? ' soft' : '') + (softLag.has(s) ? ' lagging' : '');
+
+  $('#asof').textContent = D.asof || '-';
+  $('#nTickers').textContent = rows.length;
+  $('#nSignals').textContent = rows.reduce((a, r) => a + r.scans.length, 0);
+
+  const scanCount = {};
+  rows.forEach(r => r.scans.forEach(s => { scanCount[s] = (scanCount[s] || 0) + 1; }));
+  const selected = new Set();
+  $('#groups').innerHTML = GROUPS.map(g => {
+    const chips = g.scans.filter(s => scanCount[s]).map(s =>
+      `<button class="chip${flag(s)}" data-scan="${s}" style="--c:${g.c}" type="button"><span>${LABEL[s] || s}</span><b class="num">${scanCount[s]}</b></button>`).join('');
+    return chips ? `<div class="group" style="--c:${g.c}"><div class="gname"><span class="dot"></span>${g.name}</div><div class="chips">${chips}</div></div>` : '';
+  }).join('');
+
+  const secCount = {};
+  rows.forEach(r => { secCount[r.sector] = (secCount[r.sector] || 0) + 1; });
+  Object.entries(secCount).sort((a, b) => b[1] - a[1]).forEach(([s, n]) => {
+    const o = document.createElement('option'); o.value = s; o.textContent = `${s} (${n})`; $('#fSector').appendChild(o);
+  });
+
+  const pct = v => v == null ? '<span class="faint">-</span>' : `<span class="${v > 0 ? 'up' : v < 0 ? 'down' : ''}">${v > 0 ? '+' : ''}${Number(v).toFixed(1)}%</span>`;
+  const maxScans = Math.max(1, ...rows.map(r => r.scans.length));
+  const COLS = [
+    { k: 'ticker', t: 'Ticker', l: true, v: r => r.ticker, cls: 'tk',
+      f: r => `<a href="https://www.tradingview.com/chart/?symbol=${encodeURIComponent(r.ticker)}" target="_blank" rel="noopener">${esc(r.ticker)}</a>` },
+    { k: 'sector', t: 'Sector', l: true, v: r => r.sector, f: r => esc(r.sector), cls: 'sec' },
+    { k: 'n', t: '스캔 수', v: r => r.scans.length,
+      f: r => `<span class="ncount num" style="--k:${Math.round(15 + (r.scans.length / maxScans) * 55)}">${r.scans.length}</span>` },
+    { k: 'scans', t: '걸린 스캔', l: true, v: r => r.scans.map(s => ORDER.indexOf(s)).join(','), cls: 'scans', nosort: true,
+      f: r => [...r.scans].sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b))
+        .map(s => `<span class="pill${flag(s)}" style="--c:${colorOf[s] || 'var(--text-faint)'}">${LABEL[s] || s}</span>`).join('') },
+    { k: 'close', t: '종가', v: r => r.close ?? -1, f: r => r.close == null ? '<span class="faint">-</span>' : `<span class="num">${Number(r.close).toFixed(2)}</span>` },
+    { k: 'p1d', t: '1D', v: r => r.p1d ?? -9999, f: r => `<span class="num">${pct(r.p1d)}</span>` },
+    { k: 'p1w', t: '1W', v: r => r.p1w ?? -9999, f: r => `<span class="num">${pct(r.p1w)}</span>` },
+    { k: 'p1m', t: '1M', v: r => r.p1m ?? -9999, f: r => `<span class="num">${pct(r.p1m)}</span>` },
+    { k: 'p3m', t: '3M', v: r => r.p3m ?? -9999, f: r => `<span class="num">${pct(r.p3m)}</span>` },
+    { k: 'p6m', t: '6M', v: r => r.p6m ?? -9999, f: r => `<span class="num">${pct(r.p6m)}</span>` },
+    { k: 'ytd', t: 'YTD', v: r => r.ytd ?? -9999, f: r => `<span class="num">${pct(r.ytd)}</span>` },
+  ];
+  let sortK = 'n', desc = true;
+
+  function renderHead() {
+    $('#head').innerHTML = COLS.map(c => `<th class="${c.l ? 'l' : ''}${c.k === sortK ? ' sorted' : ''}" data-k="${c.nosort ? '' : c.k}">${c.t}${c.k === sortK ? (desc ? ' ↓' : ' ↑') : ''}</th>`).join('');
+    document.querySelectorAll('#head th').forEach(th => th.onclick = () => {
+      const k = th.dataset.k;
+      if (!k) return;
+      if (sortK === k) desc = !desc; else { sortK = k; desc = !['ticker', 'sector'].includes(k); }
+      render();
+    });
+  }
+
+  function filtered() {
+    const q = $('#q').value.trim().toUpperCase(), fc = $('#fSector').value, min = +$('#fMin').value;
+    const col = COLS.find(c => c.k === sortK);
+    return rows.filter(r =>
+      (!q || (r.ticker + ' ' + r.sector).toUpperCase().includes(q)) &&
+      (!fc || r.sector === fc) &&
+      r.scans.length >= min &&
+      [...selected].every(s => r.scans.includes(s))
+    ).sort((a, b) => {
+      const x = col.v(a), y = col.v(b);
+      const d = typeof x === 'number' && typeof y === 'number' ? x - y : String(x).localeCompare(String(y));
+      return (desc ? -d : d) || (b.p1m ?? -9999) - (a.p1m ?? -9999);
+    });
+  }
+
+  function render() {
+    renderHead();
+    const list = filtered();
+    $('#body').innerHTML = list.map(r => `<tr>${COLS.map(c => `<td class="${c.l ? 'l ' : ''}${c.cls || ''}">${c.f(r)}</td>`).join('')}</tr>`).join('')
+      || `<tr><td class="l faint" colspan="${COLS.length}">조건에 맞는 종목이 없습니다</td></tr>`;
+    $('#count').textContent = `${list.length} / ${rows.length}종목`;
+    document.querySelectorAll('.chip').forEach(ch => ch.classList.toggle('on', selected.has(ch.dataset.scan)));
+    $('#activeScans').textContent = selected.size ? `선택: ${[...selected].map(s => LABEL[s] || s).join(' + ')}${selected.size > 1 ? ' (모두 걸린 종목)' : ''}` : '';
+  }
+
+  document.querySelectorAll('.chip').forEach(ch => ch.onclick = () => {
+    const s = ch.dataset.scan;
+    selected.has(s) ? selected.delete(s) : selected.add(s);
+    render();
+  });
+  ['#q', '#fSector', '#fMin'].forEach(s => $(s).addEventListener('input', render));
+  $('#reset').onclick = () => { $('#q').value = ''; $('#fSector').value = ''; $('#fMin').value = '1'; selected.clear(); render(); };
+
+  const params = new URLSearchParams(location.search);
+  if (params.get('sector')) $('#fSector').value = params.get('sector');
+  (params.get('scan') || '').split(',').filter(s => scanCount[s]).forEach(s => selected.add(s));
+
+  render();
+})();
+</script>
