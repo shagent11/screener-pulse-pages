@@ -430,7 +430,7 @@
         <h2>섹터 × 스테이지 분포</h2>
         <a class="refresh-btn" href="./stage.html" style="text-decoration:none" title="종목별 단계·S2 세부단계·점수를 표로 보기">종목별 보기 <span class="ic">&#8599;</span></a>
       </div>
-      <div class="panel-sub">스크리너 공통 유니버스(시총 $2B↑·베타 1.0↑·종가 $20↑·거래량 50만↑) <span id="stageQueried">-</span>종목 중 <span id="stageTotal">-</span>종목 분류 성공<span id="stageExcluded"></span> — 전체를 <b>다지기(S1) → 상승(S2) → 천정(S3) → 하락(S4)</b>로 라벨링 후 섹터별 집계(섹터는 S2 상승 비율 높은 순). <b>멀티 타임프레임 점수 방식</b>: 일봉 21EMA·50EMA·200SMA와 주봉 21EMA·50EMA의 배열·기울기, 1년/6개월 수익률, 52주 고점 대비 낙폭, 50EMA가 200SMA 위에 머문 기간 등으로 S1~S4 점수를 매겨 최고점 단계로 분류(장기 급락 후 단기 반등은 S2로 확정하지 않음). 상승(S2) 옆 <b>2A/2B/2C</b>는 세부단계(2A 초기 전환 · 2B 지속 추세 · 2C 후기 확장 — 2C는 단기 급등만으론 부여하지 않고 1년 성과와 추세 지속기간이 함께 확인될 때만). 1·2위 점수 차가 작은 <b>경계 종목</b>(예: S2/S3, 2A/2B)은 1순위 칸에만 세고, 셀에 마우스를 올리면 그 칸의 경계 종목 목록이 보임 — 합계와 열 합이 항상 일치. 셀 채도는 섹터 내 비중(2A/2B/2C는 그 섹터 상승 종목 중 비중) · 매매 신호가 아니라 차트 검토 우선순위용이며 경계·바이오·IPO·급등락 종목은 주봉 차트 확인 필요 · <b>이 패널의 유니버스는 섹터×스캔 교차표와 다름</b>(공통 필터가 더 엄격해 교차표엔 있는데 여기 없는 섹터가 나올 수 있음)</div>
+      <div class="panel-sub">스크리너 공통 유니버스(시총 $2B↑·베타 1.0↑·종가 $20↑·거래량 50만↑) <span id="stageQueried">-</span>종목 중 <span id="stageTotal">-</span>종목 분류 성공<span id="stageExcluded"></span> — 전체를 <b>다지기(S1) → 상승(S2) → 천정(S3) → 하락(S4)</b>로 라벨링 후 섹터별 집계(열 제목을 누르면 그 단계 종목 수 순으로 정렬 — 기본 S2 많은 순, 한 번 더 누르면 반대로). <b>멀티 타임프레임 점수 방식</b>: 일봉 21EMA·50EMA·200SMA와 주봉 21EMA·50EMA의 배열·기울기, 1년/6개월 수익률, 52주 고점 대비 낙폭, 50EMA가 200SMA 위에 머문 기간 등으로 S1~S4 점수를 매겨 최고점 단계로 분류(장기 급락 후 단기 반등은 S2로 확정하지 않음). 상승(S2) 옆 <b>2A/2B/2C</b>는 세부단계(2A 초기 전환 · 2B 지속 추세 · 2C 후기 확장 — 2C는 단기 급등만으론 부여하지 않고 1년 성과와 추세 지속기간이 함께 확인될 때만). 1·2위 점수 차가 작은 <b>경계 종목</b>(예: S2/S3, 2A/2B)은 1순위 칸에만 세고, 셀에 마우스를 올리면 그 칸의 경계 종목 목록이 보임 — 합계와 열 합이 항상 일치. 셀 채도는 섹터 내 비중(2A/2B/2C는 그 섹터 상승 종목 중 비중) · 매매 신호가 아니라 차트 검토 우선순위용이며 경계·바이오·IPO·급등락 종목은 주봉 차트 확인 필요 · <b>이 패널의 유니버스는 섹터×스캔 교차표와 다름</b>(공통 필터가 더 엄격해 교차표엔 있는데 여기 없는 섹터가 나올 수 있음)</div>
       <div class="scroll-x">
         <div class="stagegrid" id="stageGrid"></div>
       </div>
@@ -983,20 +983,22 @@
       { key: 'stage4', label: 'S4', color: 'var(--down)', title: 'S4 하락' },
     ];
 
+    // 열 제목 클릭 = 그 열 종목 수 기준 정렬(기본 S2 내림차순, 같은 열 다시 누르면 오름차순), 선택은 브라우저에 기억
+    const sortArrow = key => key === stageSort.key ? (stageSort.desc ? ' ↓' : ' ↑') : '';
+    const headStyle = key => `cursor:pointer;${key === stageSort.key ? 'color:var(--accent);font-weight:700;' : ''}`;
     let h = '<div></div>';
     STAGES.forEach(st => {
       const cls = 'st-colhead' + (st.sub ? ' sub' : '');
-      const tip = st.title || `Stage ${st.key.slice(-1)}: ${st.label}`;
-      h += `<div class="${cls}" title="${tip}">${st.sub ? '' : `<span class="dot" style="background:${st.color}"></span>`}${st.label}</div>`;
+      const tip = (st.title || st.label) + ' — 눌러서 종목 수 순 정렬';
+      h += `<div class="${cls}" data-sort="${st.key}" style="${headStyle(st.key)}" title="${tip}">${st.sub ? '' : `<span class="dot" style="background:${st.color}"></span>`}${st.label}${sortArrow(st.key)}</div>`;
     });
-    h += '<div class="st-colhead">합계</div>';
+    h += `<div class="st-colhead" data-sort="total" style="${headStyle('total')}" title="합계 — 눌러서 정렬">합계${sortArrow('total')}</div>`;
 
-    // 섹터 순서: S2(상승) 비율 높은 순 → 같으면 S2 종목수 → 합계
-    const s2ratio = r => (r.total ? (r.stage2 || 0) / r.total : 0);
+    const dir = stageSort.desc ? 1 : -1;
     const sectors = [...sd.sectors].sort((a, b) =>
-      s2ratio(b) - s2ratio(a) || (b.stage2 || 0) - (a.stage2 || 0) || b.total - a.total);
+      ((b[stageSort.key] || 0) - (a[stageSort.key] || 0)) * dir || b.total - a.total);
     sectors.forEach(r => {
-      h += `<div class="st-rowlabel" title="${r.sector} · S2 비율 ${Math.round(s2ratio(r) * 100)}%">${r.sector}</div>`;
+      h += `<div class="st-rowlabel" title="${r.sector}">${r.sector}</div>`;
       STAGES.forEach(st => {
         const v = r[st.key] || 0;
         // sub 열(2A/2B/2C)은 섹터 전체가 아니라 그 섹터의 상승(stage2) 종목 중 비중으로 —
@@ -1017,7 +1019,18 @@
       h += `<div class="st-cell st-total">${r.total}</div>`;
     });
     el.innerHTML = h;
+    el.querySelectorAll('[data-sort]').forEach(head => head.addEventListener('click', () => {
+      const key = head.dataset.sort;
+      stageSort = key === stageSort.key ? { key, desc: !stageSort.desc } : { key, desc: true };
+      try { localStorage.setItem('stageGridSort', JSON.stringify(stageSort)); } catch (e) {}
+      renderStageGrid();
+    }));
   }
+  let stageSort = { key: 'stage2', desc: true };
+  try {
+    const saved = JSON.parse(localStorage.getItem('stageGridSort') || 'null');
+    if (saved && typeof saved.key === 'string') stageSort = { key: saved.key, desc: saved.desc !== false };
+  } catch (e) {}
   renderStageGrid();
 
   renderHeatmapGeneric('heatmap', data.sector_day_unique, 8, data.dates, null, data.sector_day);
