@@ -317,15 +317,6 @@
   .verdict-tag.weak { background: color-mix(in srgb, var(--down) 20%, transparent); color: var(--down); }
   .verdict-tag.mixed { background: var(--surface-alt); color: var(--text-faint); border: 1px solid var(--border); }
 
-  .mtl-table-wrap { overflow-x: auto; }
-  .mtl-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .mtl-table th, .mtl-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
-  .mtl-table th { color: var(--text-muted); font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: .02em; }
-  .mtl-table td.num { font-family: ui-monospace, "SF Mono", "Cascadia Mono", "Menlo", monospace; font-variant-numeric: tabular-nums; text-align: right; }
-  .mtl-table td.mtl-ticker { font-weight: 700; color: var(--accent); }
-  .mtl-table td.num.neg { color: var(--down); }
-  .mtl-table td.num.pos { color: var(--up); }
-  .mtl-table tbody tr:hover { background: var(--surface-alt); }
 </style>
 
 <div class="wrap">
@@ -483,25 +474,6 @@
     </div>
   </section>
 
-  <section>
-    <div class="panel">
-      <h2>🏆 MTL 후보군</h2>
-      <div class="panel-sub">Market True Leader — 강세그룹(섹터강세 배지) 전체 종목 대상, RS≥80 · 가격≥$10 · 52W 고점대비 낙폭≤20% · ATR%≥4 · 시총≥$5B · 평균거래량(3M)≥300만 6개 조건을 모두 통과한 종목. 같은 그룹에서 2종목 이상 통과한 그룹만 표시(단일종목 그룹은 노이즈로 판단해 제외). 매일 갱신 아님 — 주 마지막 거래일(토요일) 기준 주 1회 업데이트. 그룹(대표종목 시총 기준)→그룹 내 시총 순 정렬. 최근 갱신: 2026-09-15.</div>
-      <div class="mtl-table-wrap">
-        <table class="mtl-table">
-          <thead>
-            <tr><th>티커</th><th>그룹</th><th>RS</th><th>가격</th><th>MDD%</th><th>ATR%</th><th>시총($B)</th><th>평균거래량(M)</th></tr>
-          </thead>
-          <tbody>
-            <tr><td class="mtl-ticker">MRNA</td><td>Health Technology</td><td class="num">98</td><td class="num">$142.32</td><td class="num neg">-19.4%</td><td class="num">8.6%</td><td class="num">56.8</td><td class="num">13.38</td></tr>
-            <tr><td class="mtl-ticker">TXG</td><td>Health Technology</td><td class="num">98</td><td class="num">$65.52</td><td class="num neg">-6.0%</td><td class="num">5.5%</td><td class="num">8.5</td><td class="num">3.08</td></tr>
-
-
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
 
   <footer>2026_Invest.xlsx(Screener_Log+ETF) + tv_screener_log.json 반영(2026-09-14 기준) · MAX_LOG_DAYS=60, 계속 누적 예정</footer>
 </div>
