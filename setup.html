@@ -99,6 +99,32 @@
   footer { text-align: center; font-size: 11.5px; color: var(--text-faint); margin-top: 8px; line-height: 1.6; }
 
   /* ── Setup Library (collapsible catalog card) ── */
+  /* 기준일 배지 + 스캔 설명 플로팅 (2026-09-15) */
+  .asof {
+    display: inline-flex; align-items: center; gap: 7px; margin-top: 10px;
+    font-size: 12.5px; color: var(--text-muted); background: var(--surface-alt);
+    border: 1px solid var(--border); border-radius: 999px; padding: 5px 13px;
+  }
+  .asof b { color: var(--text); font-weight: 700; }
+  .asof-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--up); }
+  .note-wrap { position: relative; margin: 16px 0 20px; }
+  .note-chip {
+    display: inline-flex; align-items: center; gap: 6px; cursor: help; font-size: 12.5px; font-weight: 700;
+    color: var(--accent); background: var(--surface-alt); border: 1px solid var(--border);
+    border-radius: 999px; padding: 5px 13px;
+  }
+  .note-chip::before { content: "\24D8"; font-weight: 400; }
+  .note-chip:hover { border-color: var(--accent); }
+  .phase-note.floating {
+    display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 40; margin: 0;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 16px; font-size: 12.5px; line-height: 1.75; color: var(--text-muted);
+    box-shadow: 0 12px 32px -10px rgba(0,0,0,.5); max-height: 56vh; overflow-y: auto;
+  }
+  .phase-note.floating b { color: var(--text); }
+  .phase-note.floating code { font-size: 11.5px; }
+  .phase-note.floating.show { display: block; }
+
   .lib-card {
     background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
     box-shadow: var(--shadow); margin-bottom: 28px; overflow: hidden;
@@ -188,6 +214,7 @@
   <div class="eyebrow">SH Trading System · Setup Channel</div>
   <h1>Setup Channel</h1>
   <div class="sub">확정된 5개 셋업(HTF·Long Base BO·Uptrend Pullback·Episodic Pivot·VCP) 라이브 스캔 — 셋업 정의·차트 패턴은 아래 라이브러리 카드 참고</div>
+  <div class="asof"><span class="asof-dot"></span>기준일 <b class="num" id="asofDate">-</b> 장마감 확정 종가 · 매칭 <b class="num" id="asofCount">-</b>건</div>
 
   <details class="lib-card">
     <summary><span class="ic">📚</span> Setup Library — 셋업 이름 + 차트 패턴 원형(archetype) 다이어그램 카탈로그 <span class="cnt">7종</span><span class="chev">▶</span></summary>
@@ -623,8 +650,11 @@
     </div>
   </details>
 
-  <div class="phase-note">
+  <div class="note-wrap">
+    <span class="note-chip" id="scanNoteChip">스캔 설명</span>
+    <div class="phase-note floating" id="scanNoteBody">
     <b>2026-09-02 5개 셋업 최종 확정 후 첫 라이브 스캔</b> — ARM/OKTA/PARR 등 실제 차트로 여러 차례 캘리브레이션 완료한 <code>screen_setups_live.py</code> 결과 그대로. HTF·Long Base BO·VCP는 "이미 돌파(Fresh)"와 "아직 안 뚫고 근접(Near)"을 구분해서 보여줌 — Fresh는 트리거된 신호, Near는 돌파 임박 관찰 대상. Uptrend Pullback은 streak_days(며칠째 조정폭 유지 중인지)를 함께 표시. <b>2026-09-03: Strength Confirmation → 거래량 신기록(HVE/HVY/HVQ) 스캔으로 교체</b> — 오늘 거래량이 다운로드된 3년 히스토리 중 최고치(HVE, "역대" 근사)/올해 들어(YTD) 최고치(HVY)/이번 분기(QTD) 최고치(HVQ)인 종목. Ever&gt;Year&gt;Quarter 순으로 상위 티어가 항상 하위 기간을 포함하므로 겹치지 않게 최상위 티어 하나로만 분류(ATH/52W신고가와 같은 부분집합 문제 회피). 차트 패턴형 셋업(진입/무효화 기준 있음)과 달리 "이미 강세/이벤트가 확인된 종목"을 보여주는 확인용 스캔이라 별도 그룹으로 표시. 기준일 <span class="num" id="scanDate"></span>(장마감 확정 종가) · 유니버스: 시총&gt;$10억, 10일평균거래량&gt;80만주, 종가&gt;$3, ATR%&gt;3% (5개 셋업과 동일 유니버스)
+    </div>
   </div>
 
   <div class="group-label">Breakout (Fresh)</div>
@@ -731,6 +761,21 @@ function statCard(p) {
   </div>`;
 }
 document.getElementById('scanDate').textContent = DATA.date;
+document.getElementById('asofDate').textContent = DATA.date;
+document.getElementById('asofCount').textContent = DATA.rows.length;
+
+// 스캔 설명: 칩 hover/클릭 시 플로팅 카드 (2026-09-15)
+(function () {
+  const chip = document.getElementById('scanNoteChip'), box = document.getElementById('scanNoteBody');
+  if (!chip || !box) return;
+  let pinned = false;
+  const hide = () => { if (!pinned && !box.matches(':hover') && !chip.matches(':hover')) box.classList.remove('show'); };
+  chip.addEventListener('mouseenter', () => box.classList.add('show'));
+  chip.addEventListener('mouseleave', () => setTimeout(hide, 150));
+  box.addEventListener('mouseenter', () => box.classList.add('show'));
+  box.addEventListener('mouseleave', () => setTimeout(hide, 150));
+  chip.addEventListener('click', () => { pinned = !pinned; pinned ? box.classList.add('show') : box.classList.remove('show'); });
+})();
 ['statBreakout','statWatching','statMomentum','statStrength'].forEach(gid => {
   document.getElementById(gid).innerHTML = PATTERNS.filter(p => p.group === gid).map(statCard).join('');
 });
