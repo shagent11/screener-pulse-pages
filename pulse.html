@@ -121,6 +121,14 @@
   .panel h2 { font-size: 15px; margin: 0 0 3px; font-weight: 700; }
   .panel .panel-sub { font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px; }
 
+  /* 접이식 패널 (2026-09-15) — 제목만 남기고 접기, 상태는 브라우저에 기억 */
+  .fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+  .fold > summary::-webkit-details-marker { display: none; }
+  .fold > summary h2 { margin: 0; }
+  .fold > summary .chev { margin-left: auto; color: var(--text-faint); font-size: 12px; transition: transform .15s; }
+  .fold[open] > summary .chev { transform: rotate(180deg); }
+  .fold > summary:hover h2, .fold > summary:hover .chev { color: var(--accent); }
+
   /* 오늘의 강세 그룹 1D% 새로고침 버튼 (2026-08-28) */
   .panel-title-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 3px; }
   .panel-title-row h2 { margin: 0; }
@@ -391,7 +399,8 @@
 
   <section>
     <div class="panel">
-      <h2>테크 세부 그룹 히트맵</h2>
+      <details class="fold" id="foldSubHeatmap" open>
+      <summary><h2>테크 세부 그룹 히트맵</h2><span class="chev">&#9662;</span></summary>
       <div class="panel-sub">Electronic Technology·Technology Services 안에서 실제 비즈니스 기준으로 세분화(9개 스캔 전체) — 그룹별 소속종목수 격차가 커서(2~71개) 셀 값은 그룹 내 참여율(%, 오늘 매칭 종목수÷그룹 전체 종목수)로 정규화, "기타(장기꼬리)"만 고정 분모가 없어 절대 종목수로 표시(등장 빈도 낮아 개별 분류 안 한 종목 묶음, 임의 분류 방지)</div>
       <div class="scroll-x">
         <div class="heatmap" id="subHeatmap"></div>
@@ -405,6 +414,7 @@
         <span class="sw" style="background:var(--heat-4)"></span>
         <span>많음</span>
       </div>
+      </details>
     </div>
   </section>
 
@@ -922,6 +932,17 @@
     el.innerHTML = h;
   }
   renderScanGrid();
+
+  // 접이식 패널 열림/닫힘 상태 기억 (2026-09-15)
+  document.querySelectorAll('details.fold[id]').forEach(d => {
+    try {
+      const saved = localStorage.getItem('fold:' + d.id);
+      if (saved !== null) d.open = saved === '1';
+    } catch (e) {}
+    d.addEventListener('toggle', () => {
+      try { localStorage.setItem('fold:' + d.id, d.open ? '1' : '0'); } catch (e) {}
+    });
+  });
 
   // ---- 섹터 × 스테이지 분포 (2026-09-09) ----
   function renderStageGrid() {
