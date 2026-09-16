@@ -146,6 +146,73 @@
   }
   a.card:hover .arrow { transform: translateX(3px); color: var(--accent); }
 
+  /* ---- Trading Process 플로우 (2026-09-17 신설) ----
+     구 Trading Process 카드/process.html 폐지 후 다이어그램을 홈 화면에 직접 전개,
+     각 박스가 곧 내비게이션(관련 페이지 있으면 링크, 없으면 Excel process 탭 메모를
+     title 툴팁으로) — Excel 다이어그램(process 탭)을 사용자가 정리한 걸 그대로 이식. */
+  .flow { width: 100%; max-width: 760px; margin: 0 auto 40px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .flow-group { width: 100%; border: 1px dashed var(--border); border-radius: 14px; padding: 24px 16px 18px; position: relative; box-sizing: border-box; }
+  .flow-group-tag { position: absolute; top: -9px; left: 16px; background: var(--bg); padding: 0 8px; font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--text-faint); }
+  .flow-screener { display: flex; justify-content: center; margin-bottom: 14px; }
+  .flow-chain { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; }
+  .flow-arrow { color: var(--text-faint); font-size: 14px; flex-shrink: 0; }
+  .flow-node {
+    display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 9px;
+    background: var(--surface); border: 1px solid var(--border); font: inherit; font-size: 12.5px; font-weight: 700;
+    color: var(--text); text-decoration: none; white-space: nowrap; cursor: pointer; appearance: none;
+    transition: border-color .14s ease, transform .14s ease, box-shadow .14s ease;
+  }
+  a.flow-node, button.flow-node { cursor: pointer; }
+  .flow-node:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .flow-node.good { border-color: var(--up-a55); color: var(--up); }
+  .flow-node.accent { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .flow-node.plain { cursor: default; }
+  .flow-node.plain:hover { transform: none; box-shadow: none; border-color: var(--border); }
+  .flow-connector { color: var(--text-faint); font-size: 15px; line-height: 1; }
+  .flow-loop { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .flow-loop .flow-node { font-size: 11.5px; padding: 6px 12px; }
+  .flow-loop-arrow { color: var(--text-faint); font-size: 11px; line-height: 1; }
+  .flow-portfolio-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%; }
+  .flow-portfolio-row .flow-group { flex: 1; min-width: 280px; }
+  .flow-outside { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .flow-emotional {
+    position: absolute; top: -14px; right: 16px; display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 12px; border-radius: 999px; background: var(--accent-soft); border: 1px solid var(--accent);
+    color: var(--accent); font-size: 10.5px; font-weight: 700; cursor: default; white-space: nowrap;
+  }
+  @media (max-width: 720px) {
+    .flow-portfolio-row { flex-direction: column; }
+    .flow-outside { margin-top: 4px; }
+  }
+  @media (max-width: 480px) {
+    .flow-emotional { position: static; margin: 0 auto 10px; width: fit-content; }
+    .flow-group { padding-top: 20px; }
+  }
+
+  /* Stocks 노드 → 오늘의 섹터강세 리더 드로어 (구 process.html에서 이식) */
+  .leaders-backdrop { position: fixed; inset: 0; background: rgba(10,12,16,.42); z-index: 49; opacity: 1; transition: opacity .18s ease; }
+  .leaders-backdrop.hidden { opacity: 0; pointer-events: none; }
+  .leaders-drawer {
+    position: fixed; top: 0; right: 0; height: 100vh; width: min(420px, 92vw); z-index: 50;
+    background: var(--surface); border-left: 1px solid var(--border); box-shadow: -10px 0 28px rgba(0,0,0,.18);
+    overflow-y: auto; transform: translateX(0); transition: transform .2s ease;
+  }
+  .leaders-drawer.hidden { transform: translateX(100%); pointer-events: none; }
+  .leaders-drawer-head { position: sticky; top: 0; background: var(--surface); padding: 18px 20px 12px; border-bottom: 1px solid var(--border); z-index: 1; }
+  .leaders-drawer-head h3 { margin: 0 0 4px; font-size: 15px; font-weight: 800; }
+  .leaders-drawer-note { font-size: 11px; color: var(--text-faint); line-height: 1.5; }
+  .leaders-drawer-close { position: absolute; top: 14px; right: 16px; border: none; background: none; color: var(--text-faint); font-size: 20px; line-height: 1; cursor: pointer; padding: 2px; }
+  .leaders-drawer-close:hover { color: var(--accent); }
+  .leaders-drawer-body { padding: 14px 20px 28px; }
+  .leaders-loading, .leaders-error, .leaders-empty { font-size: 12.5px; color: var(--text-faint); padding: 20px 0; text-align: center; }
+  .leaders-group { margin-bottom: 18px; }
+  .leaders-group-title { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .leaders-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border-radius: 8px; background: var(--surface-alt); margin-bottom: 5px; }
+  .leaders-ticker { font-weight: 700; font-size: 13px; flex-shrink: 0; }
+  .leaders-nums { display: flex; gap: 9px; font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; font-size: 10.5px; color: var(--text-muted); flex-wrap: wrap; justify-content: flex-end; }
+  .leaders-nums .good { color: var(--up); font-weight: 600; }
+  .leaders-nums .bad { color: var(--down); font-weight: 600; }
+
   /* ---- S.A(Situational Awareness) 진입 카드 — 뷰포트 우상단 고정 ---- */
   .sa-launcher {
     position: fixed; top: 220px; right: 28px; z-index: 4;
@@ -323,6 +390,16 @@
   <span class="fl-sub">관찰일지</span>
 </a>
 
+<div id="leaders-backdrop" class="leaders-backdrop hidden" onclick="closeLeadersDrawer()"></div>
+<aside id="leaders-drawer" class="leaders-drawer hidden">
+  <div class="leaders-drawer-head">
+    <h3>🎯 오늘의 섹터강세 리더</h3>
+    <div class="leaders-drawer-note">verdict=섹터강세 그룹의 종목 중 1M%&ge;5 &amp; ATR%&ge;4 &amp; 평균거래량10D&ge;100만주 통과한 3M% 상위 5개 &middot; Screener Pulse 실시간 연동</div>
+    <button type="button" class="leaders-drawer-close" onclick="closeLeadersDrawer()" aria-label="닫기">&times;</button>
+  </div>
+  <div id="leaders-drawer-body" class="leaders-drawer-body"></div>
+</aside>
+
 <div class="tapebar">
   <div class="tapebar-inner">
     <div class="ticker-tape" id="tickerTape">
@@ -336,6 +413,55 @@
 <div class="wrap">
   <div class="eyebrow">Personal Trading Terminal</div>
   <h1>SH Trading System</h1>
+
+  <div class="flow">
+    <div class="flow-group">
+      <span class="flow-group-tag">Situational Awareness</span>
+      <div class="flow-screener">
+        <a class="flow-node" href="./pulse.html" title="스크리너 결과 → Sector/Group·Setup 후보 공급">📡 Screener</a>
+      </div>
+      <div class="flow-chain">
+        <a class="flow-node good" href="./condition.html" title="M01~M07 신호등 → Condition Journal">Market Condition</a>
+        <span class="flow-arrow">&#8594;</span>
+        <a class="flow-node" href="./group.html" title="섹터 로테이션: 기술주(XLK·SOXX) → 방어주(XLV·XLP·XLU) / 경기민감·중간(XLI·XLF) — 금리인하 기대+리쇼어링 밸류 로테이션 가능성">Sector/Group</a>
+        <span class="flow-arrow">&#8594;</span>
+        <button type="button" class="flow-node" onclick="openLeadersDrawer()" title="클릭 — 오늘의 섹터강세 리더 보기(Screener Pulse 연동)">Stocks</button>
+        <span class="flow-arrow">&#8594;</span>
+        <a class="flow-node" href="./setup.html" title="주식 캐릭터(반복 행동 패턴) 분석 — 21EMA·10EMA pullback tennis ball action, -20% MDD reversal. 1st(pilot)→2nd(재시도)→3rd(관망)">Setup</a>
+      </div>
+    </div>
+
+    <div class="flow-connector">&#8595;</div>
+    <a class="flow-node accent" href="https://claude.ai/code/artifact/60da549b-75af-413a-9290-cc0f5118a5a9" target="pulseFL" title="Focus List(F.L) 열기">&#127919; Focus list</a>
+    <div class="flow-connector">&#8595;</div>
+
+    <div class="flow-portfolio-row">
+      <div class="flow-group">
+        <span class="flow-group-tag">Portfolio</span>
+        <span class="flow-emotional" title="System 1 &amp; 2 — 직관적·숙고적 사고, 감정적 판단 개입 여부 상시 점검">&#9888; Emotional</span>
+        <div class="flow-chain">
+          <div class="flow-node plain" title="set stop -33% · Risk structure defined · -AUM% -1~-2%">Stop Loss</div>
+          <span class="flow-arrow">&#8594;</span>
+          <div class="flow-node plain" title="starter 5~10% · 강세장 초입 10% · Core conviction 20~25% · Swing 10%">Position size</div>
+          <span class="flow-arrow">&#8594;</span>
+          <div class="flow-node plain" title="1) previous day bar entry 2) pullback entry 3) pivot break entry 4) anticipation entry">Entry</div>
+          <span class="flow-arrow">&#8594;</span>
+          <div class="flow-loop">
+            <div class="flow-node plain">trim / free roll</div>
+            <span class="flow-loop-arrow">&#8597;</span>
+            <div class="flow-node plain">add / feed</div>
+          </div>
+          <span class="flow-arrow">&#8594;</span>
+          <div class="flow-node plain" title="Change of character — 고점 고거래량, 행잉맨 캔들, 연속 갭업">Sell</div>
+        </div>
+      </div>
+      <div class="flow-outside">
+        <span class="flow-arrow">&#8594;</span>
+        <div class="flow-node plain" title="Log → Telegram(Opus 4.8) — 룰 준수 여부·매매 성과·행동 패턴 체크">Feedback</div>
+      </div>
+    </div>
+  </div>
+
   <div class="cards">
     <a class="card" href="./condition.html">
       <div class="card-top">
@@ -343,14 +469,6 @@
         <span class="badge auto">AUTO · 화~토</span>
       </div>
       <p>Notion 매매일지에 매일 자동 삽입되는 Sector Rotation·UWL Breadth·UWL 강세종목·Screener 분석·Stockbee 해석 5종을 최근 7일치 모아보기</p>
-      <span class="arrow">&#8594;</span>
-    </a>
-    <a class="card" href="./process.html">
-      <div class="card-top">
-        <div class="card-id"><span class="icon">🧭</span><h2>Trading Process</h2></div>
-        <span class="badge auto">AUTO · 화~토</span>
-      </div>
-      <p>Market Condition 신호등(M01~M07, 화~토 자동 갱신) + 상황인식부터 포지션 관리까지 트레이딩 프로세스 플로우차트</p>
       <span class="arrow">&#8594;</span>
     </a>
     <a class="card" href="./pulse.html">
@@ -468,6 +586,90 @@
     }
     tick();
     setInterval(tick, 1000);
+  })();
+
+  // ---- Stocks 노드 → 오늘의 섹터강세 리더 드로어 (2026-09-17, 구 process.html에서 이식) ----
+  // pulse.html의 sectorStrengthPayload를 같은 오리진 fetch로 읽어와서 verdict=섹터강세
+  // 그룹만 추리고, 클라이언트에서 그룹당 리더(1M%>=5 & ATR%>=4 & 평균거래량10D>=100만,
+  // 3M% 상위 5개)를 재계산 — pulse.html의 renderGroupLeaders()와 동일 필터 기준.
+  (function () {
+    var LEADER_MIN_1M = 5.0, LEADER_MIN_ATRP = 4.0, LEADER_MIN_AVGVOL = 1000000;
+    var leadersLoaded = false;
+
+    window.closeLeadersDrawer = function () {
+      document.getElementById('leaders-drawer').classList.add('hidden');
+      document.getElementById('leaders-backdrop').classList.add('hidden');
+    };
+
+    window.openLeadersDrawer = function () {
+      document.getElementById('leaders-drawer').classList.remove('hidden');
+      document.getElementById('leaders-backdrop').classList.remove('hidden');
+      loadLeaders();
+    };
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') window.closeLeadersDrawer();
+    });
+
+    function fmtLeaderPct(v) {
+      if (v === null || v === undefined) return '&mdash;';
+      var cls = v > 0 ? 'good' : v < 0 ? 'bad' : '';
+      return '<span class="' + cls + '">' + (v > 0 ? '+' : '') + v.toFixed(1) + '%</span>';
+    }
+
+    function renderLeaders(data) {
+      var byGroup = {};
+      data.forEach(function (item) {
+        if (item.verdict !== '섹터강세') return;
+        (byGroup[item.group] = byGroup[item.group] || []).push(item);
+      });
+      var groups = Object.keys(byGroup);
+      var body = document.getElementById('leaders-drawer-body');
+      if (!groups.length) {
+        body.innerHTML = '<div class="leaders-empty">오늘은 섹터강세로 판정된 그룹이 없습니다.</div>';
+        return;
+      }
+      var html = '';
+      groups.forEach(function (g) {
+        var items = byGroup[g].filter(function (l) {
+          return l.p3m !== null && l.p3m !== undefined &&
+            l.p1m !== null && l.p1m !== undefined && l.p1m >= LEADER_MIN_1M &&
+            l.atrp !== null && l.atrp !== undefined && l.atrp >= LEADER_MIN_ATRP &&
+            l.avgvol10d !== null && l.avgvol10d !== undefined && l.avgvol10d >= LEADER_MIN_AVGVOL;
+        }).sort(function (a, b) { return b.p3m - a.p3m; }).slice(0, 5);
+        if (!items.length) return;
+        html += '<div class="leaders-group"><div class="leaders-group-title">' + g + '</div>';
+        items.forEach(function (l) {
+          html += '<div class="leaders-row"><span class="leaders-ticker">' + l.ticker + '</span>' +
+            '<span class="leaders-nums">' +
+            '<span>1D ' + fmtLeaderPct(l.p1d) + '</span>' +
+            '<span>1W ' + fmtLeaderPct(l.p1w) + '</span>' +
+            '<span>1M ' + fmtLeaderPct(l.p1m) + '</span>' +
+            '<span>3M ' + fmtLeaderPct(l.p3m) + '</span>' +
+            '<span>6M ' + fmtLeaderPct(l.p6m) + '</span>' +
+            '</span></div>';
+        });
+        html += '</div>';
+      });
+      body.innerHTML = html || '<div class="leaders-empty">조건을 통과한 리더가 없습니다.</div>';
+    }
+
+    function loadLeaders() {
+      var body = document.getElementById('leaders-drawer-body');
+      if (leadersLoaded) return;
+      body.innerHTML = '<div class="leaders-loading">불러오는 중&hellip;</div>';
+      fetch('./pulse.html').then(function (r) {
+        if (!r.ok) throw new Error('http ' + r.status);
+        return r.text();
+      }).then(function (html) {
+        var m = html.match(/<script id="sectorStrengthPayload" type="application\/json">([\s\S]*?)<\/script>/);
+        if (!m) throw new Error('payload not found');
+        renderLeaders(JSON.parse(m[1]));
+        leadersLoaded = true;
+      }).catch(function (e) {
+        body.innerHTML = '<div class="leaders-error">불러오기 실패 &mdash; Screener Pulse 페이지를 확인해주세요.</div>';
+      });
+    }
   })();
 </script>
 </body>
