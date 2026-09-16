@@ -172,6 +172,140 @@
           <span><span class="swatch" style="background:var(--band3)"></span>XLV&middot;XLU&middot;XLE</span>
         </div>
       </div>
+      <div class="panel mab">
+        <div class="panel-title">MA Breadth &middot; 이동평균 상회 비율 <span class="note">S&amp;P 500 &middot; NYSE 보통주 전체</span></div>
+        <div class="mab-body">
+          <div class="mab-toggle" id="breadthToggle">
+            <button data-uni="all" class="active">둘 다</button>
+            <button data-uni="sp500">S&amp;P 500</button>
+            <button data-uni="nyse">NYSE</button>
+          </div>
+          <div class="mab-stats" id="breadthStats"></div>
+          <div class="scroll-x"><svg class="mab-chart" id="breadthChart" viewBox="0 0 900 260"></svg></div>
+          <div class="mab-legend">
+            <span class="item"><span class="dot" style="background:var(--accent)"></span>S&amp;P 500</span>
+            <span class="item"><span class="dot" style="background:var(--series-b)"></span>NYSE</span>
+            <span class="item"><span class="ln"></span>20일선 상회</span>
+            <span class="item"><span class="ln dashed"></span>50일선 상회</span>
+          </div>
+          <div class="mab-note">지수는 대형주 몇 개로 버틸 수 있지만 이 비율은 못 버틴다 &mdash; M01~M07보다 먼저 꺾이고 먼저 도는 시장 폭 지표. 80% 위는 과열(되돌림 경계), 20% 아래는 과매도(반등 구간)이고, 절대 수치보다 <b>방향과 두 선의 간격</b>이 중요하다. 20일선 비율이 50일선 비율 위로 올라오면 단기 반등이 중기 추세를 되돌리기 시작했다는 신호<span id="maBreadthNote"></span></div>
+        </div>
+      </div>
+      <style>
+        :root { --series-b:#3d6fa5; }
+        @media (prefers-color-scheme: dark) { :root { --series-b:#6ea8e0; } }
+        .mab .mab-body { padding:14px 16px 16px; }
+        .mab-toggle { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
+        .mab-toggle button { font:inherit; font-size:12px; font-weight:600; padding:5px 12px; border-radius:7px;
+          border:1px solid var(--border); background:var(--surface-alt); color:var(--text-muted); cursor:pointer; }
+        .mab-toggle button:hover { border-color:var(--accent); color:var(--text); }
+        .mab-toggle button.active { background:var(--accent); border-color:var(--accent); color:var(--surface); }
+        .mab-stats { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+        .bstat { flex:1 1 150px; min-width:140px; padding:10px 12px; border-radius:9px;
+          background:var(--surface-alt); border:1px solid var(--border); border-left:3px solid var(--bs-color); }
+        .bstat .lbl { font-size:11px; color:var(--text-muted); }
+        .bstat .val { font-size:21px; font-weight:700; font-family:ui-monospace,"SF Mono",Menlo,monospace; margin-top:3px; }
+        .bstat .chg { font-size:11.5px; font-family:ui-monospace,"SF Mono",Menlo,monospace; }
+        .bstat .chg.up { color:var(--up); } .bstat .chg.down { color:var(--down); }
+        .bstat .zone { font-size:10.5px; color:var(--text-faint); margin-top:2px; }
+        /* 좁은 화면에서 viewBox 비율대로 납작해지지 않게 min-width + .scroll-x로 가로스크롤 */
+        svg.mab-chart { width:100%; height:auto; min-width:560px; display:block; }
+        .mab-chart .axis-label { font-size:10px; fill:var(--text-faint); }
+        .mab-legend { display:flex; gap:16px; margin-top:10px; font-size:12px; color:var(--text-muted); flex-wrap:wrap; }
+        .mab-legend .item { display:flex; align-items:center; gap:6px; }
+        .mab-legend .dot { width:9px; height:9px; border-radius:50%; }
+        .mab-legend .ln { width:18px; height:0; border-top:2.5px solid var(--text-muted); }
+        .mab-legend .ln.dashed { border-top-style:dashed; }
+        .mab-note { font-size:11.5px; color:var(--text-faint); margin-top:12px; padding-top:10px; border-top:1px dashed var(--border); }
+      </style>
+      <script id="maBreadthPayload" type="application/json">{"dates": ["2026-03-25", "2026-03-26", "2026-03-27", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-27", "2026-04-28", "2026-04-29", "2026-04-30", "2026-05-01", "2026-05-04", "2026-05-05", "2026-05-06", "2026-05-07", "2026-05-08", "2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-18", "2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-11", "2026-06-12", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-22", "2026-06-23", "2026-06-24", "2026-06-25", "2026-06-26", "2026-06-29", "2026-06-30", "2026-07-01", "2026-07-02", "2026-07-06", "2026-07-07", "2026-07-08", "2026-07-09", "2026-07-10", "2026-07-13", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17", "2026-07-20", "2026-07-21", "2026-07-22", "2026-07-23", "2026-07-24", "2026-07-27", "2026-07-28", "2026-07-29", "2026-07-30", "2026-07-31", "2026-08-03", "2026-08-04", "2026-08-05", "2026-08-06", "2026-08-07", "2026-08-10", "2026-08-11", "2026-08-12", "2026-08-13", "2026-08-14", "2026-08-17", "2026-08-18", "2026-08-19", "2026-08-20", "2026-08-21", "2026-08-24", "2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28", "2026-08-31", "2026-09-01", "2026-09-02", "2026-09-03", "2026-09-04", "2026-09-08", "2026-09-09", "2026-09-10", "2026-09-11", "2026-09-14", "2026-09-15"], "series": {"sp500_ma20": [23.99, 18.15, 13.31, 17.14, 35.89, 45.16, 52.82, 58.27, 53.43, 76.01, 73.79, 66.53, 71.98, 73.39, 72.58, 74.6, 80.04, 78.23, 69.15, 65.73, 65.73, 59.68, 55.44, 56.05, 48.99, 59.27, 56.45, 45.77, 47.98, 52.22, 44.76, 42.14, 42.14, 44.35, 41.13, 41.53, 35.48, 44.35, 39.92, 46.98, 50.4, 58.27, 59.68, 56.05, 54.64, 50.81, 46.98, 52.02, 49.8, 61.29, 59.68, 53.23, 63.1, 55.44, 63.91, 70.97, 69.96, 67.34, 51.21, 50.81, 51.21, 53.63, 60.08, 60.69, 62.9, 64.92, 62.9, 64.11, 67.54, 67.34, 66.73, 56.85, 58.27, 62.3, 63.1, 57.06, 51.81, 65.12, 58.06, 51.81, 48.99, 45.56, 43.35, 55.44, 63.1, 69.15, 62.7, 55.85, 53.23, 58.67, 67.54, 64.72, 62.78, 64.99, 62.58, 63.58, 64.59, 69.01, 66.6, 57.95, 53.12, 53.12, 44.87, 49.5, 53.32, 51.0, 52.41, 44.38, 42.37, 38.96, 31.93, 37.35, 45.58, 35.34, 26.91, 20.88, 17.27, 24.7, 24.9, 22.69], "sp500_ma50": [27.62, 22.18, 19.76, 19.35, 24.19, 26.41, 28.83, 31.25, 30.04, 46.77, 48.39, 43.55, 50.0, 52.62, 51.21, 52.82, 60.08, 60.89, 57.66, 54.64, 54.84, 52.42, 50.2, 52.02, 49.8, 56.45, 55.44, 51.81, 53.23, 55.65, 52.62, 51.41, 49.6, 50.0, 45.77, 46.77, 43.95, 50.81, 46.98, 52.22, 54.44, 57.06, 55.65, 55.44, 56.25, 52.62, 51.41, 51.81, 50.0, 55.65, 53.63, 51.41, 57.46, 51.01, 55.65, 60.48, 62.1, 64.92, 54.03, 55.44, 54.64, 58.87, 62.5, 63.1, 64.11, 64.72, 61.49, 63.31, 66.94, 67.54, 67.34, 63.1, 63.91, 67.74, 64.92, 63.31, 61.69, 67.34, 63.71, 60.28, 58.87, 61.69, 57.66, 65.12, 68.55, 71.57, 65.52, 63.51, 62.1, 63.51, 67.74, 66.13, 63.58, 65.19, 64.59, 62.98, 64.39, 68.21, 69.82, 61.97, 59.36, 59.56, 53.72, 57.55, 59.15, 58.03, 58.43, 53.61, 52.81, 49.4, 45.38, 47.19, 50.6, 46.79, 42.17, 36.75, 33.13, 38.55, 37.35, 34.34], "nyse_ma20": [32.84, 30.46, 22.22, 24.86, 41.79, 47.36, 53.28, 60.39, 58.83, 76.11, 74.63, 71.39, 77.36, 77.87, 78.96, 79.42, 82.71, 81.71, 76.15, 74.49, 72.14, 70.73, 68.56, 67.37, 54.6, 64.69, 60.79, 48.66, 54.21, 58.61, 52.36, 50.26, 43.91, 40.85, 38.37, 39.96, 32.57, 38.28, 33.44, 43.5, 47.13, 51.59, 56.88, 54.84, 54.14, 50.32, 47.36, 53.47, 43.41, 56.14, 51.05, 49.27, 60.27, 55.5, 61.41, 68.6, 63.83, 62.62, 48.12, 54.61, 51.24, 54.35, 60.1, 58.67, 65.23, 64.43, 63.05, 62.51, 64.66, 64.03, 60.16, 49.34, 52.18, 55.72, 55.66, 55.98, 57.05, 67.62, 59.27, 52.87, 54.29, 51.74, 45.74, 54.38, 59.03, 64.07, 54.19, 50.06, 48.59, 59.96, 66.77, 61.52, 57.78, 60.16, 55.58, 56.65, 57.84, 62.26, 62.3, 54.98, 48.53, 52.19, 45.34, 47.72, 48.41, 47.97, 45.03, 42.71, 41.15, 36.34, 31.08, 37.46, 43.84, 43.34, 33.02, 28.21, 23.89, 27.39, 27.95, 26.75], "nyse_ma50": [30.59, 27.82, 23.44, 24.34, 28.53, 30.5, 32.56, 35.63, 35.77, 48.43, 51.45, 49.33, 55.61, 56.96, 57.02, 58.53, 66.9, 68.73, 64.64, 63.55, 62.68, 62.43, 62.04, 63.28, 58.11, 64.62, 63.73, 58.75, 61.16, 65.05, 62.76, 60.91, 56.85, 55.58, 50.29, 53.15, 47.36, 51.97, 47.71, 54.33, 55.92, 57.77, 59.36, 59.36, 59.36, 56.31, 53.09, 55.7, 49.14, 55.76, 50.92, 50.48, 56.26, 52.26, 56.39, 60.46, 58.17, 58.55, 50.73, 54.16, 52.45, 55.44, 57.18, 58.54, 62.94, 61.83, 60.52, 60.99, 62.95, 63.2, 61.87, 57.88, 58.64, 62.43, 61.54, 61.29, 63.06, 68.06, 63.69, 60.14, 60.73, 62.52, 57.73, 63.01, 65.2, 67.21, 59.47, 58.55, 57.57, 62.23, 66.08, 64.66, 60.29, 63.74, 60.23, 60.04, 59.97, 62.51, 63.43, 58.74, 55.48, 56.38, 52.91, 55.35, 54.47, 54.66, 53.97, 51.03, 49.84, 46.09, 42.34, 45.72, 48.09, 47.97, 43.59, 39.15, 34.83, 36.9, 35.4, 33.64]}, "latest": {"sp500": {"ma20": 22.69, "ma50": 34.34, "n": 498}, "nyse": {"ma20": 26.75, "ma50": 33.64, "n": 1611}}, "prev": {"sp500": {"ma20": 24.9, "ma50": 37.35, "n": 498}, "nyse": {"ma20": 27.95, "ma50": 35.4, "n": 1599}}, "labels": {"sp500": "S&P 500", "nyse": "NYSE 전체"}}</script>
+      <script>
+      (function(){
+        var D = JSON.parse(document.getElementById('maBreadthPayload').textContent);
+        var SERIES = [
+          { key:'sp500_ma20', uni:'sp500', ma:20, color:'var(--accent)',   dash:null,  label:'S&P 500 20일선' },
+          { key:'sp500_ma50', uni:'sp500', ma:50, color:'var(--accent)',   dash:'5 4', label:'S&P 500 50일선' },
+          { key:'nyse_ma20',  uni:'nyse',  ma:20, color:'var(--series-b)', dash:null,  label:'NYSE 20일선' },
+          { key:'nyse_ma50',  uni:'nyse',  ma:50, color:'var(--series-b)', dash:'5 4', label:'NYSE 50일선' }
+        ];
+        var UNI_COLOR = { sp500:'var(--accent)', nyse:'var(--series-b)' };
+        var dates = D.dates || [];
+        var chart = document.getElementById('breadthChart');
+        var statsEl = document.getElementById('breadthStats');
+        var fmtDate = function(s){ var p = s.split('-'); return (+p[1]) + '/' + (+p[2]); };
+        if (!dates.length) {
+          chart.innerHTML = '<text x="20" y="40" class="axis-label">데이터 없음 — ma_breadth.py --backfill 실행 필요</text>';
+          return;
+        }
+        // 과매도(20%↓)/과열(80%↑)은 되돌림 경계로 보는 관용 구간 — 절대 신호가 아니라 맥락용
+        var zoneOf = function(v){ return v >= 80 ? '과열권' : (v <= 20 ? '과매도권' : '중립'); };
+
+        function renderStats(uni){
+          var latest = D.latest || {}, prev = D.prev || {}, html = '';
+          ['sp500','nyse'].forEach(function(u){
+            if (uni !== 'all' && uni !== u) return;
+            ['ma20','ma50'].forEach(function(m){
+              var v = latest[u] && latest[u][m];
+              if (v === undefined || v === null) return;
+              var p = prev[u] && prev[u][m];
+              var d = (p === undefined || p === null) ? null : +(v - p).toFixed(1);
+              html += '<div class="bstat" style="--bs-color:' + UNI_COLOR[u] + '">'
+                + '<div class="lbl">' + D.labels[u] + ' · ' + (m === 'ma20' ? '20일선' : '50일선') + ' 상회</div>'
+                + '<div class="val">' + v.toFixed(1) + '%'
+                + (d === null ? '' : ' <span class="chg ' + (d >= 0 ? 'up' : 'down') + '">' + (d >= 0 ? '▲' : '▼') + Math.abs(d).toFixed(1) + '%p</span>')
+                + '</div><div class="zone">' + zoneOf(v) + ' · ' + latest[u].n.toLocaleString() + '종목</div></div>';
+            });
+          });
+          statsEl.innerHTML = html;
+        }
+
+        function renderChart(uni){
+          var W = 900, H = 260, padL = 34, padR = 12, padT = 16, padB = 28, n = dates.length;
+          var xs = function(i){ return padL + (W - padL - padR) * (n === 1 ? 0.5 : i / (n - 1)); };
+          var ys = function(v){ return H - padB - (H - padT - padB) * (v / 100); };
+          var shown = SERIES.filter(function(s){ return (uni === 'all' || s.uni === uni) && D.series[s.key]; });
+          var svg = '';
+          svg += '<rect x="' + padL + '" y="' + ys(100) + '" width="' + (W-padL-padR) + '" height="' + (ys(80)-ys(100)) + '" fill="var(--down)" opacity="0.055"/>';
+          svg += '<rect x="' + padL + '" y="' + ys(20) + '" width="' + (W-padL-padR) + '" height="' + (ys(0)-ys(20)) + '" fill="var(--up)" opacity="0.055"/>';
+          [0,20,40,60,80,100].forEach(function(g){
+            svg += '<line x1="' + padL + '" x2="' + (W-padR) + '" y1="' + ys(g) + '" y2="' + ys(g) + '" stroke="var(--border)" stroke-width="1"/>';
+            svg += '<text x="4" y="' + (ys(g)+3) + '" class="axis-label">' + g + '</text>';
+          });
+          svg += '<line x1="' + padL + '" x2="' + (W-padR) + '" y1="' + ys(50) + '" y2="' + ys(50) + '" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="2 4" opacity=".7"/>';
+          var step = Math.max(1, Math.ceil(n / 10));
+          dates.forEach(function(d, i){
+            if (i % step === 0 || i === n-1)
+              svg += '<text x="' + xs(i) + '" y="' + (H-8) + '" class="axis-label" text-anchor="middle">' + fmtDate(d) + '</text>';
+          });
+          shown.forEach(function(s){
+            var arr = D.series[s.key];
+            var path = arr.map(function(v, i){ return (i===0?'M':'L') + xs(i).toFixed(1) + ',' + ys(v).toFixed(1); }).join(' ');
+            svg += '<path d="' + path + '" fill="none" stroke="' + s.color + '" stroke-width="' + (s.ma === 20 ? 2.2 : 1.6) + '"'
+                 + (s.dash ? ' stroke-dasharray="' + s.dash + '"' : '') + ' stroke-linejoin="round"/>';
+            svg += '<circle cx="' + xs(n-1) + '" cy="' + ys(arr[n-1]) + '" r="3.2" fill="' + s.color + '"/>';
+          });
+          // 점마다 원을 찍으면 120일×4계열=480개라 엉키므로, 날짜별 투명 밴드 하나에 그날 전 계열 값을 담은 툴팁
+          var bw = (W - padL - padR) / Math.max(n - 1, 1);
+          dates.forEach(function(d, i){
+            var tip = [fmtDate(d)].concat(shown.map(function(s){ return s.label + ' ' + D.series[s.key][i].toFixed(1) + '%'; })).join('\n');
+            svg += '<rect x="' + (xs(i)-bw/2).toFixed(1) + '" y="' + padT + '" width="' + bw.toFixed(1) + '" height="' + (H-padT-padB) + '" fill="transparent"><title>' + tip + '</title></rect>';
+          });
+          chart.innerHTML = svg;
+        }
+
+        function render(uni){ renderStats(uni); renderChart(uni); }
+        render('all');
+        Array.prototype.forEach.call(document.querySelectorAll('#breadthToggle button'), function(b){
+          b.addEventListener('click', function(){
+            Array.prototype.forEach.call(document.querySelectorAll('#breadthToggle button'), function(x){ x.classList.remove('active'); });
+            b.classList.add('active');
+            render(b.dataset.uni);
+          });
+        });
+        var note = document.getElementById('maBreadthNote');
+        if (note) note.textContent = ' · ' + fmtDate(dates[0]) + '~' + fmtDate(dates[dates.length-1]) + ' ' + dates.length + '거래일';
+      })();
+      </script>
     </div>
   </section>
     <div class="sub">Sector Rotation · UWL Breadth · UWL 강세종목 · Screener 분석 · Stockbee — 최근 7일 · <span class="num">9/15</span> 기준</div>
