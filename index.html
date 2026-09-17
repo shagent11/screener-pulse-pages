@@ -136,8 +136,7 @@
     background: var(--accent-soft); padding: 4px 8px; border-radius: 5px;
   }
   .flow-title { margin: 0; font-size: 12.5px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--text-muted); }
-  .flow-head-right { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .flow-jump, .flow-warn {
+  .flow-jump {
     display: inline-flex; align-items: center; gap: 6px;
     font-size: 11.5px; font-weight: 700; color: var(--accent);
     border-radius: 999px; padding: 5px 13px; text-decoration: none; white-space: nowrap;
@@ -169,7 +168,6 @@
   .flow-panel.collapsed .flow-head { padding-bottom: 0; margin-bottom: 0; border-bottom: none; }
   .flow-jump { border: 1px solid var(--accent-a45); transition: background .14s ease, border-color .14s ease; }
   .flow-jump:hover { background: var(--accent-soft); border-color: var(--accent); }
-  .flow-warn { border: 1px dashed var(--accent-a45); cursor: default; }
   .flow-row { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; }
   .flow-feed { display: flex; flex-direction: column; align-items: center; margin-bottom: 2px; }
 
@@ -242,7 +240,7 @@
   @media (max-width: 720px) {
     .flow-panel { padding: 18px 16px 22px; border-radius: 16px; }
     .flow-head { margin-bottom: 16px; }
-    .flow-jump, .flow-warn { margin-left: 0; }
+    .flow-jump { margin-left: 0; }
     .flow-row { flex-direction: column; align-items: center; flex-wrap: nowrap; }
     .flow-node { font-size: 13.5px; padding: 10px 15px 12px; width: 100%; max-width: 250px; }
     .flow-elbow {
