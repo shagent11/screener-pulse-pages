@@ -178,8 +178,10 @@
   }
   .flow-node.hero::after { color: var(--accent); }
 
-  /* 연결선 — 가로(.flow-link)/세로(.flow-down), 끝에 삼각형 화살촉 */
-  .flow-link { flex: 0 0 30px; height: 1px; background: var(--border); position: relative; margin: 0 2px; }
+  /* 연결선 — 가로(.flow-link)/세로(.flow-down), 끝에 삼각형 화살촉.
+     가로선은 신축(flex:1) — 행이 패널 폭을 꽉 채워야 아래 .flow-elbow의 꺾임점이
+     행의 끝 노드·시작 노드와 맞는다(고정폭이면 행이 가운데로 모여 어긋남). */
+  .flow-link { flex: 1 1 26px; min-width: 22px; height: 1px; background: var(--border); position: relative; margin: 0 2px; }
   .flow-link::after {
     content: ""; position: absolute; right: 0; top: 50%; transform: translateY(-50%);
     border-left: 5px solid var(--border); border-top: 4px solid transparent; border-bottom: 4px solid transparent;
@@ -194,18 +196,35 @@
     border-top: 5px solid var(--border); border-left: 4px solid transparent; border-right: 4px solid transparent;
   }
   .flow-down.dash { background: repeating-linear-gradient(180deg, var(--border) 0 3px, transparent 3px 6px); }
-  .flow-down.inner { height: 24px; margin: 8px 0; }
-  .flow-rowsep { display: flex; justify-content: center; }
+
+  /* Portfolio 1행 끝(Entry) → 2행 시작(add/feed) 꺾임 연결선.
+     가운데 세로선을 쓰면 행의 끝도 시작도 아닌 허공을 가리켜서 어긋나 보였음(사용자 지적).
+     좌우 22px 안쪽에서 꺾어 양 끝 노드의 몸통에 닿게 함 — 노드 폭이 44px만 넘으면 성립. */
+  .flow-elbow {
+    position: relative; height: 26px; margin: 10px 22px 8px;
+    border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    border-bottom-right-radius: 10px;
+  }
+  .flow-elbow::after {
+    content: ""; position: absolute; left: -4px; bottom: -5px;
+    border-left: 4px solid transparent; border-right: 4px solid transparent;
+    border-top: 5px solid var(--border);
+  }
 
   /* 좁은 화면: 가로 체인을 세로 스택으로 전환하고 연결선도 세로로 눕힌다.
      flex-wrap에 맡기면 줄 끝에 화살표만 남아 허공을 가리킨다(실제로 그렇게 보였음). */
-  @media (max-width: 560px) {
+  @media (max-width: 720px) {
     .flow-panel { padding: 18px 16px 22px; border-radius: 16px; }
     .flow-head { margin-bottom: 16px; }
     .flow-jump, .flow-warn { margin-left: 0; }
     .flow-row { flex-direction: column; align-items: center; flex-wrap: nowrap; }
     .flow-node { font-size: 13.5px; padding: 10px 15px 12px; width: 100%; max-width: 250px; }
-    .flow-link { flex: 0 0 22px; width: 1px; height: 22px; margin: 0; }
+    .flow-elbow {
+      height: 22px; width: 1px; margin: 0 auto; background: var(--border);
+      border: none; border-radius: 0;
+    }
+    .flow-elbow::after { left: 50%; transform: translateX(-50%); bottom: -5px; }
+    .flow-link { flex: 0 0 22px; width: 1px; height: 22px; margin: 0; min-width: 0; }
     .flow-link::after {
       right: auto; top: auto; left: 50%; bottom: 0; transform: translateX(-50%);
       border-left: 4px solid transparent; border-right: 4px solid transparent;
@@ -464,7 +483,7 @@
         <div class="flow-node plain" title="1) previous day bar entry 2) pullback entry 3) pivot break entry 4) anticipation entry"><span class="step">08</span>Entry</div>
       </div>
 
-      <div class="flow-rowsep"><span class="flow-down inner"></span></div>
+      <div class="flow-elbow"></div>
 
       <div class="flow-row">
         <div class="flow-node plain" title="진입 후 추가 매수 — 계획된 분할만"><span class="step">09</span>add / feed</div>
@@ -472,11 +491,10 @@
         <div class="flow-node plain" title="일부 익절로 리스크 제거(free roll)"><span class="step">10</span>trim / free roll</div>
         <span class="flow-link"></span>
         <div class="flow-node plain" title="Change of character — 고점 고거래량, 행잉맨 캔들, 연속 갭업"><span class="step">11</span>Sell</div>
+        <span class="flow-link"></span>
+        <div class="flow-node plain" title="Log → Telegram(Opus 4.8) — 룰 준수 여부·매매 성과·행동 패턴 체크"><span class="step">12</span>&#8634; Feedback</div>
       </div>
     </section>
-
-    <span class="flow-down"></span>
-    <div class="flow-node plain" title="Log → Telegram(Opus 4.8) — 룰 준수 여부·매매 성과·행동 패턴 체크"><span class="step">12</span>&#8634; Feedback</div>
   </div>
 
 </div>
