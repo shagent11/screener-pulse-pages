@@ -94,7 +94,7 @@
   .clock { font-size: 11px; color: var(--text-faint); white-space: nowrap; }
 
   /* ---- 메인 ---- */
-  .wrap { position: relative; z-index: 1; max-width: 640px; width: 100%; padding: 56px 24px 32px; flex: 1; }
+  .wrap { position: relative; z-index: 1; max-width: 720px; width: 100%; padding: 56px 24px 32px; flex: 1; }
   .eyebrow {
     display: flex; align-items: center; justify-content: center; gap: 8px;
     font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase;
@@ -108,85 +108,54 @@
   .tagline { text-align: center; font-size: 13px; color: var(--text-muted); margin: 0 0 36px; line-height: 1.6; }
   .tagline .num { color: var(--text-faint); }
 
-  .cards { display: grid; gap: 12px; }
-  a.card {
-    position: relative; display: block; background: var(--surface); border: 1px solid var(--border);
-    border-radius: 14px; padding: 20px 22px; box-shadow: var(--shadow); text-decoration: none; color: inherit;
-    transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
-    overflow: hidden;
-  }
-  a.card::before {
-    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-    background: linear-gradient(180deg, var(--accent), transparent);
-    opacity: 0; transition: opacity .14s ease;
-  }
-  a.card:hover {
-    transform: translateY(-3px);
-    border-color: var(--accent);
-    box-shadow: var(--shadow), 0 0 0 1px var(--accent-a20);
-  }
-  a.card:hover::before { opacity: 1; }
-  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
-  .card-id { display: flex; align-items: center; gap: 10px; }
-  .icon {
-    width: 34px; height: 34px; border-radius: 9px; background: var(--accent-soft);
-    display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
-  }
-  .card h2 { font-size: 16px; margin: 0; font-weight: 700; }
-  .badge {
-    font-size: 9.5px; font-weight: 700; letter-spacing: .05em; padding: 3px 8px; border-radius: 20px;
-    white-space: nowrap; border: 1px solid transparent;
-  }
-  .badge.auto { background: var(--up-soft); color: var(--up); }
-  .badge.manual { background: var(--surface-alt); color: var(--text-faint); border-color: var(--border); }
-  .card p { font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.55; }
-  .card .arrow {
-    position: absolute; right: 20px; bottom: 18px; color: var(--text-faint); font-size: 15px;
-    transition: transform .14s ease, color .14s ease;
-  }
-  a.card:hover .arrow { transform: translateX(3px); color: var(--accent); }
-
   /* ---- Trading Process 플로우 (2026-09-17 신설) ----
      구 Trading Process 카드/process.html 폐지 후 다이어그램을 홈 화면에 직접 전개,
      각 박스가 곧 내비게이션(관련 페이지 있으면 링크, 없으면 Excel process 탭 메모를
      title 툴팁으로) — Excel 다이어그램(process 탭)을 사용자가 정리한 걸 그대로 이식. */
-  .flow { width: 100%; max-width: 760px; margin: 0 auto 40px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-  .flow-group { width: 100%; border: 1px dashed var(--border); border-radius: 14px; padding: 24px 16px 18px; position: relative; box-sizing: border-box; }
-  .flow-group-tag { position: absolute; top: -9px; left: 16px; background: var(--bg); padding: 0 8px; font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--text-faint); }
-  .flow-screener { display: flex; justify-content: center; margin-bottom: 14px; }
-  .flow-chain { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; }
-  .flow-arrow { color: var(--text-faint); font-size: 14px; flex-shrink: 0; }
+  .flow { width: 100%; margin: 0 auto 8px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .flow-group { width: 100%; border: 1px dashed var(--border); border-radius: 18px; padding: 32px 20px 26px; position: relative; box-sizing: border-box; }
+  .flow-group-tag { position: absolute; top: -9px; left: 20px; background: var(--bg); padding: 0 9px; font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--text-faint); }
+  .flow-screener { display: flex; justify-content: center; margin-bottom: 18px; }
+  .flow-chain { display: flex; align-items: center; justify-content: center; gap: 9px; flex-wrap: wrap; }
+  .flow-arrow { color: var(--text-faint); font-size: 16px; flex-shrink: 0; }
   .flow-node {
-    display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 9px;
-    background: var(--surface); border: 1px solid var(--border); font: inherit; font-size: 12.5px; font-weight: 700;
+    position: relative;
+    display: inline-flex; align-items: center; gap: 7px; padding: 15px 22px; border-radius: 12px;
+    background: var(--surface); border: 1px solid var(--border); font: inherit; font-size: 15px; font-weight: 700;
     color: var(--text); text-decoration: none; white-space: nowrap; cursor: pointer; appearance: none;
+    box-shadow: var(--shadow);
     transition: border-color .14s ease, transform .14s ease, box-shadow .14s ease;
   }
+  /* 링크/드로어가 달린 노드만 ↗ 표시 — 원칙만 있는 Portfolio 노드와 구분(클릭해도 안 가는데
+     눌러보게 만들지 않기 위함) */
   a.flow-node, button.flow-node { cursor: pointer; }
-  .flow-node:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
+  /* ↗는 absolute — 인라인으로 두면 노드 폭이 13px씩 늘어 체인이 한 줄에 안 들어간다 */
+  a.flow-node::after, button.flow-node::after { content: "\2197"; position: absolute; top: 5px; right: 7px; font-size: 10px; font-weight: 700; color: var(--text-faint); }
+  a.flow-node:hover::after, button.flow-node:hover::after { color: var(--accent); }
+  .flow-node.accent::after { color: var(--accent); }
+  .flow-node:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow), 0 0 0 1px var(--accent-a20); }
   .flow-node.good { border-color: var(--up-a55); color: var(--up); }
   .flow-node.accent { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
-  .flow-node.plain { cursor: default; }
+  .flow-node.plain { cursor: default; box-shadow: none; background: var(--surface-alt); }
   .flow-node.plain:hover { transform: none; box-shadow: none; border-color: var(--border); }
-  .flow-connector { color: var(--text-faint); font-size: 15px; line-height: 1; }
-  .flow-loop { display: flex; flex-direction: column; align-items: center; gap: 3px; }
-  .flow-loop .flow-node { font-size: 11.5px; padding: 6px 12px; }
-  .flow-loop-arrow { color: var(--text-faint); font-size: 11px; line-height: 1; }
-  .flow-portfolio-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%; }
-  .flow-portfolio-row .flow-group { flex: 1; min-width: 280px; }
-  .flow-outside { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .flow-connector { color: var(--text-faint); font-size: 20px; line-height: 1; }
+  .flow-group > .flow-connector { display: block; text-align: center; margin: 10px 0; }
+  .flow-portfolio-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; width: 100%; }
+  .flow-portfolio-row .flow-group { flex: 1; min-width: 300px; }
+  .flow-outside { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
   .flow-emotional {
-    position: absolute; top: -14px; right: 16px; display: inline-flex; align-items: center; gap: 5px;
-    padding: 6px 12px; border-radius: 999px; background: var(--accent-soft); border: 1px solid var(--accent);
-    color: var(--accent); font-size: 10.5px; font-weight: 700; cursor: default; white-space: nowrap;
+    position: absolute; top: -16px; right: 20px; display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 15px; border-radius: 999px; background: var(--accent-soft); border: 1px solid var(--accent);
+    color: var(--accent); font-size: 12px; font-weight: 700; cursor: default; white-space: nowrap;
   }
-  @media (max-width: 720px) {
+  @media (max-width: 760px) {
     .flow-portfolio-row { flex-direction: column; }
-    .flow-outside { margin-top: 4px; }
+    .flow-outside { margin-top: 6px; }
   }
-  @media (max-width: 480px) {
-    .flow-emotional { position: static; margin: 0 auto 10px; width: fit-content; }
-    .flow-group { padding-top: 20px; }
+  @media (max-width: 560px) {
+    .flow-emotional { position: static; margin: 0 auto 14px; width: fit-content; }
+    .flow-group { padding: 26px 14px 22px; }
+    .flow-node { font-size: 14px; padding: 13px 17px; }
   }
 
   /* Stocks 노드 → 오늘의 섹터강세 리더 드로어 (구 process.html에서 이식) */
@@ -213,51 +182,32 @@
   .leaders-nums .good { color: var(--up); font-weight: 600; }
   .leaders-nums .bad { color: var(--down); font-weight: 600; }
 
-  /* ---- S.A(Situational Awareness) 진입 카드 — 뷰포트 우상단 고정 ---- */
-  .sa-launcher {
-    position: fixed; top: 220px; right: 28px; z-index: 4;
+  /* ---- 우측 고정 진입 카드: S.A · F.L · M.R (2026-09-17 통합) ----
+     카드 그리드를 홈 다이어그램으로 대체하면서 sa/fl 개별 클래스를 .launcher 하나로
+     합치고 Monthly Report를 세 번째로 추가(사용자 요청 — "monthly report만 우측 작은 박스로").
+     F.L은 claude.ai Artifact라 이 정적 사이트에서 호스팅 불가, 외부 링크로만 배치.
+     ⚠️ 좁은 화면(<=1000px)에선 .wrap 옆 여백이 없어 가로 필(pill)로 전환 — 숨기면
+     진입 경로가 아예 사라짐(2026-09-04 모바일 지적으로 확인된 실수). */
+  .launchers { position: fixed; top: 220px; right: 28px; z-index: 4; display: flex; flex-direction: column; gap: 14px; }
+  .launcher {
     width: 84px; height: 84px; border-radius: 14px;
     background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
     text-decoration: none; color: inherit;
     transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
   }
-  .sa-launcher:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--shadow), 0 0 0 1px var(--accent-a20); }
-  .sa-launcher .sa-icon { font-size: 20px; }
-  .sa-launcher .sa-label { font-size: 12.5px; font-weight: 800; letter-spacing: .03em; color: var(--text); }
-  .sa-launcher .sa-sub { font-size: 8.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
-  /* 2026-09-04: 좁은 화면에서 완전히 숨기던 걸 인라인 필(pill)로 전환(사용자 지적 —
-     모바일 웹에서 S.A 채널 진입로가 아예 안 보였음). 데스크톱의 뷰포트 우상단 고정
-     사각 카드는 .wrap 옆 여백을 쓰는 디자인이라 좁은 화면엔 그 여백이 없어서 숨겼던
-     것 — 대신 가로로 눕힌 필 형태로 tapebar 위에 인라인 배치. */
-  @media (max-width: 900px) {
-    .sa-launcher {
-      position: static; width: fit-content; height: auto;
-      flex-direction: row; gap: 8px;
-      margin: 0 auto 14px; padding: 9px 18px; border-radius: 999px;
+  .launcher:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--shadow), 0 0 0 1px var(--accent-a20); }
+  .launcher-icon { font-size: 20px; }
+  .launcher-label { font-size: 12.5px; font-weight: 800; letter-spacing: .03em; color: var(--text); }
+  .launcher-sub { font-size: 8.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
+  @media (max-width: 1000px) {
+    .launchers {
+      position: static; flex-direction: row; justify-content: center; flex-wrap: wrap;
+      gap: 10px; margin: 14px auto 0;
     }
-  }
-
-  /* ---- F.L(Focus List) 진입 카드 — S.A 카드 바로 아래 고정 (2026-09-08 신설)
-     F.L은 claude.ai Artifact(db capability)로 구현된 실시간 편집 도구라 이 정적
-     사이트에서 직접 호스팅 불가 — S.A와 동일한 카드 스타일로 외부 링크(새 탭)만 배치. */
-  .fl-launcher {
-    position: fixed; top: 318px; right: 28px; z-index: 4;
-    width: 84px; height: 84px; border-radius: 14px;
-    background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
-    text-decoration: none; color: inherit;
-    transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
-  }
-  .fl-launcher:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--shadow), 0 0 0 1px var(--accent-a20); }
-  .fl-launcher .fl-icon { font-size: 20px; }
-  .fl-launcher .fl-label { font-size: 12.5px; font-weight: 800; letter-spacing: .03em; color: var(--text); }
-  .fl-launcher .fl-sub { font-size: 8.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
-  @media (max-width: 900px) {
-    .fl-launcher {
-      position: static; width: fit-content; height: auto;
-      flex-direction: row; gap: 8px;
-      margin: 0 auto 14px; padding: 9px 18px; border-radius: 999px;
+    .launcher {
+      width: fit-content; height: auto; flex-direction: row; gap: 8px;
+      padding: 9px 18px; border-radius: 999px;
     }
   }
 
@@ -378,17 +328,23 @@
   </svg>
 </div>
 
-<a class="sa-launcher" href="./awareness.html">
-  <span class="sa-icon">🧭</span>
-  <span class="sa-label">S.A</span>
-  <span class="sa-sub">우위판단</span>
-</a>
-
-<a class="fl-launcher" href="https://claude.ai/code/artifact/60da549b-75af-413a-9290-cc0f5118a5a9" target="pulseFL">
-  <span class="fl-icon">🎯</span>
-  <span class="fl-label">F.L</span>
-  <span class="fl-sub">관찰일지</span>
-</a>
+<div class="launchers">
+  <a class="launcher" href="./awareness.html">
+    <span class="launcher-icon">🧭</span>
+    <span class="launcher-label">S.A</span>
+    <span class="launcher-sub">우위판단</span>
+  </a>
+  <a class="launcher" href="https://claude.ai/code/artifact/60da549b-75af-413a-9290-cc0f5118a5a9" target="pulseFL">
+    <span class="launcher-icon">🎯</span>
+    <span class="launcher-label">F.L</span>
+    <span class="launcher-sub">관찰일지</span>
+  </a>
+  <a class="launcher" href="./report.html">
+    <span class="launcher-icon">📅</span>
+    <span class="launcher-label">M.R</span>
+    <span class="launcher-sub">월간리포트</span>
+  </a>
+</div>
 
 <div id="leaders-backdrop" class="leaders-backdrop hidden" onclick="closeLeadersDrawer()"></div>
 <aside id="leaders-drawer" class="leaders-drawer hidden">
@@ -413,6 +369,7 @@
 <div class="wrap">
   <div class="eyebrow">Personal Trading Terminal</div>
   <h1>SH Trading System</h1>
+  <p class="tagline">상황인식 &rarr; Focus list &rarr; 포지션 관리.<br>각 단계를 누르면 해당 채널로 이동하고, 원칙만 있는 단계는 올려두면 기준이 뜹니다.</p>
 
   <div class="flow">
     <div class="flow-group">
@@ -445,12 +402,12 @@
           <div class="flow-node plain" title="starter 5~10% · 강세장 초입 10% · Core conviction 20~25% · Swing 10%">Position size</div>
           <span class="flow-arrow">&#8594;</span>
           <div class="flow-node plain" title="1) previous day bar entry 2) pullback entry 3) pivot break entry 4) anticipation entry">Entry</div>
-          <span class="flow-arrow">&#8594;</span>
-          <div class="flow-loop">
-            <div class="flow-node plain">trim / free roll</div>
-            <span class="flow-loop-arrow">&#8597;</span>
-            <div class="flow-node plain">add / feed</div>
-          </div>
+        </div>
+        <div class="flow-connector">&#8595;</div>
+        <div class="flow-chain">
+          <div class="flow-node plain">add / feed</div>
+          <span class="flow-arrow">&#8646;</span>
+          <div class="flow-node plain">trim / free roll</div>
           <span class="flow-arrow">&#8594;</span>
           <div class="flow-node plain" title="Change of character — 고점 고거래량, 행잉맨 캔들, 연속 갭업">Sell</div>
         </div>
@@ -462,40 +419,6 @@
     </div>
   </div>
 
-  <div class="cards">
-    <a class="card" href="./condition.html">
-      <div class="card-top">
-        <div class="card-id"><span class="icon">📓</span><h2>Condition Journal</h2></div>
-        <span class="badge auto">AUTO · 화~토</span>
-      </div>
-      <p>Notion 매매일지에 매일 자동 삽입되는 Sector Rotation·UWL Breadth·UWL 강세종목·Screener 분석·Stockbee 해석 5종을 최근 7일치 모아보기</p>
-      <span class="arrow">&#8594;</span>
-    </a>
-    <a class="card" href="./pulse.html">
-      <div class="card-top">
-        <div class="card-id"><span class="icon">📡</span><h2>Screener Pulse</h2></div>
-        <span class="badge auto">AUTO · 화~토</span>
-      </div>
-      <p>7-스캔 Screener_Log 누적 대시보드 — 섹터/테크 세부그룹 히트맵, 지속등장 리더보드, 섹터강세 리더보드</p>
-      <span class="arrow">&#8594;</span>
-    </a>
-    <a class="card" href="./setup.html">
-      <div class="card-top">
-        <div class="card-id"><span class="icon">🧩</span><h2>Setup Channel</h2></div>
-        <span class="badge auto">AUTO · 화~토</span>
-      </div>
-      <p>확정된 5개 셋업(HTF·Long Base BO·Uptrend Pullback·Episodic Pivot·VCP) 라이브 스캔 — 셋업 카탈로그(VCP·Big Base BO·HTF·Uptrend Pullback·Cup&amp;Handle·Episodic Pivot·Flat Base)는 페이지 내 라이브러리 카드로</p>
-      <span class="arrow">&#8594;</span>
-    </a>
-    <a class="card" href="./report.html">
-      <div class="card-top">
-        <div class="card-id"><span class="icon">📅</span><h2>Monthly Report</h2></div>
-        <span class="badge auto">AUTO · 매달 1일</span>
-      </div>
-      <p>ETF·UWL 탭 + Condition Journal + Screener Pulse 4곳을 종합한 월간 리포트 — 한줄총평·시장 국면 변화·섹터 로테이션, Opus가 매달 1일 자동 작성해 접이식 카드로 누적</p>
-      <span class="arrow">&#8594;</span>
-    </a>
-  </div>
 </div>
 <footer>
   <div class="footer-inner">Auto-refresh Tue&ndash;Sat · Last updated <span id="lastUpdated">9/17 07:31 KST</span> · Data from internal trading DB + Notion</div></footer>
