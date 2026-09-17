@@ -286,6 +286,19 @@
   .leaders-nums { display: flex; gap: 9px; font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; font-size: 10.5px; color: var(--text-muted); flex-wrap: wrap; justify-content: flex-end; }
   .leaders-nums .good { color: var(--up); font-weight: 600; }
   .leaders-nums .bad { color: var(--down); font-weight: 600; }
+  .leaders-group-title { display: flex; align-items: center; gap: 6px; }
+  .leader-tech { font-size: 8.5px; font-weight: 800; letter-spacing: .06em; color: var(--accent);
+    border: 1px solid var(--accent-a45); border-radius: 4px; padding: 1px 4px; }
+  .leaders-meta { display: flex; align-items: center; gap: 8px; font-size: 10.5px;
+    color: var(--text-faint); margin-bottom: 8px; }
+  .leaders-meta .num { font-weight: 800; color: var(--accent); font-size: 12px; }
+  .leader-state { font-weight: 700; color: var(--up); letter-spacing: .04em; }
+  .leader-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .leader-chip { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11.5px;
+    font-weight: 700; background: var(--surface-alt); border: 1px solid var(--border);
+    border-radius: 6px; padding: 4px 8px; }
+  .leaders-asof { font-size: 10.5px; color: var(--text-faint); text-align: center;
+    border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px; }
 
   /* ---- 우측 고정 진입 카드: M.R(Monthly Report) 전용 (2026-09-17) ----
      구 S.A·F.L 런처는 제거됨 — 다이어그램 자체가 진입로라 중복이었음(S.A는 Phase 01
@@ -444,8 +457,8 @@
 <div id="leaders-backdrop" class="leaders-backdrop hidden" onclick="closeLeadersDrawer()"></div>
 <aside id="leaders-drawer" class="leaders-drawer hidden">
   <div class="leaders-drawer-head">
-    <h3>🎯 오늘의 섹터강세 리더</h3>
-    <div class="leaders-drawer-note">verdict=섹터강세 그룹의 종목 중 1M%&ge;5 &amp; ATR%&ge;4 &amp; 평균거래량10D&ge;100만주 통과한 3M% 상위 5개 &middot; Screener Pulse 실시간 연동</div>
+    <h3>🎯 오늘의 리더주</h3>
+    <div class="leaders-drawer-note">전 시장 세부그룹 중 <b>등급 A &middot; 섹터액션 OK &middot; 신호확신 HIGH</b>를 모두 만족하는 그룹의 상위 강한 종목 &middot; 강세그룹 페이지(group.html) 실시간 연동</div>
     <button type="button" class="leaders-drawer-close" onclick="closeLeadersDrawer()" aria-label="닫기">&times;</button>
   </div>
   <div id="leaders-drawer-body" class="leaders-drawer-body"></div>
@@ -503,10 +516,7 @@
           <h2 class="flow-title">Portfolio</h2>
           <span class="flow-caret">&#9662;</span>
         </button>
-        <span class="flow-head-right">
-          <a class="flow-jump desktop-only" href="http://127.0.0.1:8765/portfolio">&#128202; Allocation &#8599;</a>
-          <span class="flow-warn" title="System 1 &amp; 2 — 직관적·숙고적 사고, 감정적 판단 개입 여부 상시 점검">&#9888; Emotional</span>
-        </span>
+        <a class="flow-jump desktop-only" href="http://127.0.0.1:8765/portfolio">&#128202; Allocation &#8599;</a>
       </div>
 
       <div id="phase2Body" class="flow-collapsible">
@@ -649,12 +659,11 @@
     });
   })();
 
-  // ---- Stocks 노드 → 오늘의 섹터강세 리더 드로어 (2026-09-17, 구 process.html에서 이식) ----
-  // pulse.html의 sectorStrengthPayload를 같은 오리진 fetch로 읽어와서 verdict=섹터강세
-  // 그룹만 추리고, 클라이언트에서 그룹당 리더(1M%>=5 & ATR%>=4 & 평균거래량10D>=100만,
-  // 3M% 상위 5개)를 재계산 — pulse.html의 renderGroupLeaders()와 동일 필터 기준.
+  // ---- Stocks 노드 → 오늘의 리더주 드로어 (2026-09-17 개편) ----
+  // 기존엔 pulse.html의 sectorStrengthPayload(ETF 프록시 verdict)를 썼는데,
+  // group.html이 전 시장 1,400여 종목을 104개 세부그룹으로 점수화하고 있어서 그쪽으로 교체.
+  // 리더 기준(사용자 확정): 등급 A · 섹터액션 OK · 신호확신 HIGH를 **모두** 만족하는 그룹의 강한 종목.
   (function () {
-    var LEADER_MIN_1M = 5.0, LEADER_MIN_ATRP = 4.0, LEADER_MIN_AVGVOL = 1000000;
     var leadersLoaded = false;
 
     window.closeLeadersDrawer = function () {
@@ -672,63 +681,54 @@
       if (e.key === 'Escape') window.closeLeadersDrawer();
     });
 
-    function fmtLeaderPct(v) {
-      if (v === null || v === undefined) return '&mdash;';
-      var cls = v > 0 ? 'good' : v < 0 ? 'bad' : '';
-      return '<span class="' + cls + '">' + (v > 0 ? '+' : '') + v.toFixed(1) + '%</span>';
+    function esc(v) {
+      return String(v == null ? '' : v).replace(/[&<>"]/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+      });
     }
 
-    function renderLeaders(data) {
-      var byGroup = {};
-      data.forEach(function (item) {
-        if (item.verdict !== '섹터강세') return;
-        (byGroup[item.group] = byGroup[item.group] || []).push(item);
-      });
-      var groups = Object.keys(byGroup);
+    function renderLeaders(payload) {
+      var groups = (payload.groups || []).filter(function (g) {
+        return g.grade === 'A' && g.sectorAction === 'OK' && g.signalConfidence === 'HIGH';
+      }).sort(function (a, b) { return (b.score || 0) - (a.score || 0); });
+
       var body = document.getElementById('leaders-drawer-body');
       if (!groups.length) {
-        body.innerHTML = '<div class="leaders-empty">오늘은 섹터강세로 판정된 그룹이 없습니다.</div>';
+        body.innerHTML = '<div class="leaders-empty">오늘은 세 조건을 모두 만족하는 그룹이 없습니다.</div>';
         return;
       }
-      var html = '';
-      groups.forEach(function (g) {
-        var items = byGroup[g].filter(function (l) {
-          return l.p3m !== null && l.p3m !== undefined &&
-            l.p1m !== null && l.p1m !== undefined && l.p1m >= LEADER_MIN_1M &&
-            l.atrp !== null && l.atrp !== undefined && l.atrp >= LEADER_MIN_ATRP &&
-            l.avgvol10d !== null && l.avgvol10d !== undefined && l.avgvol10d >= LEADER_MIN_AVGVOL;
-        }).sort(function (a, b) { return b.p3m - a.p3m; }).slice(0, 5);
-        if (!items.length) return;
-        html += '<div class="leaders-group"><div class="leaders-group-title">' + g + '</div>';
-        items.forEach(function (l) {
-          html += '<div class="leaders-row"><span class="leaders-ticker">' + l.ticker + '</span>' +
-            '<span class="leaders-nums">' +
-            '<span>1D ' + fmtLeaderPct(l.p1d) + '</span>' +
-            '<span>1W ' + fmtLeaderPct(l.p1w) + '</span>' +
-            '<span>1M ' + fmtLeaderPct(l.p1m) + '</span>' +
-            '<span>3M ' + fmtLeaderPct(l.p3m) + '</span>' +
-            '<span>6M ' + fmtLeaderPct(l.p6m) + '</span>' +
-            '</span></div>';
-        });
-        html += '</div>';
-      });
-      body.innerHTML = html || '<div class="leaders-empty">조건을 통과한 리더가 없습니다.</div>';
+      body.innerHTML = groups.map(function (g) {
+        var chips = (g.strongTickers || []).map(function (t) {
+          return '<span class="leader-chip">' + esc(t) + '</span>';
+        }).join('');
+        return '<div class="leaders-group">'
+          + '<div class="leaders-group-title">' + esc(g.name)
+            + (g.isTech ? ' <span class="leader-tech">TECH</span>' : '') + '</div>'
+          + '<div class="leaders-meta">'
+            + '<span class="num">' + (g.score != null ? g.score.toFixed(1) : '&mdash;') + '</span>'
+            + '<span class="leader-state">' + esc(g.state || '') + '</span>'
+            + '<span>' + esc(g.sector || '') + '</span>'
+          + '</div>'
+          + '<div class="leader-chips">' + chips + '</div>'
+          + '</div>';
+      }).join('') + '<div class="leaders-asof">기준일 ' + esc(payload.asof || '')
+        + ' · 전체 ' + (payload.groups || []).length + '개 그룹 중 ' + groups.length + '개</div>';
     }
 
     function loadLeaders() {
       var body = document.getElementById('leaders-drawer-body');
       if (leadersLoaded) return;
       body.innerHTML = '<div class="leaders-loading">불러오는 중&hellip;</div>';
-      fetch('./pulse.html').then(function (r) {
+      fetch('./group.html').then(function (r) {
         if (!r.ok) throw new Error('http ' + r.status);
         return r.text();
       }).then(function (html) {
-        var m = html.match(/<script id="sectorStrengthPayload" type="application\/json">([\s\S]*?)<\/script>/);
+        var m = html.match(/<script id="groupStrengthPayload" type="application\/json">([\s\S]*?)<\/script>/);
         if (!m) throw new Error('payload not found');
         renderLeaders(JSON.parse(m[1]));
         leadersLoaded = true;
-      }).catch(function (e) {
-        body.innerHTML = '<div class="leaders-error">불러오기 실패 &mdash; Screener Pulse 페이지를 확인해주세요.</div>';
+      }).catch(function () {
+        body.innerHTML = '<div class="leaders-error">불러오기 실패 &mdash; 강세그룹 페이지를 확인해주세요.</div>';
       });
     }
   })();
