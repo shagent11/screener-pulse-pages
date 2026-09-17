@@ -143,8 +143,8 @@
     border-radius: 999px; padding: 5px 13px; text-decoration: none; white-space: nowrap;
   }
   .flow-head > .flow-jump { margin-left: auto; }
-  /* Allocation(포트폴리오)은 잔고가 그대로 보이는 화면 — 폰에서는 진입로 자체를 감춘다.
-     portfolio.html도 자체 차단하지만 링크가 남아있으면 눌러보게 되므로 양쪽 다 막음 */
+  /* Allocation(포트폴리오)은 잔고 화면이라 2026-09-17에 로컬 서버(fl_server, :8765)로 옮겼다 —
+     공개 repo에 두니 raw URL로 인증 없이 읽혔음. 이 맥에서만 열리고, 폰에서는 칩도 감춘다 */
   @media (max-width: 760px), (pointer: coarse) { .desktop-only { display: none !important; } }
 
   /* Portfolio 패널 접기 — "프로세스만 파악하는 용도"라 기본은 접힌 상태,
@@ -504,7 +504,7 @@
           <span class="flow-caret">&#9662;</span>
         </button>
         <span class="flow-head-right">
-          <a class="flow-jump desktop-only" href="./portfolio.html">&#128202; Allocation &#8599;</a>
+          <a class="flow-jump desktop-only" href="http://127.0.0.1:8765/portfolio">&#128202; Allocation &#8599;</a>
           <span class="flow-warn" title="System 1 &amp; 2 — 직관적·숙고적 사고, 감정적 판단 개입 여부 상시 점검">&#9888; Emotional</span>
         </span>
       </div>
