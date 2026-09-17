@@ -136,11 +136,34 @@
     background: var(--accent-soft); padding: 4px 8px; border-radius: 5px;
   }
   .flow-title { margin: 0; font-size: 12.5px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--text-muted); }
+  .flow-head-right { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .flow-jump, .flow-warn {
-    margin-left: auto; display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; gap: 6px;
     font-size: 11.5px; font-weight: 700; color: var(--accent);
     border-radius: 999px; padding: 5px 13px; text-decoration: none; white-space: nowrap;
   }
+  .flow-head > .flow-jump { margin-left: auto; }
+
+  /* Portfolio 패널 접기 — "프로세스만 파악하는 용도"라 기본은 접힌 상태,
+     사용자가 편 상태는 localStorage로 기억한다 */
+  .flow-collapse {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: none; border: none; padding: 0; margin: 0; cursor: pointer;
+    font: inherit; color: inherit;
+  }
+  .flow-caret {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 19px; height: 19px; border-radius: 6px;
+    background: var(--surface-alt); border: 1px solid var(--border);
+    color: var(--text-muted); font-size: 9px; line-height: 1;
+    transition: transform .16s ease, border-color .16s ease, color .16s ease;
+  }
+  .flow-collapse[aria-expanded="false"] .flow-caret { transform: rotate(-90deg); }
+  .flow-collapse:hover .flow-title { color: var(--accent); }
+  .flow-collapse:hover .flow-caret { color: var(--accent); border-color: var(--accent); }
+  .flow-collapsible { overflow: hidden; }
+  .flow-collapsible[hidden] { display: none; }
+  .flow-panel.collapsed .flow-head { padding-bottom: 0; margin-bottom: 0; border-bottom: none; }
   .flow-jump { border: 1px solid var(--accent-a45); transition: background .14s ease, border-color .14s ease; }
   .flow-jump:hover { background: var(--accent-soft); border-color: var(--accent); }
   .flow-warn { border: 1px dashed var(--accent-a45); cursor: default; }
@@ -472,11 +495,18 @@
 
     <section class="flow-panel">
       <div class="flow-head">
-        <span class="flow-phase">PHASE 02</span>
-        <h2 class="flow-title">Portfolio</h2>
-        <span class="flow-warn" title="System 1 &amp; 2 — 직관적·숙고적 사고, 감정적 판단 개입 여부 상시 점검">&#9888; Emotional</span>
+        <button type="button" class="flow-collapse" id="phase2Toggle" aria-expanded="false" aria-controls="phase2Body">
+          <span class="flow-phase">PHASE 02</span>
+          <h2 class="flow-title">Portfolio</h2>
+          <span class="flow-caret">&#9662;</span>
+        </button>
+        <span class="flow-head-right">
+          <a class="flow-jump" href="./portfolio.html">&#128202; 포트폴리오 &#8599;</a>
+          <span class="flow-warn" title="System 1 &amp; 2 — 직관적·숙고적 사고, 감정적 판단 개입 여부 상시 점검">&#9888; Emotional</span>
+        </span>
       </div>
 
+      <div id="phase2Body" class="flow-collapsible">
       <div class="flow-row">
         <div class="flow-node plain" title="set stop -33% · Risk structure defined · -AUM% -1~-2%"><span class="step">06</span>Stop Loss</div>
         <span class="flow-link"></span>
@@ -495,6 +525,7 @@
         <div class="flow-node plain" title="Change of character — 고점 고거래량, 행잉맨 캔들, 연속 갭업"><span class="step">11</span>Sell</div>
         <span class="flow-link"></span>
         <div class="flow-node plain" title="Log → Telegram(Opus 4.8) — 룰 준수 여부·매매 성과·행동 패턴 체크"><span class="step">12</span>&#8634; Feedback</div>
+      </div>
       </div>
     </section>
   </div>
@@ -589,6 +620,30 @@
     }
     tick();
     setInterval(tick, 1000);
+  })();
+
+  // ---- Portfolio 패널 접기/펴기 (2026-09-17) — 프로세스 참조용이라 기본 접힘 ----
+  (function () {
+    var KEY = 'flowPhase2Open';
+    var btn = document.getElementById('phase2Toggle');
+    var body = document.getElementById('phase2Body');
+    if (!btn || !body) return;
+    var panel = btn.closest('.flow-panel');
+
+    function apply(open) {
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      body.hidden = !open;
+      if (panel) panel.classList.toggle('collapsed', !open);
+    }
+    var saved;
+    try { saved = localStorage.getItem(KEY); } catch (e) {}
+    apply(saved === '1');
+
+    btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-expanded') !== 'true';
+      apply(open);
+      try { localStorage.setItem(KEY, open ? '1' : '0'); } catch (e) {}
+    });
   })();
 
   // ---- Stocks 노드 → 오늘의 섹터강세 리더 드로어 (2026-09-17, 구 process.html에서 이식) ----
