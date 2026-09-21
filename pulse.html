@@ -752,9 +752,16 @@
     svg.appendChild(bgG);
     svg.appendChild(labelsG);
 
+    // 2026-09-21: 점에 호버하면 나머지 전부 흐리게(사용자 요청). 티커별로 그려낸 요소를
+    // 모아뒀다가 호버 시 "나 아닌 것들"만 흐리게 함. ⚠️ 꼬리(trailG)는 topMovers(상시표시)만
+    // 담는다 — hover 전용 꼬리는 `.trail-hover{opacity:0}`으로 숨겨져 있어서 inline opacity를
+    // 씌우면 숨어있던 꼬리가 되살아난다(실제로 밟을 뻔한 함정).
+    const rendered = [];
+
     priority.forEach(d => {
       const x = xs(d[xKey]), y = ys(d[yKey]);
       const col = rsColor(d.rs);
+      const myEls = [];
 
       const pts = trailPts(d.ticker);
       let trailG = null;
@@ -762,11 +769,14 @@
         trailG = buildTrailGroup(d.ticker, pts, col);
         trailG.setAttribute('class', topMovers.has(d.ticker) ? 'trail' : 'trail trail-hover');
         trailsG.appendChild(trailG);
+        if (topMovers.has(d.ticker)) myEls.push(trailG); // 상시표시 꼬리만 흐림 대상
       }
 
       const clusterN = (d._clusterMembers || []).length;
       if (clusterN > 0) {
-        dotsG.appendChild(mkEl('circle', { cx:x, cy:y, r:7.5, fill:'none', stroke:col, 'stroke-width':1, opacity:.5 }));
+        const ring = mkEl('circle', { cx:x, cy:y, r:7.5, fill:'none', stroke:col, 'stroke-width':1, opacity:.5 });
+        dotsG.appendChild(ring);
+        myEls.push(ring);
       }
       const dot = mkEl('circle', { cx:x, cy:y, r:4.5, fill:col, stroke:'var(--surface)', 'stroke-width':1 });
       if (trailG) {
@@ -784,6 +794,7 @@
         dot.style.cursor = 'help';
       }
       dotsG.appendChild(dot);
+      myEls.push(dot);
 
       const label = d.ticker + (d.rs !== null ? ' ' + d.rs : '') + (clusterN > 0 ? ` +${clusterN}` : '');
       const lw = label.length * charW;
@@ -799,16 +810,20 @@
       }
 
       if (chosen.r > INNER_R) {
-        leaderG.appendChild(mkEl('line', {
+        const leader = mkEl('line', {
           x1: x, y1: y, x2: x + chosen.cx*0.55, y2: y + chosen.cy*0.55,
           stroke: col, 'stroke-width': 1, opacity: .5,
-        }));
+        });
+        leaderG.appendChild(leader);
+        myEls.push(leader);
       }
 
-      bgG.appendChild(mkEl('rect', {
+      const labelBg = mkEl('rect', {
         x: x+chosen.dx-3, y: y+chosen.dy-lh+3, width: lw+6, height: lh+1,
         rx: 3, fill: 'var(--surface)', opacity: .82,
-      }));
+      });
+      bgG.appendChild(labelBg);
+      myEls.push(labelBg);
       const tx = mkEl('text', { x: x+chosen.dx, y: y+chosen.dy, class:'dotlabel' });
       tx.textContent = d.ticker;
       if (d.rs !== null) {
@@ -822,6 +837,22 @@
         tx.appendChild(badge);
       }
       labelsG.appendChild(tx);
+      myEls.push(tx);
+
+      rendered.push({ dot, els: myEls });
+    });
+
+    // ---- 호버 강조: 나머지 전부 흐리게(애니메이션 없음, 사용자 확정) ----
+    const DIM = '0.1';
+    rendered.forEach(item => {
+      item.dot.style.cursor = 'pointer';
+      item.dot.addEventListener('mouseenter', () => {
+        rendered.forEach(o => { if (o !== item) o.els.forEach(e => e.style.opacity = DIM); });
+      });
+      item.dot.addEventListener('mouseleave', () => {
+        // inline style만 지우면 원래 attribute 투명도(링 .5 / 리더선 .5 / 라벨배경 .82)로 복귀
+        rendered.forEach(o => o.els.forEach(e => e.style.opacity = ''));
+      });
     });
 
     const q1 = data.filter(d => d[xKey]>0 && d[yKey]>0).length;
