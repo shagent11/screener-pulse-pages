@@ -175,10 +175,13 @@
       <div class="panel mab">
         <div class="panel-title">MA Breadth &middot; 이동평균 상회 비율 <span class="note">S&amp;P 500 &middot; NYSE 보통주 전체</span></div>
         <div class="mab-body">
-          <div class="mab-toggle" id="breadthToggle">
-            <button data-uni="all" class="active">둘 다</button>
-            <button data-uni="sp500">S&amp;P 500</button>
-            <button data-uni="nyse">NYSE</button>
+          <div class="mab-head">
+            <div class="mab-toggle" id="breadthToggle">
+              <button data-uni="all" class="active">둘 다</button>
+              <button data-uni="sp500">S&amp;P 500</button>
+              <button data-uni="nyse">NYSE</button>
+            </div>
+            <button class="mab-reset" id="breadthReset" hidden>⤢ 전체 기간</button>
           </div>
           <div class="mab-stats" id="breadthStats"></div>
           <div class="scroll-x"><svg class="mab-chart" id="breadthChart" viewBox="0 0 900 260"></svg></div>
@@ -187,6 +190,7 @@
             <span class="item"><span class="dot" style="background:var(--series-b)"></span>NYSE</span>
             <span class="item"><span class="ln"></span>20일선 상회</span>
             <span class="item"><span class="ln dashed"></span>50일선 상회</span>
+            <span class="item hint">휠 확대/축소 &middot; 드래그 이동 &middot; 더블클릭 초기화</span>
           </div>
           <div class="mab-note">지수는 대형주 몇 개로 버틸 수 있지만 이 비율은 못 버틴다 &mdash; M01~M07보다 먼저 꺾이고 먼저 도는 시장 폭 지표. 80% 위는 과열(되돌림 경계), 20% 아래는 과매도(반등 구간)이고, 절대 수치보다 <b>방향과 두 선의 간격</b>이 중요하다. 20일선 비율이 50일선 비율 위로 올라오면 단기 반등이 중기 추세를 되돌리기 시작했다는 신호<span id="maBreadthNote"></span></div>
         </div>
@@ -195,7 +199,14 @@
         :root { --series-b:#3d6fa5; }
         @media (prefers-color-scheme: dark) { :root { --series-b:#6ea8e0; } }
         .mab .mab-body { padding:14px 16px 16px; }
-        .mab-toggle { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
+        .mab-head { display:flex; gap:8px; align-items:center; justify-content:space-between;
+          flex-wrap:wrap; margin-bottom:12px; }
+        .mab-toggle { display:flex; gap:6px; flex-wrap:wrap; }
+        .mab-reset { font:inherit; font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:7px;
+          border:1px dashed var(--border); background:transparent; color:var(--text-muted); cursor:pointer; }
+        .mab-reset:hover { border-color:var(--accent); color:var(--text); }
+        /* [[feedback_hidden_attr_vs_display]] — hidden이 display 규칙에 지지 않게 명시 */
+        .mab-reset[hidden] { display:none; }
         .mab-toggle button { font:inherit; font-size:12px; font-weight:600; padding:5px 12px; border-radius:7px;
           border:1px solid var(--border); background:var(--surface-alt); color:var(--text-muted); cursor:pointer; }
         .mab-toggle button:hover { border-color:var(--accent); color:var(--text); }
@@ -209,7 +220,10 @@
         .bstat .chg.up { color:var(--up); } .bstat .chg.down { color:var(--down); }
         .bstat .zone { font-size:10.5px; color:var(--text-faint); margin-top:2px; }
         /* 좁은 화면에서 viewBox 비율대로 납작해지지 않게 min-width + .scroll-x로 가로스크롤 */
-        svg.mab-chart { width:100%; height:auto; min-width:560px; display:block; }
+        svg.mab-chart { width:100%; height:auto; min-width:560px; display:block; cursor:grab;
+          touch-action:pan-y; user-select:none; -webkit-user-select:none; }
+        svg.mab-chart.dragging { cursor:grabbing; }
+        .mab-legend .hint { color:var(--text-faint); font-size:11px; margin-left:auto; }
         .mab-chart .axis-label { font-size:10px; fill:var(--text-faint); }
         .mab-legend { display:flex; gap:16px; margin-top:10px; font-size:12px; color:var(--text-muted); flex-wrap:wrap; }
         .mab-legend .item { display:flex; align-items:center; gap:6px; }
@@ -259,8 +273,24 @@
           statsEl.innerHTML = html;
         }
 
+        // ── 가로 줌/팬 ─────────────────────────────────────────────────────
+        // 뷰 윈도우(표시할 인덱스 구간)만 바꿔 다시 그린다. SVG viewBox를 늘리는 방식은
+        // 선 두께·글자까지 같이 확대돼서 안 쓴다.
+        var W = 900, H = 260, padL = 34, padR = 12, padT = 16, padB = 28;
+        var N = dates.length, MIN_SPAN = 15;
+        var view = { s: 0, e: N - 1 };
+        var curUni = 'all';
+        var resetBtn = document.getElementById('breadthReset');
+
+        function clampView(s, span){
+          span = Math.max(MIN_SPAN, Math.min(N, Math.round(span)));
+          s = Math.max(0, Math.min(N - span, Math.round(s)));
+          return { s: s, e: s + span - 1 };
+        }
+
         function renderChart(uni){
-          var W = 900, H = 260, padL = 34, padR = 12, padT = 16, padB = 28, n = dates.length;
+          var n = view.e - view.s + 1;
+          var sub = dates.slice(view.s, view.e + 1);
           var xs = function(i){ return padL + (W - padL - padR) * (n === 1 ? 0.5 : i / (n - 1)); };
           var ys = function(v){ return H - padB - (H - padT - padB) * (v / 100); };
           var shown = SERIES.filter(function(s){ return (uni === 'all' || s.uni === uni) && D.series[s.key]; });
@@ -273,12 +303,12 @@
           });
           svg += '<line x1="' + padL + '" x2="' + (W-padR) + '" y1="' + ys(50) + '" y2="' + ys(50) + '" stroke="var(--text-faint)" stroke-width="1" stroke-dasharray="2 4" opacity=".7"/>';
           var step = Math.max(1, Math.ceil(n / 10));
-          dates.forEach(function(d, i){
+          sub.forEach(function(d, i){
             if (i % step === 0 || i === n-1)
               svg += '<text x="' + xs(i) + '" y="' + (H-8) + '" class="axis-label" text-anchor="middle">' + fmtDate(d) + '</text>';
           });
           shown.forEach(function(s){
-            var arr = D.series[s.key];
+            var arr = D.series[s.key].slice(view.s, view.e + 1);
             var path = arr.map(function(v, i){ return (i===0?'M':'L') + xs(i).toFixed(1) + ',' + ys(v).toFixed(1); }).join(' ');
             svg += '<path d="' + path + '" fill="none" stroke="' + s.color + '" stroke-width="' + (s.ma === 20 ? 2.2 : 1.6) + '"'
                  + (s.dash ? ' stroke-dasharray="' + s.dash + '"' : '') + ' stroke-linejoin="round"/>';
@@ -286,14 +316,61 @@
           });
           // 점마다 원을 찍으면 240일×4계열=960개라 엉키므로, 날짜별 투명 밴드 하나에 그날 전 계열 값을 담은 툴팁
           var bw = (W - padL - padR) / Math.max(n - 1, 1);
-          dates.forEach(function(d, i){
-            var tip = [fmtDate(d)].concat(shown.map(function(s){ return s.label + ' ' + D.series[s.key][i].toFixed(1) + '%'; })).join('\n');
+          sub.forEach(function(d, i){
+            var tip = [fmtDate(d)].concat(shown.map(function(s){ return s.label + ' ' + D.series[s.key][view.s + i].toFixed(1) + '%'; })).join('\n');
             svg += '<rect x="' + (xs(i)-bw/2).toFixed(1) + '" y="' + padT + '" width="' + bw.toFixed(1) + '" height="' + (H-padT-padB) + '" fill="transparent"><title>' + tip + '</title></rect>';
           });
           chart.innerHTML = svg;
         }
 
-        function render(uni){ renderStats(uni); renderChart(uni); }
+        var note = document.getElementById('maBreadthNote');
+        function renderNote(){
+          var n = view.e - view.s + 1;
+          if (note) note.textContent = ' · ' + fmtDate(dates[view.s]) + '~' + fmtDate(dates[view.e]) + ' ' + n + '거래일'
+            + (n === N ? '' : ' (전체 ' + N + '일 중 확대)');
+          if (resetBtn) resetBtn.hidden = (n === N);
+        }
+        function redraw(){ renderChart(curUni); renderNote(); }
+        function resetView(){ view = { s: 0, e: N - 1 }; redraw(); }
+
+        // 커서 위치를 앵커로 고정한 채 구간 길이만 늘리고 줄인다
+        function svgX(ev){
+          var r = chart.getBoundingClientRect();
+          return (ev.clientX - r.left) / r.width * W;
+        }
+        chart.addEventListener('wheel', function(ev){
+          // 트랙패드 가로 스크롤은 페이지에 넘긴다(좁은 화면의 .scroll-x와 충돌 방지)
+          if (Math.abs(ev.deltaX) > Math.abs(ev.deltaY)) return;
+          ev.preventDefault();
+          var span = view.e - view.s + 1;
+          var frac = Math.max(0, Math.min(1, (svgX(ev) - padL) / (W - padL - padR)));
+          var anchor = view.s + frac * (span - 1);
+          var next = Math.round(span * (ev.deltaY > 0 ? 1.25 : 0.8));
+          if (next === span) next = span + (ev.deltaY > 0 ? 1 : -1);
+          view = clampView(anchor - frac * (next - 1), next);
+          redraw();
+        }, { passive: false });
+
+        var drag = null;
+        chart.addEventListener('mousedown', function(ev){
+          if (view.e - view.s + 1 >= N) return;   // 전체 구간이면 끌 데가 없다
+          drag = { x: svgX(ev), s: view.s, span: view.e - view.s + 1 };
+          chart.classList.add('dragging');
+          ev.preventDefault();
+        });
+        window.addEventListener('mousemove', function(ev){
+          if (!drag) return;
+          var di = -(svgX(ev) - drag.x) / (W - padL - padR) * (drag.span - 1);
+          view = clampView(drag.s + di, drag.span);
+          redraw();
+        });
+        window.addEventListener('mouseup', function(){
+          if (drag) { drag = null; chart.classList.remove('dragging'); }
+        });
+        chart.addEventListener('dblclick', resetView);
+        if (resetBtn) resetBtn.addEventListener('click', resetView);
+
+        function render(uni){ curUni = uni; renderStats(uni); renderChart(uni); renderNote(); }
         render('all');
         Array.prototype.forEach.call(document.querySelectorAll('#breadthToggle button'), function(b){
           b.addEventListener('click', function(){
@@ -302,8 +379,6 @@
             render(b.dataset.uni);
           });
         });
-        var note = document.getElementById('maBreadthNote');
-        if (note) note.textContent = ' · ' + fmtDate(dates[0]) + '~' + fmtDate(dates[dates.length-1]) + ' ' + dates.length + '거래일';
       })();
       </script>
     </div>
