@@ -10,7 +10,6 @@
     --text: #1b2430; --text-muted: #5b6675; --text-faint: #8993a3;
     --accent: #a6742f; --accent-soft: #e8dcc3;
     --up: #1c8a5c; --down: #c23b45; --info: #2d6ca8;
-    --band1:#e5eef6; --band2:#ece7f4; --band3:#e8f0e6;
     --shadow: 0 1px 2px rgba(20,25,35,.06), 0 8px 24px -12px rgba(20,25,35,.15);
   }
   @media (prefers-color-scheme: dark) {
@@ -19,7 +18,6 @@
       --text: #e7ecf3; --text-muted: #93a0b3; --text-faint: #5f6b7d;
       --accent: #d9a856; --accent-soft: #3a3120;
       --up: #3ecf8e; --down: #e0616b; --info: #6ea8dc;
-      --band1:#1a2531; --band2:#221e2c; --band3:#1c2721;
       --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px -14px rgba(0,0,0,.6);
     }
   }
@@ -28,7 +26,6 @@
     --text: #e7ecf3; --text-muted: #93a0b3; --text-faint: #5f6b7d;
     --accent: #d9a856; --accent-soft: #3a3120;
     --up: #3ecf8e; --down: #e0616b; --info: #6ea8dc;
-    --band1:#1a2531; --band2:#221e2c; --band3:#1c2721;
     --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px -14px rgba(0,0,0,.6);
   }
   * { box-sizing: border-box; }
@@ -42,75 +39,77 @@
   h1 { font-size:27px; margin:0 0 6px; font-weight:800; letter-spacing:-.01em; }
   .sub { font-size:13.5px; color:var(--text-muted); margin-bottom:24px; line-height:1.55; }
   .num { font-family:ui-monospace,"SF Mono",Menlo,monospace; font-variant-numeric:tabular-nums; }
-
+  .stale { color:var(--accent); background:var(--accent-soft); border-radius:8px;
+    padding:9px 12px; font-size:12px; margin-bottom:18px; line-height:1.55; }
 
   .panel { background:var(--surface); border:1px solid var(--border); border-radius:14px;
     padding:20px 22px 22px; box-shadow:var(--shadow); margin-bottom:22px; }
   .panel h2 { font-size:15px; margin:0 0 4px; font-weight:700; }
   .panel-sub { font-size:12.5px; color:var(--text-muted); margin-bottom:14px; line-height:1.5; }
+  .note { font-size:11.5px; color:var(--text-faint); line-height:1.55; margin-top:10px; }
   .scroll-x { overflow-x:auto; }
   table.mgrid { width:100%; border-collapse:collapse; font-size:12.5px; }
   table.mgrid th, table.mgrid td { padding:7px 8px; text-align:center; border-bottom:1px solid var(--border); }
   table.mgrid th { color:var(--text-faint); font-weight:600; font-size:10px; text-transform:uppercase; letter-spacing:.02em; }
   table.mgrid td.sec { text-align:left; font-weight:600; white-space:nowrap; }
-  table.mgrid td.rid { color:var(--text-faint); font-size:11px; }
-  table.mgrid td.ticker { text-align:left; font-weight:600; }
-  table.mgrid td.num { font-variant-numeric:tabular-nums; }
-  table.mgrid td.n0 { color:var(--text-faint); }
+  table.mgrid td.num { font-variant-numeric:tabular-nums; font-family:ui-monospace,Menlo,monospace; }
   table.mgrid tr:last-child td { border-bottom:none; }
-  table.mgrid tr.g1 td { background:var(--band1); }
-  table.mgrid tr.g2 td { background:var(--band2); }
-  table.mgrid tr.g3 td { background:var(--band3); }
-  .cond { font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,monospace; font-size:11.5px; color:var(--text-muted); }
-  .dot-flow { display:inline-flex; align-items:center; gap:4px; font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,monospace; font-size:11.5px; color:var(--text-muted); }
-  .dot-flow .arrow { color:var(--text-faint); font-size:11px; }
-  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; }
-  .dot.good { background:var(--up); } .dot.warn { background:#d9a856; } .dot.bad { background:var(--down); }
-  .v { font-weight:700; font-size:11.5px; }
-  .v-섹터강세 { color:var(--up); } .v-종목쏠림 { color:var(--down); } .v-혼조 { color:var(--text-faint); }
-  .grp-etf { font-size:10.5px; color:var(--text-faint); font-family:ui-monospace,"SF Mono",Menlo,monospace; }
+
+  .delta { font-family:ui-monospace,Menlo,monospace; font-size:11.5px; font-weight:700; }
+  .delta.up { color:var(--up); } .delta.down { color:var(--down); } .delta.flat { color:var(--text-faint); }
+
+  /* ① 환경 */
+  .hero { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+  .hero-v { font-size:26px; font-weight:800; letter-spacing:-.01em; }
+  .hero-v.up { color:var(--up); } .hero-v.down { color:var(--down); } .hero-v.flat { color:var(--text-muted); }
+  .hero-sub { font-size:12.5px; color:var(--text-muted); }
+  .chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  .chip { font-size:11.5px; border:1px solid var(--border); border-radius:999px;
+    padding:4px 11px; color:var(--text-muted); }
+  .chip.up { border-color:var(--up); color:var(--up); }
+  .chip.down { border-color:var(--down); color:var(--down); }
+
+  /* ② 인덱스 */
+  .idx-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .idx { background:var(--surface-alt); border:1px solid var(--border); border-radius:11px; padding:14px 16px; }
+  .idx-h { font-size:14px; font-weight:800; margin-bottom:9px; display:flex; align-items:baseline; gap:8px; }
+  .idx-px { font-size:12px; font-weight:600; color:var(--text-muted); }
+  .idx-row { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin-top:9px; }
+  .idx-k { font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--text-faint); min-width:124px; }
+  .idx-v { font-size:12.5px; font-weight:700; }
+  .idx-v.up { color:var(--up); } .idx-v.down { color:var(--down); } .idx-v.flat { color:var(--text-muted); }
+
+  /* ③ 리더 */
+  .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+  .metric { background:var(--surface-alt); border:1px solid var(--border); border-radius:11px; padding:11px 13px; }
+  .metric-k { font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--text-faint); margin-bottom:5px; }
+  .metric-v { font-size:13px; display:flex; align-items:baseline; gap:7px; }
+  .metric-v b { font-size:19px; font-weight:800; }
+
+  /* ④ 액션 */
+  .act-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .act-col { background:var(--surface-alt); border:1px solid var(--border); border-radius:11px; padding:13px 14px; }
+  .act-col.fire { border-color:var(--up); } .act-col.cool { border-color:var(--down); }
+  .act-h { font-size:11px; font-weight:800; letter-spacing:.04em; margin-bottom:9px; color:var(--text-muted); }
+  .act-row { display:flex; align-items:baseline; gap:7px; flex-wrap:wrap; padding:5px 0;
+    border-top:1px solid var(--border); font-size:12px; }
+  .act-row:first-of-type { border-top:none; }
+  .act-n { font-weight:700; }
+  .act-s { color:var(--text-muted); font-size:11.5px; }
+  .act-w { font-size:10.5px; color:var(--text-faint); width:100%; }
+
+  @media (max-width:760px) {
+    .idx-grid, .act-grid { grid-template-columns:1fr; }
+    .metrics { grid-template-columns:repeat(2,1fr); }
+  }
   footer { text-align:center; font-size:11.5px; color:var(--text-faint); margin-top:8px; line-height:1.6; }
-  /* ── 접기(2026-09-17): ①②③ 타이틀 클릭 토글, 상태는 localStorage ── */
   h2.fold { cursor:pointer; display:flex; align-items:center; gap:8px; user-select:none; }
   h2.fold:hover { color:var(--accent); }
   .caret { font-size:10px; color:var(--text-faint); transition:transform .16s ease; }
   h2.fold.closed .caret { transform:rotate(-90deg); }
   .foldbody[hidden] { display:none !important; }
-  /* ── REGIME TRANSITION 카드 ── */
-  .rt-head { margin:14px 0 6px; }
-  .rt-lines { display:flex; flex-direction:column; gap:5px; }
-  .rt-line { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
-  .rt-k { font-size:10.5px; font-weight:700; letter-spacing:.06em; color:var(--text-faint);
-    text-transform:uppercase; min-width:76px; }
-  .rt-v { font-size:15px; font-weight:800; }
-  .rt-v.rt-dir { font-size:19px; }
-  .rt-sub { font-size:11.5px; color:var(--text-muted); }
-  .rt-partial { color:var(--accent); } .rt-full { color:var(--up); }
-  .rt-state { font-size:11px; color:var(--text-faint); margin-bottom:10px; }
-  .rt-dir { font-size:19px; font-weight:800; letter-spacing:-.01em; }
-  .rt-stage { font-size:12.5px; color:var(--text-muted); margin-top:3px; }
-  .rt-net { text-align:right; font-size:11.5px; color:var(--text-muted); line-height:1.6; }
-  .rt-net b { font-size:15px; } .rt-net .up { color:var(--up); } .rt-net .down { color:var(--down); }
-  .rt-netnum { font-family:ui-monospace,Menlo,monospace; font-weight:700; color:var(--text); }
-  .rt-wait { font-size:11.5px; color:var(--accent); background:var(--accent-soft);
-    border-radius:7px; padding:7px 11px; margin-bottom:10px; }
-  .rt-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-  @media (max-width:760px) { .rt-grid { grid-template-columns:1fr; } }
-  .rt-coltitle { font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase;
-    color:var(--text-faint); margin-bottom:6px; }
-  .rt-row { display:grid; grid-template-columns:78px 30px 1fr; gap:8px; align-items:baseline;
-    font-size:11.5px; padding:5px 0; border-top:1px solid var(--border); }
-  .rt-name { font-weight:700; color:var(--text-muted); }
-  .rt-score { font-family:ui-monospace,Menlo,monospace; font-weight:800; text-align:right; }
-  .rt-pos .rt-score { color:var(--accent); } .rt-zero .rt-score { color:var(--text-faint); }
-  .rt-pending .rt-score, .rt-pending .rt-detail { color:var(--text-faint); font-style:italic; }
-  .rt-detail { color:var(--text-muted); line-height:1.5; }
-  .rt-badge { margin-left:6px; font-size:9px; font-weight:800; letter-spacing:.05em;
-    color:var(--accent); border:1px solid var(--accent); border-radius:4px; padding:1px 4px; }
-  .rt-read { margin-top:14px; font-size:13px; font-weight:700; }
-  .rt-guide { margin-top:4px; font-size:12.5px; color:var(--accent); }
-  .rt-stale { margin-top:12px; font-size:12.5px; color:var(--down); background:var(--down-soft,transparent);
-    border:1px solid var(--down); border-radius:8px; padding:10px 12px; line-height:1.6; }
 </style>
 </head>
 <body>
@@ -118,68 +117,55 @@
   <a class="back" href="./index.html">&larr; 펄스 허브</a>
   <div class="eyebrow">SH Trading System · Situational Awareness</div>
   <h1>Situational Awareness</h1>
-  <div class="sub">시장 → 섹터 → 셋업 3단 우위 판단 — 각 단계가 겹칠수록(베이지안 스태킹) 확신도가 높아짐.<br>Market as of <span class="num">2026-09-22</span> regular close · Generated <span class="num">9/23 07:32</span> KST</div>
+  <div class="sub">시장의 폭이 넓어지는지 좁아지는지(환경) → 어디에 추세가 살아있는지(리더·액션).
+    국면 라벨은 만들지 않는다 — 층마다 방향과 근거만 본다.<br>
+    Market as of <span class="num">2026-09-22</span> regular close · Generated <span class="num">9/23 10:11</span> KST</div>
 
-  <div class="panel rt">
-    <h2 class="fold" data-fold="RT">REGIME TRANSITION<span class="caret">▾</span></h2>
-    <div class="foldbody" id="RT">
-    <div class="panel-sub">Market as of <span class="num">2026-09-22</span> regular close · Generated <span class="num">9/23 07:32</span> KST</div>
-    <div class="rt-head"><div class="rt-lines"><div class="rt-line"><span class="rt-k">현재 국면</span><span class="rt-v rt-dir">RISK-OFF</span><span class="rt-sub">약세 강도 <b class="num">6</b>/10</span></div><div class="rt-line"><span class="rt-k">변화 방향</span><span class="rt-v">혼조</span><span class="rt-sub">개선 <b class="up">2</b> · 악화 <b class="down">2</b> · 순 <b class="num">+0</b></span></div><div class="rt-line"><span class="rt-k">전환 단계</span><span class="rt-v">기존 국면 유지</span><span class="rt-sub">전환 미인정 · 잠정 모멘텀 <b class="num">+0</b></span></div><div class="rt-line"><span class="rt-k">데이터 신뢰도</span><span class="rt-v rt-full">FULL</span><span class="rt-sub">5/5 layers</span></div></div></div><div class="rt-state">현재 상태 근거 · 20MA 상회 28% · 20MA<50MA 2개 · 지수 🔴3 · A/B+OK 5개</div>
-    
-    <div class="rt-grid">
-      <div class="rt-col"><div class="rt-coltitle">개선 모멘텀 (→ Recovery)</div><div class="rt-row rt-zero"><span class="rt-name">Breadth</span><span class="rt-score">+0</span><span class="rt-detail">20MA 3일 변화 +4.9%p (SP +7.6 · NYSE +2.2)<span class="rt-badge">BROAD</span></span></div><div class="rt-row rt-zero"><span class="rt-name">Breadth Cross</span><span class="rt-score">+0</span><span class="rt-detail">SP 28.51% vs 29.52% · NYSE 27.5% vs 28.93% — 20MA가 50MA 위: 0/2</span></div><div class="rt-row rt-pos"><span class="rt-name">Index</span><span class="rt-score">+2</span><span class="rt-detail">M01~M06 🟢3 🟡0 🔴3 · 전일 대비 개선 0 / 악화 0</span></div><div class="rt-row rt-zero"><span class="rt-name">Group</span><span class="rt-score">+0</span><span class="rt-detail">A/B+OK 7개 → 5개 (-2) · 4개 섹터 분산</span></div><div class="rt-row rt-zero"><span class="rt-name">Setup</span><span class="rt-score">+0</span><span class="rt-detail">Trigger 고유 14 → 10종목 (-4) · 비중 21% · Watch 25→18</span></div></div>
-      <div class="rt-col"><div class="rt-coltitle">악화 모멘텀 (→ Distribution/Risk-off)</div><div class="rt-row rt-zero"><span class="rt-name">Breadth 악화</span><span class="rt-score">+0</span><span class="rt-detail">20MA 3일 +4.9%p</span></div><div class="rt-row rt-zero"><span class="rt-name">Cross 하향</span><span class="rt-score">+0</span><span class="rt-detail">오늘 하향교차 0개 · 20MA−50MA 간격 3일 -6.7%p 악화</span></div><div class="rt-row rt-zero"><span class="rt-name">Index 악화</span><span class="rt-score">+0</span><span class="rt-detail">전일 대비 악화 전환 0건 (현재 🔴3은 State로)</span></div><div class="rt-row rt-pos"><span class="rt-name">Group 축소</span><span class="rt-score">+1</span><span class="rt-detail">A/B+OK 3일 -2 · FADING 59개</span></div><div class="rt-row rt-pos"><span class="rt-name">Setup 악화</span><span class="rt-score">+1</span><span class="rt-detail">Trigger 3일 -4 (실패돌파 데이터 없어 1점 상한)</span></div></div>
+  <div class="stale">⚠️ 층별 기준일이 다릅니다 — 환경·리더·액션은 <b>2026-09-22</b>, 인덱스(DD/FTD)는 <b>2026-09-21</b> 종가 기준. yfinance가 아직 직전 거래일 종가를 안 내려준 상태입니다.</div>
+  <div class="panel"><h2 class="fold" data-fold="L1">① 환경 — 시장의 폭<span class="caret">▾</span></h2><div class="foldbody" id="L1"><div class="panel-sub">2026-09-22 기준 · 126거래일 누적. 폭이 넓어지는지 좁아지는지 <b>방향</b>만 본다.</div><div class="hero">
+      <span class="hero-v up">넓어지는 중</span>
+      <span class="hero-sub">20일선 상회 비율 3거래일 변화 평균 <b class="num">+4.9%p</b></span>
     </div>
-    <div class="rt-read">과매도 구간이지만 반등 전환은 미확인 (개선 2 · 악화 2 혼재)</div>
-    <div class="rt-guide">→ 신규 노출 최소화, Triggered만 검토</div>
-    </div></div>
-  <div class="panel">
-    <h2 class="fold" data-fold="L1">① 시장 우위 — 방어적(리스크오프)<span class="caret">▾</span></h2><div class="foldbody" id="L1">
-    <div class="panel-sub">M01~M06 지수: 🟢3 🟡0 🔴3 · M07 GICS 9섹터: 🟢2 🟡2 🔴5(Red)</div>
-    <div class="scroll-x"><table class="mgrid"><thead><tr><th style="text-align:left">ID</th><th style="text-align:left">종목</th><th style="text-align:left">조건</th><th>신호</th></tr></thead><tbody>
-    <tr><td class="rid">M01</td><td class="ticker">QQQ (growth)</td><td><span class="dot-flow">3d<span class="dot warn"></span><span class="arrow">&rarr;</span><span class="dot good"></span></span></td><td><span class="dot good"></span></td></tr>
-<tr><td class="rid">M02</td><td class="ticker">SPY (value)</td><td><span class="dot-flow">2d<span class="dot bad"></span><span class="arrow">&rarr;</span><span class="dot good"></span></span></td><td><span class="dot good"></span></td></tr>
-<tr><td class="rid">M03</td><td class="ticker">RSP (equal weight)</td><td><span class="cond">11d</span></td><td><span class="dot bad"></span></td></tr>
-<tr><td class="rid">M04</td><td class="ticker">MDYG (mid cap)</td><td><span class="cond">17d</span></td><td><span class="dot bad"></span></td></tr>
-<tr><td class="rid">M05</td><td class="ticker">VB (small cap)</td><td><span class="cond">15d</span></td><td><span class="dot bad"></span></td></tr>
-<tr><td class="rid">M06</td><td class="ticker">SOXX</td><td><span class="dot-flow">2d<span class="dot warn"></span><span class="arrow">&rarr;</span><span class="dot good"></span></span></td><td><span class="dot good"></span></td></tr>
-    </tbody></table></div>
-    <div class="scroll-x" style="margin-top:10px"><table class="mgrid"><thead><tr><th style="text-align:left">ID</th><th style="text-align:left">섹터ETF</th><th style="text-align:left">조건</th><th>신호</th></tr></thead><tbody>
-    <tr class="g1"><td class="rid">M07</td><td class="ticker">XLK</td><td class="cond">4d</td><td><span class="dot good"></span></td></tr>
-<tr class="g1"><td class="rid"></td><td class="ticker">XLC</td><td class="cond">2d(🟡→🟢)</td><td><span class="dot good"></span></td></tr>
-<tr class="g1"><td class="rid"></td><td class="ticker">XLI</td><td class="cond">22d</td><td><span class="dot bad"></span></td></tr>
-<tr class="g2"><td class="rid"></td><td class="ticker">XLY</td><td class="cond">15d</td><td><span class="dot bad"></span></td></tr>
-<tr class="g2"><td class="rid"></td><td class="ticker">XLF</td><td class="cond">9d</td><td><span class="dot bad"></span></td></tr>
-<tr class="g2"><td class="rid"></td><td class="ticker">XLB</td><td class="cond">10d</td><td><span class="dot bad"></span></td></tr>
-<tr class="g3"><td class="rid"></td><td class="ticker">XLV</td><td class="cond">2d(🔴→🟡)</td><td><span class="dot warn"></span></td></tr>
-<tr class="g3"><td class="rid"></td><td class="ticker">XLU</td><td class="cond">10d</td><td><span class="dot bad"></span></td></tr>
-<tr class="g3"><td class="rid"></td><td class="ticker">XLE</td><td class="cond">2d(🟢→🟡)</td><td><span class="dot warn"></span></td></tr>
-    </tbody></table></div>
-    </div></div>
-  <div class="panel">
-    <h2 class="fold" data-fold="L2">② 섹터 우위<span class="caret">▾</span></h2><div class="foldbody" id="L2">
-    <div class="panel-sub">GICS 9섹터 실측 수익률 기준 강세/약세 판정 · 광의 리더십 Top5(ETF 전체, MA조건🟢 게이트): DRAM(RS 93) · SOXX(RS 92) · EWT(RS 92) · EWY(RS 92) · HACK(RS 91)</div>
-    <div class="scroll-x"><table class="mgrid"><thead><tr><th style="text-align:left">섹터</th><th>1M</th><th>3M</th><th>6M</th><th>판정</th></tr></thead><tbody>
-    <tr><td class="sec">Energy(XLE)</td><td class="num">-3.3%</td><td class="num">+15.5%</td><td class="num">+1.8%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Health Care(XLV)</td><td class="num">-1.2%</td><td class="num">+10.9%</td><td class="num">+16.6%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Technology(XLK)</td><td class="num">+6.4%</td><td class="num">+6.6%</td><td class="num">+45.2%</td><td class="v v-섹터강세">섹터강세</td></tr><tr><td class="sec">Communication(XLC)</td><td class="num">+2.3%</td><td class="num">+5.6%</td><td class="num">+2.6%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Financials(XLF)</td><td class="num">-4.4%</td><td class="num">+1.8%</td><td class="num">+11.6%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Materials(XLB)</td><td class="num">-4.8%</td><td class="num">-0.7%</td><td class="num">+3.2%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Consumer Discretionary(XLY)</td><td class="num">-4.3%</td><td class="num">-1.6%</td><td class="num">+2.1%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Industrials(XLI)</td><td class="num">-5.9%</td><td class="num">-4.9%</td><td class="num">+4.0%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Utilities(XLU)</td><td class="num">-7.7%</td><td class="num">-10.5%</td><td class="num">-10.4%</td><td class="v v-종목쏠림">종목쏠림</td></tr>
-    </tbody></table></div>
-    <div class="panel-sub" style="margin-top:16px">섹터 내부 그룹 — 같은 섹터 안에서도 어떤 테마가 실제로 끌고 가는지(3M% 내림차순, 확신 있는 테마 ETF만 보수적으로 포함)</div>
-    <div class="scroll-x"><table class="mgrid"><thead><tr><th style="text-align:left">상위섹터</th><th style="text-align:left">그룹</th><th>1M</th><th>3M</th><th>6M</th><th>판정</th></tr></thead><tbody>
-    <tr><td class="sec">Energy</td><td class="sec">정제<span class="grp-etf"> CRAK</span></td><td class="num">+6.8%</td><td class="num">+42.7%</td><td class="num">+31.7%</td><td class="v v-섹터강세">섹터강세</td></tr><tr><td class="sec">Technology</td><td class="sec">AI클라우드·SaaS<span class="grp-etf"> SKYY·IGV·CLOU·WCLD·XSW</span></td><td class="num">+3.2%</td><td class="num">+30.4%</td><td class="num">+46.0%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Energy</td><td class="sec">원유·탐사<span class="grp-etf"> USO·XOP</span></td><td class="num">+1.6%</td><td class="num">+27.4%</td><td class="num">+11.5%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Technology</td><td class="sec">사이버보안<span class="grp-etf"> CIBR·HACK</span></td><td class="num">+10.0%</td><td class="num">+24.6%</td><td class="num">+62.6%</td><td class="v v-섹터강세">섹터강세</td></tr><tr><td class="sec">Materials</td><td class="sec">금·귀금속<span class="grp-etf"> GDX·GLD·SLV</span></td><td class="num">-4.4%</td><td class="num">+18.8%</td><td class="num">+4.3%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Health Care</td><td class="sec">바이오텍<span class="grp-etf"> XBI·IBB</span></td><td class="num">-1.1%</td><td class="num">+14.1%</td><td class="num">+30.2%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Communication</td><td class="sec">인터넷·플랫폼<span class="grp-etf"> FDN</span></td><td class="num">+2.9%</td><td class="num">+13.8%</td><td class="num">+24.1%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Financials</td><td class="sec">핀테크<span class="grp-etf"> FINX</span></td><td class="num">-4.6%</td><td class="num">+7.0%</td><td class="num">+11.4%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Technology</td><td class="sec">IoT·엣지<span class="grp-etf"> SNSR</span></td><td class="num">+4.4%</td><td class="num">+1.1%</td><td class="num">+29.7%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Technology</td><td class="sec">AI·머신러닝<span class="grp-etf"> AIQ·CHAT</span></td><td class="num">+5.5%</td><td class="num">+0.9%</td><td class="num">+45.1%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Energy</td><td class="sec">미드스트림<span class="grp-etf"> MLPX</span></td><td class="num">-4.1%</td><td class="num">-1.8%</td><td class="num">-3.7%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Communication</td><td class="sec">통신서비스<span class="grp-etf"> IYZ·XTL</span></td><td class="num">-2.1%</td><td class="num">-2.5%</td><td class="num">+4.9%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Financials</td><td class="sec">지역은행<span class="grp-etf"> KRE</span></td><td class="num">-5.4%</td><td class="num">-2.6%</td><td class="num">+11.3%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Materials</td><td class="sec">우라늄<span class="grp-etf"> URA</span></td><td class="num">-2.0%</td><td class="num">-3.7%</td><td class="num">-8.7%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Industrials</td><td class="sec">운송<span class="grp-etf"> IYT</span></td><td class="num">-7.6%</td><td class="num">-5.0%</td><td class="num">+8.4%</td><td class="v v-종목쏠림">종목쏠림</td></tr><tr><td class="sec">Technology</td><td class="sec">AI반도체<span class="grp-etf"> SOXX</span></td><td class="num">+8.5%</td><td class="num">-5.5%</td><td class="num">+68.7%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Industrials</td><td class="sec">전력망<span class="grp-etf"> GRID·ZAP</span></td><td class="num">-1.8%</td><td class="num">-6.4%</td><td class="num">+4.2%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Industrials</td><td class="sec">인프라·건설<span class="grp-etf"> PAVE</span></td><td class="num">-5.0%</td><td class="num">-7.7%</td><td class="num">+5.4%</td><td class="v v-종목쏠림">종목쏠림</td></tr><tr><td class="sec">Technology</td><td class="sec">광통신·네트워킹<span class="grp-etf"> FOTO·LYTE·LAZR</span></td><td class="num">+0.0%</td><td class="num">-8.2%</td><td class="num">-9.3%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Industrials</td><td class="sec">항공우주·방산<span class="grp-etf"> ITA</span></td><td class="num">-10.5%</td><td class="num">-9.2%</td><td class="num">-4.4%</td><td class="v v-종목쏠림">종목쏠림</td></tr><tr><td class="sec">Technology</td><td class="sec">AI서버·데이터센터HW<span class="grp-etf"> SRVR·DTCR</span></td><td class="num">-2.5%</td><td class="num">-9.8%</td><td class="num">+9.4%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Industrials</td><td class="sec">우주산업<span class="grp-etf"> UFO·NASA</span></td><td class="num">-1.3%</td><td class="num">-9.9%</td><td class="num">-1.6%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Materials</td><td class="sec">리튬·배터리소재<span class="grp-etf"> LIT</span></td><td class="num">-5.8%</td><td class="num">-9.9%</td><td class="num">+0.4%</td><td class="v v-종목쏠림">종목쏠림</td></tr><tr><td class="sec">Consumer Discretionary</td><td class="sec">주택건설<span class="grp-etf"> XHB</span></td><td class="num">-6.8%</td><td class="num">-10.0%</td><td class="num">-0.2%</td><td class="v v-종목쏠림">종목쏠림</td></tr><tr><td class="sec">Technology</td><td class="sec">메모리<span class="grp-etf"> DRAM</span></td><td class="num">+8.5%</td><td class="num">-11.2%</td><td class="num">+117.3%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Utilities</td><td class="sec">클린에너지<span class="grp-etf"> ICLN·QCLN·FAN</span></td><td class="num">-0.6%</td><td class="num">-11.8%</td><td class="num">+0.1%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Technology</td><td class="sec">반도체 장비·소재<span class="grp-etf"> EUV</span></td><td class="num">-1.0%</td><td class="num">-14.1%</td><td class="num">-5.9%</td><td class="v v-혼조">혼조</td></tr><tr><td class="sec">Materials</td><td class="sec">희귀금속<span class="grp-etf"> REMX</span></td><td class="num">-9.6%</td><td class="num">-23.0%</td><td class="num">-17.4%</td><td class="v v-종목쏠림">종목쏠림</td></tr>
-    </tbody></table></div>
-    </div></div>
-  <div class="panel">
-    <h2 class="fold" data-fold="L3">③ 셋업 우위<span class="caret">▾</span></h2><div class="foldbody" id="L3">
-    <div class="panel-sub">오늘(2026-09-22) 섹터별 셋업 매칭 건수 — 상위 12개 섹터</div>
-    <div class="scroll-x"><table class="mgrid"><thead><tr><th style="text-align:left">섹터</th><th>HTF</th><th>LongBase(돌파)</th><th>LongBase(근접)</th><th>UpBreak</th><th>Pullback</th><th>Pullback↑</th><th>EP</th><th>HVE(역대)</th><th>HVY(연중)</th><th>HVQ(분기)</th></tr></thead><tbody>
-    <tr><td class="sec">Health Technology</td><td class="num n0">—</td><td class="num">1</td><td class="num">2</td><td class="num">3</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num">1</td><td class="num">1</td><td class="num">5</td></tr><tr><td class="sec">Technology Services</td><td class="num">3</td><td class="num">1</td><td class="num n0">—</td><td class="num">2</td><td class="num">2</td><td class="num n0">—</td><td class="num">1</td><td class="num n0">—</td><td class="num n0">—</td><td class="num">2</td></tr><tr><td class="sec">Electronic Technology</td><td class="num">1</td><td class="num n0">—</td><td class="num">2</td><td class="num">1</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num">1</td></tr><tr><td class="sec">Consumer Services</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num">2</td><td class="num">3</td></tr><tr><td class="sec">Retail Trade</td><td class="num n0">—</td><td class="num n0">—</td><td class="num">3</td><td class="num n0">—</td><td class="num">1</td><td class="num n0">—</td><td class="num">1</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td></tr><tr><td class="sec">Producer Manufacturing</td><td class="num n0">—</td><td class="num n0">—</td><td class="num">1</td><td class="num n0">—</td><td class="num">1</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td></tr><tr><td class="sec">Transportation</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num">2</td><td class="num n0">—</td><td class="num n0">—</td></tr><tr><td class="sec">Health Services</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num">1</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num">1</td><td class="num n0">—</td></tr><tr><td class="sec">Commercial Services</td><td class="num">1</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num">1</td></tr><tr><td class="sec">Finance</td><td class="num n0">—</td><td class="num n0">—</td><td class="num">1</td><td class="num n0">—</td><td class="num">1</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td></tr><tr><td class="sec">Non-Energy Minerals</td><td class="num n0">—</td><td class="num n0">—</td><td class="num">1</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td></tr><tr><td class="sec">Consumer Durables</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num">1</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td><td class="num n0">—</td></tr>
-    </tbody></table></div>
-    </div></div>
+    <div class="scroll-x"><table class="mgrid"><thead><tr>
+      <th style="text-align:left">유니버스</th><th>20일선 상회</th><th>50일선 상회</th>
+      <th>격차</th><th>3거래일</th><th>10거래일</th></tr></thead><tbody><tr><td class="sec">S&P 500</td><td class="num">28.5%</td><td class="num">29.5%</td><td class="num">-1.0%p</td><td class="num"><span class="delta up">+7.6%p</span></td><td class="num"><span class="delta up">+1.6%p</span></td></tr><tr><td class="sec">NYSE</td><td class="num">27.5%</td><td class="num">28.9%</td><td class="num">-1.4%p</td><td class="num"><span class="delta up">+2.2%p</span></td><td class="num"><span class="delta down">-5.5%p</span></td></tr></tbody></table></div>
+    <div class="chips"><span class="chip down">S&P 500 20MA가 50MA 아래 · 66거래일째</span><span class="chip down">NYSE 20MA가 50MA 아래 · 53거래일째</span></div>
+    <div class="note">교차는 격차가 ±2%p를 2거래일 연속 유지할 때만 인정한다 —
+      단순 부호 비교로는 126거래일에 29번 교차했고 그중 여러 구간이 3일 이하 휩쏘였다.</div></div></div>
+  <div class="panel"><h2 class="fold" data-fold="L2">② 인덱스 — Distribution / Follow-Through<span class="caret">▾</span></h2><div class="foldbody" id="L2"><div class="panel-sub">2026-09-21 종가 기준 · DD는 −0.2%↓ &amp; 거래량 증가(25거래일, 지수가 +5% 위로 가면 만료). FTD는 조정 저점 후 랠리 4~25일차의 +1.0%↑ &amp; 거래량 증가.</div><div class="idx-grid"><div class="idx">
+          <div class="idx-h">SPY <span class="num idx-px">773.50</span></div>
+          <div class="idx-row"><span class="idx-k">Distribution Day</span>
+            <span class="idx-v down"><b class="num">10</b>개 · BEAR</span></div>
+          <div class="note">최근 25거래일 · 해당일: … 08-31 · 09-01 · 09-08 · 09-10 · 09-15 · 09-16 (최근 6개만 표시)</div>
+          <div class="idx-row"><span class="idx-k">Follow-Through</span>
+            <span class="idx-v up">FTD 2026-04-08 (랠리 6일차 +2.55%) 발행 후 114거래일 · 새 조정 없음</span></div>
+        </div><div class="idx">
+          <div class="idx-h">QQQ <span class="num idx-px">741.47</span></div>
+          <div class="idx-row"><span class="idx-k">Distribution Day</span>
+            <span class="idx-v down"><b class="num">6</b>개 · BEAR</span></div>
+          <div class="note">최근 25거래일 · 해당일: 08-18 · 08-24 · 08-28 · 09-01 · 09-10 · 09-14</div>
+          <div class="idx-row"><span class="idx-k">Follow-Through</span>
+            <span class="idx-v flat">조정 중 · 저점 2026-09-16 · 랠리 시도 3일차 (FTD 창 4일차부터)</span></div>
+        </div></div></div></div>
+  <div class="panel"><h2 class="fold" data-fold="L3">③ 리더 — 그룹이 견조한가<span class="caret">▾</span></h2><div class="foldbody" id="L3"><div class="panel-sub">2026-09-22 기준 · 전체 103개 그룹 · 2026-09-17(3거래일 전) 대비. qualified = 섹터액션 OK &amp; 점수 50↑.</div><div class="metrics">
+      <div class="metric"><div class="metric-k">qualified 그룹</div>
+        <div class="metric-v"><b class="num">14</b> <span class="delta down">-6</span></div></div>
+      <div class="metric"><div class="metric-k">섹터액션 OK</div>
+        <div class="metric-v"><b class="num">26</b> <span class="delta down">-2</span></div></div>
+      <div class="metric"><div class="metric-k">강한 종목 비율</div>
+        <div class="metric-v"><b class="num">16.4%</b> <span class="delta down">-3.5%p</span></div></div>
+      <div class="metric"><div class="metric-k">상위 10 점수 유지</div>
+        <div class="metric-v"><b class="num">7/9</b></div></div>
+    </div>
+    <div class="scroll-x"><table class="mgrid"><thead><tr>
+      <th style="text-align:left">그룹</th><th>점수</th><th>3일 변화</th>
+      <th>등급</th><th>상태</th><th>강한종목</th></tr></thead><tbody><tr><td class="sec">사이버보안</td><td class="num">97.2</td><td class="num"><span class="delta flat">+0.0</span></td><td>A</td><td>REACCEL</td><td class="num">11/13</td></tr><tr><td class="sec">크립토·디지털자산</td><td class="num">94.5</td><td class="num"><span class="delta up">+23.3</span></td><td>A</td><td>REACCEL</td><td class="num">9/14</td></tr><tr><td class="sec">정유·마케팅</td><td class="num">84.5</td><td class="num"><span class="delta down">-14.8</span></td><td>A</td><td>PULLBACK</td><td class="num">4/9</td></tr><tr><td class="sec">AI클라우드·데이터인프라</td><td class="num">82.8</td><td class="num"><span class="delta up">+8.4</span></td><td>A</td><td>REACCEL</td><td class="num">9/19</td></tr><tr><td class="sec">해운</td><td class="num">81.8</td><td class="num"><span class="delta down">-16.4</span></td><td>A</td><td>PULLBACK</td><td class="num">6/11</td></tr><tr><td class="sec">금·귀금속 광산</td><td class="num">77.5</td><td class="num"><span class="delta up">+3.8</span></td><td>B</td><td>REACCEL</td><td class="num">16/24</td></tr><tr><td class="sec">AI서버·데이터센터HW</td><td class="num">77.3</td><td class="num"><span class="delta up">+10.2</span></td><td>B</td><td>EMERGING</td><td class="num">6/16</td></tr><tr><td class="sec">Distribution Services·Electronics Distributors</td><td class="num">74.0</td><td class="num"><span class="delta up">+18.4</span></td><td>B</td><td>EMERGING</td><td class="num">1/3</td></tr><tr><td class="sec">파운드리·후공정</td><td class="num">63.8</td><td class="num">신규</td><td>C</td><td>EMERGING</td><td class="num">2/6</td></tr><tr><td class="sec">바이오텍</td><td class="num">61.9</td><td class="num"><span class="delta up">+0.3</span></td><td>C</td><td>PULLBACK</td><td class="num">22/48</td></tr></tbody></table></div></div></div>
+  <div class="panel"><h2 class="fold" data-fold="L4">④ 액션 — 새로 터지는 곳<span class="caret">▾</span></h2><div class="foldbody" id="L4"><div class="panel-sub">2026-09-22 vs 2026-09-17 · 이미 강한 곳은 ③에 있다. 여기는 <b>변화</b>만.</div><div class="act-grid"><div class="act-col fire"><div class="act-h">🔥 터진 곳 (2)</div><div class="act-row"><span class="act-n">AI반도체</span><span class="num act-s">59.5</span><span class="delta up">+26.1</span><span class="act-w">qualified 진입 · 5/32</span></div><div class="act-row"><span class="act-n">비철금속·광물</span><span class="num act-s">58.6</span><span class="delta up">+30.7</span><span class="act-w">qualified 진입 · 6/12</span></div></div><div class="act-col cool"><div class="act-h">❄️ 식은 곳 (8)</div><div class="act-row"><span class="act-n">건강보험·관리의료</span><span class="num act-s">18.6</span><span class="delta down">-42.3</span><span class="act-w">액션 이탈 · 0/7</span></div><div class="act-row"><span class="act-n">종합에너지·오일메이저</span><span class="num act-s">35.6</span><span class="delta down">-33.8</span><span class="act-w">액션 이탈 · 1/27</span></div><div class="act-row"><span class="act-n">비료·농화학</span><span class="num act-s">48.9</span><span class="delta down">-23.6</span><span class="act-w">액션 이탈 · 1/4</span></div><div class="act-row"><span class="act-n">손해보험</span><span class="num act-s">30.5</span><span class="delta down">-22.2</span><span class="act-w">액션 이탈 · 1/10</span></div><div class="act-row"><span class="act-n">소프트웨어·SaaS 기타</span><span class="num act-s">34.9</span><span class="delta down">-20.3</span><span class="act-w">액션 이탈 · 1/13</span></div><div class="act-row"><span class="act-n">의료서비스</span><span class="num act-s">46.7</span><span class="delta down">-13.3</span><span class="act-w">액션 이탈 · 2/15</span></div><div class="act-row"><span class="act-n">생명·건강보험</span><span class="num act-s">45.8</span><span class="delta down">-6.9</span><span class="act-w">액션 이탈 · 1/7</span></div><div class="act-row"><span class="act-n">인터넷플랫폼</span><span class="num act-s">48.6</span><span class="delta down">-5.6</span><span class="act-w">점수 50 미만 · 3/8</span></div></div><div class="act-col rise"><div class="act-h">↗ 올라오는 중</div><div class="act-row"><span class="act-n">미디어·엔터테인먼트</span><span class="num act-s">40.6</span><span class="delta up">+27.3</span><span class="act-w">FADING · 3/10</span></div><div class="act-row"><span class="act-n">항공사</span><span class="num act-s">33.7</span><span class="delta up">+25.2</span><span class="act-w">EMERGING · 0/7</span></div><div class="act-row"><span class="act-n">의류·신발</span><span class="num act-s">27.1</span><span class="delta up">+22.9</span><span class="act-w">EMERGING · 2/16</span></div><div class="act-row"><span class="act-n">전력반도체·전력관리</span><span class="num act-s">46.8</span><span class="delta up">+19.6</span><span class="act-w">EMERGING · 1/8</span></div><div class="act-row"><span class="act-n">전력망·전기장비</span><span class="num act-s">41.0</span><span class="delta up">+19.5</span><span class="act-w">EMERGING · 4/23</span></div></div></div><div class="note">하루 전이 아니라 3거래일 전과 비교한다 — 그룹 state는 5거래일 만에 58%가 한 번 이상 뒤집혀서 하루 단위 전환은 전부 노이즈다. qualified 진입·이탈만 이벤트로 센다.</div></div></div>
 
-  <footer>build_awareness_page.py · process/screener/setup 3개 스크립트의 산출물 재사용 · 화~토 자동 갱신</footer>
+  <footer>build_awareness_page.py · 계산은 sa_engine.py / index_health.py · 화~토 자동 갱신</footer>
 </div>
 <script>
 (function(){
-  // ①②③ + REGIME 카드 접기 — 편 상태는 브라우저가 기억(기본은 펼침)
   document.querySelectorAll('h2.fold').forEach(function(h){
     var id = h.getAttribute('data-fold');
     var body = document.getElementById(id);
