@@ -214,7 +214,7 @@
   <div class="eyebrow">SH Trading System · Edge Setup</div>
   <h1>Edge Setup</h1>
   <div class="sub">내가 우위(edge)를 가져갈 수 있는 자리만 — <b>아직 돌파하지 않은</b> 셋업 4종(HTF·Long Base·Uptrend Pullback·Episodic Pivot) + 거래량 신기록(HV). 이미 뚫고 나간 자리는 추격이라 여기서 안 찾는다. 셋업 정의·차트 패턴은 아래 라이브러리 카드 참고</div>
-  <div class="asof"><span class="asof-dot"></span>기준일 <b class="num" id="asofDate">-</b> 장마감 확정 종가 · 매칭 <b class="num" id="asofCount">-</b>건</div>
+  <div class="asof"><span class="asof-dot"></span>기준일 <b class="num" id="asofDate">-</b> 장마감 확정 종가 · 매칭 <b class="num" id="asofCount">-</b>건<span id="asofUniq"></span></div>
 
   <details class="lib-card">
     <summary><span class="ic">📚</span> Setup Library — 셋업 이름 + 차트 패턴 원형(archetype) 다이어그램 카탈로그 <span class="cnt">7종</span><span class="chev">▶</span></summary>
@@ -748,6 +748,9 @@ function statCard(p) {
 document.getElementById('scanDate').textContent = DATA.date;
 document.getElementById('asofDate').textContent = DATA.date;
 document.getElementById('asofCount').textContent = DATA.rows.length;
+// 한 종목이 셋업 두 개에 걸리면 매칭 건수 ≠ 종목 수(2026-09-26). 다를 때만 병기한다.
+(function(){ var u = new Set(DATA.rows.map(function(r){ return r.ticker; })).size;
+  if (u !== DATA.rows.length) document.getElementById('asofUniq').innerHTML = ' · 고유 <b class="num">' + u + '</b>종목'; })();
 
 // 스캔 설명: 칩 hover/클릭 시 플로팅 카드 (2026-09-15)
 (function () {
