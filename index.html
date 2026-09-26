@@ -6,76 +6,85 @@
 <title>SH Trading System</title>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <style>
+  /* 2026-09-26 홈 디자인 A(터미널·콕핏) — 격자 배경·큰 스텝 번호·"이 단계가 답하는 질문" 한 줄·
+     흐르는 연결선·우측 상단 도크. 시안: claude.ai/artifact/GdczdCvxbFes6fPhPDTYAj(탭 A).
+     ⚠️ lastUpdated 스팬은 속성 없는 형태 그대로 둘 것(publish 스크립트·채널 점검 정규식) */
   :root {
-    --bg: #eef1f4; --surface: #ffffff; --surface-alt: #f4f6f9; --border: #d9dfe6;
+    --bg: #eef1f4; --surface: #ffffff; --surface-alt: #f4f6f9; --border: #d9dfe6; --hair: #e4e8ee;
     --text: #1b2430; --text-muted: #5b6675; --text-faint: #8993a3;
-    --accent: #a6742f; --accent-soft: #e8dcc3;
-    --up: #2f8f63; --down: #c94a3e; --up-soft: #e3f1e7; --down-soft: #fbe7e5;
-    --shadow: 0 1px 2px rgba(20,25,35,.06), 0 8px 24px -12px rgba(20,25,35,.15);
-    --accent-a45: rgba(166,116,47,.45); --accent-a22: rgba(166,116,47,.22); --accent-a20: rgba(166,116,47,.20);
+    --accent: #a6742f; --accent-soft: #efe4cf;
+    --up: #2f8f63; --down: #c94a3e;
+    --grid: rgba(27,36,48,.05);
+    --shadow: 0 1px 2px rgba(20,25,35,.06), 0 10px 30px -14px rgba(20,25,35,.22);
+    --accent-a45: rgba(166,116,47,.45); --accent-a22: rgba(166,116,47,.18); --accent-a20: rgba(166,116,47,.20);
     --surface-a92: rgba(255,255,255,.92); --surface-a60: rgba(255,255,255,.60);
     --up-a55: rgba(47,143,99,.55); --up-a45: rgba(47,143,99,.45);
+    --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0c0f14; --surface: #171c25; --surface-alt: #1d2330; --border: #2c3442;
+    :root:not([data-theme="light"]) {
+      --bg: #0b0e13; --surface: #141922; --surface-alt: #1a202b; --border: #283141; --hair: #1f2633;
       --text: #e8ecf2; --text-muted: #93a0b3; --text-faint: #5f6b7d;
-      --accent: #d9a856; --accent-soft: #3a3120;
-      --up: #4fb286; --down: #e2685c; --up-soft: #16281d; --down-soft: #2e1917;
-      --shadow: 0 1px 2px rgba(0,0,0,.35), 0 8px 28px -12px rgba(0,0,0,.6);
-      --accent-a45: rgba(217,168,86,.45); --accent-a22: rgba(217,168,86,.22); --accent-a20: rgba(217,168,86,.20);
-      --surface-a92: rgba(23,28,37,.92); --surface-a60: rgba(23,28,37,.60);
+      --accent: #d9a856; --accent-soft: #2e2718;
+      --up: #4fb286; --down: #e2685c; --grid: rgba(232,236,242,.035);
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -14px rgba(0,0,0,.7);
+      --accent-a45: rgba(217,168,86,.45); --accent-a22: rgba(217,168,86,.20); --accent-a20: rgba(217,168,86,.20);
+      --surface-a92: rgba(20,25,34,.92); --surface-a60: rgba(20,25,34,.60);
       --up-a55: rgba(79,178,134,.55); --up-a45: rgba(79,178,134,.45);
+      color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #0c0f14; --surface: #171c25; --surface-alt: #1d2330; --border: #2c3442;
+    --bg: #0b0e13; --surface: #141922; --surface-alt: #1a202b; --border: #283141; --hair: #1f2633;
     --text: #e8ecf2; --text-muted: #93a0b3; --text-faint: #5f6b7d;
-    --accent: #d9a856; --accent-soft: #3a3120;
-    --up: #4fb286; --down: #e2685c; --up-soft: #16281d; --down-soft: #2e1917;
-    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 8px 28px -12px rgba(0,0,0,.6);
-    --accent-a45: rgba(217,168,86,.45); --accent-a22: rgba(217,168,86,.22); --accent-a20: rgba(217,168,86,.20);
-    --surface-a92: rgba(23,28,37,.92); --surface-a60: rgba(23,28,37,.60);
+    --accent: #d9a856; --accent-soft: #2e2718;
+    --up: #4fb286; --down: #e2685c; --grid: rgba(232,236,242,.035);
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -14px rgba(0,0,0,.7);
+    --accent-a45: rgba(217,168,86,.45); --accent-a22: rgba(217,168,86,.20); --accent-a20: rgba(217,168,86,.20);
+    --surface-a92: rgba(20,25,34,.92); --surface-a60: rgba(20,25,34,.60);
     --up-a55: rgba(79,178,134,.55); --up-a45: rgba(79,178,134,.45);
+    color-scheme: dark;
   }
   * { box-sizing: border-box; }
   body {
-    margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center;
-    background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    position: relative; overflow-x: hidden;
+    margin: 0; min-height: 100vh; display: flex; flex-direction: column;
+    background-color: var(--bg); color: var(--text); font-family: var(--sans);
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px; background-attachment: fixed;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
   }
-  .num { font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; font-variant-numeric: tabular-nums; }
-
-  /* ---- 배경: 캔들스틱 + 상단 글로우 ---- */
-  .bg-chart {
-    position: fixed; inset: 0; z-index: 0; overflow: hidden;
-    opacity: .16; pointer-events: none;
-  }
-  .bg-chart svg { position: absolute; bottom: 0; left: 0; width: 100%; height: 56%; display: block; }
-  .bg-chart .wick { stroke: var(--accent); stroke-width: 1.1; }
-  .bg-chart .up { fill: var(--bg); stroke: var(--accent); stroke-width: 1.3; }
-  .bg-chart .down { fill: var(--accent); stroke: var(--accent); stroke-width: 1; }
+  .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
   .bg-glow {
-    position: fixed; top: -280px; left: 50%; transform: translateX(-50%);
-    width: 900px; height: 560px; z-index: 0; pointer-events: none;
+    position: fixed; top: -300px; left: 50%; transform: translateX(-50%);
+    width: 1000px; height: 560px; z-index: 0; pointer-events: none;
     background: radial-gradient(ellipse at center, var(--accent-a22) 0%, transparent 68%);
   }
 
-  /* ---- 상단 라이브 티커 테이프 ---- */
+  /* ---- 상단 라이브 티커 테이프 — 한 줄 고정(넘치면 가로 스크롤, 줄바꿈 금지) ---- */
   .tapebar {
     position: sticky; top: 0; z-index: 5; width: 100%;
-    background: var(--surface-a92);
-    backdrop-filter: blur(10px);
+    background: var(--surface-a92); backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
   }
   .tapebar-inner {
-    max-width: 760px; margin: 0 auto; padding: 8px 20px;
-    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    max-width: 1120px; margin: 0 auto; padding: 9px 24px;
+    display: flex; align-items: center; gap: 16px;
   }
-  .market-status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .04em; color: var(--text-muted); white-space: nowrap; margin-left: auto; padding-left: 10px; }
+  .ticker-tape { display: flex; align-items: center; gap: 20px; flex: 1; min-width: 0;
+                 overflow-x: auto; scrollbar-width: none; white-space: nowrap; }
+  .ticker-tape::-webkit-scrollbar { display: none; }
+  .tk-item { display: inline-flex; align-items: baseline; gap: 6px; font-size: 12px; flex: none; }
+  .tk-name { font-weight: 600; color: var(--text); }
+  .tk-price { color: var(--text-muted); }
+  .tk-chg { font-weight: 600; }
+  .tk-chg.up { color: var(--up); } .tk-chg.down { color: var(--down); }
+  .tk-error { color: var(--text-faint); font-size: 11.5px; }
+  .market-status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; letter-spacing: .04em; color: var(--text-muted); white-space: nowrap; flex: none; }
   .market-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-faint); flex-shrink: 0; }
   .market-status.open .dot { background: var(--up); box-shadow: 0 0 0 0 var(--up-a55); animation: pulse-dot 1.8s ease-out infinite; }
   .market-status.pre .dot, .market-status.post .dot { background: var(--accent); }
@@ -84,185 +93,115 @@
     70% { box-shadow: 0 0 0 6px transparent; }
     100% { box-shadow: 0 0 0 0 transparent; }
   }
-  .ticker-tape { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; flex: 1; }
-  .tk-item { display: inline-flex; align-items: baseline; gap: 6px; font-size: 12px; white-space: nowrap; }
-  .tk-name { font-weight: 700; color: var(--text); }
-  .tk-price { color: var(--text-muted); }
-  .tk-chg { font-weight: 700; }
-  .tk-chg.up { color: var(--up); } .tk-chg.down { color: var(--down); }
-  .tk-error { color: var(--text-faint); font-size: 11.5px; }
-  .clock { font-size: 11px; color: var(--text-faint); white-space: nowrap; }
+  .clock { font-size: 11px; color: var(--text-faint); white-space: nowrap; flex: none; }
 
   /* ---- 메인 ---- */
-  .wrap { position: relative; z-index: 1; max-width: 720px; width: 100%; padding: 56px 24px 32px; flex: 1; }
-  .eyebrow {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--accent); font-weight: 700; margin-bottom: 14px; text-align: center;
+  .wrap { position: relative; z-index: 1; width: 100%; max-width: 1120px; margin: 0 auto; padding: 44px 24px 28px; flex: 1; }
+  .top { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end; justify-content: space-between; margin-bottom: 26px; }
+  .eyebrow { font: 600 11px var(--mono); letter-spacing: .16em; color: var(--accent); text-transform: uppercase; }
+  h1 { font: 700 clamp(30px, 4.4vw, 44px)/1.05 var(--sans); letter-spacing: -.025em; margin: 8px 0 9px; text-wrap: balance; }
+  .sub { font: 12px/1.6 var(--mono); color: var(--text-muted); }
+  .sub #lastUpdated { color: var(--text); }
+  .dock { display: flex; gap: 8px; flex-wrap: wrap; }
+  .dock a {
+    text-decoration: none; color: var(--text); font: 500 12.5px var(--sans); background: var(--surface);
+    border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px;
+    display: inline-flex; gap: 8px; align-items: baseline; transition: border-color .15s, transform .15s;
   }
-  .eyebrow::before, .eyebrow::after { content: ""; height: 1px; width: 28px; background: var(--accent-a45); }
-  h1 {
-    font-size: 34px; margin: 0 0 32px; font-weight: 800; text-align: center; letter-spacing: -.02em;
-    color: var(--text);
-  }
-  .tagline { text-align: center; font-size: 13px; color: var(--text-muted); margin: 0 0 36px; line-height: 1.6; }
-  .tagline .num { color: var(--text-faint); }
-
-  /* ---- Trading Process 플로우 (2026-09-17 신설) ----
-     구 Trading Process 카드/process.html 폐지 후 다이어그램을 홈 화면에 직접 전개,
-     각 박스가 곧 내비게이션(관련 페이지 있으면 링크, 없으면 Excel process 탭 메모를
-     title 툴팁으로) — Excel 다이어그램(process 탭)을 사용자가 정리한 걸 그대로 이식.
-     연결선은 글리프(→)가 아니라 1px 선+삼각형으로 그린다 — 글리프는 폰트마다 굵기·여백이
-     달라 다이어그램이 지저분해 보였고 노드 폭도 먹었음.
-     노드는 2줄(스텝번호/라벨) 구성: 번호를 라벨 옆에 인라인으로 두면 4개짜리 체인이
-     한 줄에 안 들어간다. */
-  .flow { width: 100%; display: flex; flex-direction: column; align-items: center; }
-  .flow-panel {
-    position: relative; width: 100%; box-sizing: border-box; overflow: hidden;
-    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
-    padding: 20px 24px 26px; box-shadow: var(--shadow);
-  }
-  .flow-panel::before {
-    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-    background: linear-gradient(180deg, var(--accent), transparent 88%);
-  }
-  .flow-head {
-    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-    padding-bottom: 14px; margin-bottom: 20px; border-bottom: 1px solid var(--border);
-  }
-  .flow-phase {
-    font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
-    font-size: 9.5px; font-weight: 700; letter-spacing: .1em; color: var(--accent);
-    background: var(--accent-soft); padding: 4px 8px; border-radius: 5px;
-  }
-  .flow-title { margin: 0; font-size: 12.5px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--text-muted); }
-  .flow-jump {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 11.5px; font-weight: 700; color: var(--accent);
-    border-radius: 999px; padding: 5px 13px; text-decoration: none; white-space: nowrap;
-  }
-  .flow-head > .flow-jump:nth-of-type(1) { margin-left: auto; }
-  .flow-head > .flow-jump + .flow-jump { margin-left: 8px; }
-  /* Allocation(포트폴리오)은 잔고 화면이라 2026-09-17에 로컬 서버(fl_server, :8765)로 옮겼다 —
-     공개 repo에 두니 raw URL로 인증 없이 읽혔음. 이 맥에서만 열리고, 폰에서는 칩도 감춘다 */
+  .dock a small { font: 10.5px var(--mono); color: var(--text-faint); }
+  .dock a:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .dock a:focus-visible, .mod:focus-visible, .hero a:focus-visible, .bay-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  /* Allocation(잔고)은 로컬 서버(:8765) 전용 — 폰에서는 칩 자체를 감춘다 */
   @media (max-width: 760px), (pointer: coarse) { .desktop-only { display: none !important; } }
 
-  /* Portfolio 패널 접기 — "프로세스만 파악하는 용도"라 기본은 접힌 상태,
-     사용자가 편 상태는 localStorage로 기억한다 */
-  .flow-collapse {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: none; border: none; padding: 0; margin: 0; cursor: pointer;
-    font: inherit; color: inherit;
-  }
-  .flow-caret {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 19px; height: 19px; border-radius: 6px;
-    background: var(--surface-alt); border: 1px solid var(--border);
-    color: var(--text-muted); font-size: 9px; line-height: 1;
-    transition: transform .16s ease, border-color .16s ease, color .16s ease;
-  }
-  .flow-collapse[aria-expanded="false"] .flow-caret { transform: rotate(-90deg); }
-  .flow-collapse:hover .flow-title { color: var(--accent); }
-  .flow-collapse:hover .flow-caret { color: var(--accent); border-color: var(--accent); }
-  .flow-collapsible { overflow: hidden; }
-  .flow-collapsible[hidden] { display: none; }
-  .flow-panel.collapsed .flow-head { padding-bottom: 0; margin-bottom: 0; border-bottom: none; }
-  .flow-jump { border: 1px solid var(--accent-a45); transition: background .14s ease, border-color .14s ease; }
-  .flow-jump:hover { background: var(--accent-soft); border-color: var(--accent); }
-  .flow-row { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; }
-  .flow-feed { display: flex; flex-direction: column; align-items: center; margin-bottom: 2px; }
+  .bay { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); }
+  .bay-h { display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+           font: 600 11px var(--mono); letter-spacing: .14em; color: var(--text-muted); text-transform: uppercase; }
+  .bay-h .ph { color: var(--accent); }
+  .bay-h .rule { flex: 1; height: 1px; background: var(--hair); }
+  .bay-h .cnt { color: var(--text-faint); letter-spacing: .06em; }
+  .bay-toggle { display: flex; width: 100%; align-items: center; gap: 10px; background: none; border: 0; padding: 0; margin: 0;
+                cursor: pointer; font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; }
+  .bay-toggle .caret { font-size: 10px; color: var(--text-faint); transition: transform .16s ease; }
+  .bay-toggle[aria-expanded="false"] .caret { transform: rotate(-90deg); }
+  .bay-toggle:hover .caret, .bay-toggle:hover .ph { color: var(--accent); }
+  .bay.collapsed .bay-h { margin-bottom: 0; }
+  #phase2Body[hidden] { display: none; }
 
-  .flow-node {
-    position: relative; display: inline-flex; flex-direction: column; align-items: flex-start; gap: 3px;
-    padding: 11px 18px 13px; border-radius: 13px;
-    background: linear-gradient(180deg, var(--surface), var(--surface-alt));
-    border: 1px solid var(--border); font: inherit; font-size: 14.5px; font-weight: 700;
-    color: var(--text); text-decoration: none; white-space: nowrap; appearance: none;
-    transition: border-color .16s ease, transform .16s ease, box-shadow .16s ease;
+  /* 모듈(링크·드로어가 달린 단계) */
+  .mod {
+    position: relative; display: block; text-align: left; text-decoration: none; color: inherit;
+    font: inherit; background: var(--surface-alt); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 14px 13px; cursor: pointer; appearance: none; width: 100%;
+    transition: border-color .15s, transform .15s, box-shadow .15s;
   }
-  .flow-node .step {
-    font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
-    font-size: 9.5px; font-weight: 700; letter-spacing: .12em; color: var(--accent); opacity: .85;
+  .mod:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .mod .n { font: 500 30px/1 var(--mono); color: var(--accent); letter-spacing: -.03em; }
+  .mod .t { font: 600 14.5px var(--sans); margin-top: 10px; color: var(--text); }
+  .mod .q { font-size: 12px; line-height: 1.5; color: var(--text-muted); margin-top: 4px; }
+  .mod .go { position: absolute; top: 12px; right: 12px; font: 12px var(--mono); color: var(--text-faint); }
+  .mod:hover .go { color: var(--accent); }
+  .feed { display: flex; justify-content: center; }
+  .mod.feedmod { width: min(280px, 100%); display: flex; gap: 14px; align-items: center; padding: 11px 36px 11px 14px; }
+  .mod.feedmod .n { font-size: 13px; letter-spacing: .12em; }
+  .mod.feedmod .t { margin: 0; }
+  .mod.feedmod .q { margin: 0 0 0 auto; }
+  .chain { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; }
+  .chain > .mod:not(:last-child)::before {
+    content: ""; position: absolute; top: 50%; right: -23px; width: 22px; height: 1px;
+    background: linear-gradient(90deg, transparent 0 40%, var(--accent) 50%, transparent 60% 100%), var(--border);
+    background-size: 300% 100%, 100% 100%; animation: flow-h 2.8s linear infinite;
   }
-  /* 링크·드로어가 달린 노드만 ↗ — 원칙만 있는 Portfolio 노드(점선 고스트)와 구분 */
-  a.flow-node, button.flow-node { cursor: pointer; }
-  a.flow-node::after, button.flow-node::after {
-    content: "\2197"; position: absolute; top: 9px; right: 11px;
-    font-size: 9.5px; font-weight: 700; color: var(--text-faint);
-  }
-  a.flow-node:hover, button.flow-node:hover {
-    transform: translateY(-2px); border-color: var(--accent);
-    box-shadow: var(--shadow), 0 0 0 1px var(--accent-a20);
-  }
-  a.flow-node:hover::after, button.flow-node:hover::after { color: var(--accent); }
-  .flow-node.plain { background: none; border-style: dashed; color: var(--text-muted); cursor: default; }
-  .flow-node.plain .step { color: var(--text-faint); opacity: 1; }
-  .flow-node.hero {
-    font-size: 16px; padding: 13px 26px 15px; border-color: var(--accent); color: var(--accent);
-    background: linear-gradient(135deg, var(--accent-soft), var(--surface));
-  }
-  .flow-node.hero::after { color: var(--accent); }
+  /* 흐르는 점 — 1px 선 위를 금색 하이라이트가 지나간다 */
+  .vwire { width: 1px; height: 22px; margin: 0 auto;
+           background: linear-gradient(180deg, transparent 0 40%, var(--accent) 50%, transparent 60% 100%), var(--border);
+           background-size: 100% 300%, 100% 100%; animation: flow-v 2.2s linear infinite; }
+  .vwire.dash { background: repeating-linear-gradient(180deg, var(--border) 0 3px, transparent 3px 6px); animation: none; }
+  @keyframes flow-h { from { background-position: 100% 0, 0 0; } to { background-position: 0 0, 0 0; } }
+  @keyframes flow-v { from { background-position: 0 100%, 0 0; } to { background-position: 0 0, 0 0; } }
 
-  /* 연결선 — 가로(.flow-link)/세로(.flow-down), 끝에 삼각형 화살촉.
-     가로선은 신축(flex:1) — 행이 패널 폭을 꽉 채워야 아래 .flow-elbow의 꺾임점이
-     행의 끝 노드·시작 노드와 맞는다(고정폭이면 행이 가운데로 모여 어긋남). */
-  .flow-link { flex: 1 1 26px; min-width: 22px; height: 1px; background: var(--border); position: relative; margin: 0 2px; }
-  .flow-link::after {
-    content: ""; position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-    border-left: 5px solid var(--border); border-top: 4px solid transparent; border-bottom: 4px solid transparent;
+  .hero { display: flex; justify-content: center; }
+  .hero a {
+    display: flex; align-items: center; gap: 16px; text-decoration: none; color: var(--text); padding: 16px 22px;
+    border-radius: 12px; border: 1px solid var(--accent); background: linear-gradient(180deg, var(--accent-soft), var(--surface));
+    box-shadow: 0 0 0 6px var(--accent-a22), var(--shadow); min-width: min(380px, 100%); transition: transform .15s;
   }
-  .flow-link.dual::before {
-    content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-    border-right: 5px solid var(--border); border-top: 4px solid transparent; border-bottom: 4px solid transparent;
-  }
-  .flow-down { width: 1px; height: 28px; background: var(--border); position: relative; flex: none; }
-  .flow-down::after {
-    content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-    border-top: 5px solid var(--border); border-left: 4px solid transparent; border-right: 4px solid transparent;
-  }
-  .flow-down.dash { background: repeating-linear-gradient(180deg, var(--border) 0 3px, transparent 3px 6px); }
+  .hero a:hover { transform: translateY(-2px); }
+  .hero .n { font: 500 34px/1 var(--mono); color: var(--accent); }
+  .hero .t { font: 700 17px var(--sans); }
+  .hero .q { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  .hero .local { margin-left: auto; font: 10.5px var(--mono); color: var(--text-faint); border: 1px dashed var(--border); padding: 3px 7px; border-radius: 5px; white-space: nowrap; }
 
-  /* Portfolio 1행 끝(Entry) → 2행 시작(add/feed) 꺾임 연결선.
-     가운데 세로선을 쓰면 행의 끝도 시작도 아닌 허공을 가리켜서 어긋나 보였음(사용자 지적).
-     좌우 22px 안쪽에서 꺾어 양 끝 노드의 몸통에 닿게 함 — 노드 폭이 44px만 넘으면 성립. */
-  .flow-elbow {
-    position: relative; height: 26px; margin: 10px 22px 8px;
-    border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
-    border-bottom-right-radius: 10px;
+  /* PHASE 02 — 링크 없는 원칙. 셀 코멘트 원문은 title 툴팁 */
+  .rules { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
+  .rule-m { border: 1px dashed var(--border); border-radius: 8px; padding: 10px 10px 11px; cursor: help; }
+  .rule-m .n { font: 500 12px var(--mono); color: var(--text-faint); }
+  .rule-m .t { font: 600 12.5px var(--sans); margin-top: 6px; }
+  .rule-m .v { font: 11px/1.45 var(--mono); color: var(--text-muted); margin-top: 4px; }
+
+  @media (max-width: 900px) {
+    .chain { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .chain > .mod::before { display: none; }
+    .rules { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   }
-  .flow-elbow::after {
-    content: ""; position: absolute; left: -4px; bottom: -5px;
-    border-left: 4px solid transparent; border-right: 4px solid transparent;
-    border-top: 5px solid var(--border);
+  @media (max-width: 560px) {
+    .wrap { padding: 30px 16px 24px; }
+    .tapebar-inner { padding: 8px 16px; gap: 12px; }
+    .clock { display: none; }
+    .chain { grid-template-columns: 1fr; }
+    .mod .n { font-size: 24px; }
+    .rules { grid-template-columns: 1fr 1fr; }
+    .hero a { padding: 14px 16px; }
+    .bay { padding: 16px 14px; }
+    .bay-h { white-space: nowrap; letter-spacing: .1em; }
+    .bay-h .cnt { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .chain > .mod::before, .vwire { animation: none; }
+    .mod, .hero a, .dock a { transition: none; }
   }
 
-  /* 좁은 화면: 가로 체인을 세로 스택으로 전환하고 연결선도 세로로 눕힌다.
-     flex-wrap에 맡기면 줄 끝에 화살표만 남아 허공을 가리킨다(실제로 그렇게 보였음). */
-  @media (max-width: 720px) {
-    .flow-panel { padding: 18px 16px 22px; border-radius: 16px; }
-    .flow-head { margin-bottom: 16px; }
-    .flow-jump { margin-left: 0; }
-    .flow-row { flex-direction: column; align-items: center; flex-wrap: nowrap; }
-    .flow-node { font-size: 13.5px; padding: 10px 15px 12px; width: 100%; max-width: 250px; }
-    .flow-elbow {
-      height: 22px; width: 1px; margin: 0 auto; background: var(--border);
-      border: none; border-radius: 0;
-    }
-    .flow-elbow::after { left: 50%; transform: translateX(-50%); bottom: -5px; }
-    .flow-link { flex: 0 0 22px; width: 1px; height: 22px; margin: 0; min-width: 0; }
-    .flow-link::after {
-      right: auto; top: auto; left: 50%; bottom: 0; transform: translateX(-50%);
-      border-left: 4px solid transparent; border-right: 4px solid transparent;
-      border-top: 5px solid var(--border); border-bottom: none;
-    }
-    .flow-link.dual::before {
-      left: 50%; top: 0; transform: translateX(-50%);
-      border-left: 4px solid transparent; border-right: 4px solid transparent;
-      border-bottom: 5px solid var(--border); border-top: none;
-    }
-  }
-
-  /* Stocks 노드 → 오늘의 섹터강세 리더 드로어 (구 process.html에서 이식) */
+  /* Stocks 노드 → 오늘의 섹터강세 리더 드로어 */
   .leaders-backdrop { position: fixed; inset: 0; background: rgba(10,12,16,.42); z-index: 49; opacity: 1; transition: opacity .18s ease; }
   .leaders-backdrop.hidden { opacity: 0; pointer-events: none; }
   .leaders-drawer {
@@ -272,73 +211,31 @@
   }
   .leaders-drawer.hidden { transform: translateX(100%); pointer-events: none; }
   .leaders-drawer-head { position: sticky; top: 0; background: var(--surface); padding: 18px 20px 12px; border-bottom: 1px solid var(--border); z-index: 1; }
-  .leaders-drawer-head h3 { margin: 0 0 4px; font-size: 15px; font-weight: 800; }
+  .leaders-drawer-head h3 { margin: 0 0 4px; font-size: 15px; font-weight: 700; }
   .leaders-drawer-note { font-size: 11px; color: var(--text-faint); line-height: 1.5; }
   .leaders-drawer-close { position: absolute; top: 14px; right: 16px; border: none; background: none; color: var(--text-faint); font-size: 20px; line-height: 1; cursor: pointer; padding: 2px; }
   .leaders-drawer-close:hover { color: var(--accent); }
   .leaders-drawer-body { padding: 14px 20px 28px; }
   .leaders-loading, .leaders-error, .leaders-empty { font-size: 12.5px; color: var(--text-faint); padding: 20px 0; text-align: center; }
   .leaders-group { margin-bottom: 18px; }
-  .leaders-group-title { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
-  .leaders-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border-radius: 8px; background: var(--surface-alt); margin-bottom: 5px; }
-  .leaders-ticker { font-weight: 700; font-size: 13px; flex-shrink: 0; }
-  .leaders-nums { display: flex; gap: 9px; font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; font-size: 10.5px; color: var(--text-muted); flex-wrap: wrap; justify-content: flex-end; }
-  .leaders-nums .good { color: var(--up); font-weight: 600; }
-  .leaders-nums .bad { color: var(--down); font-weight: 600; }
-  .leaders-group-title { display: flex; align-items: center; gap: 6px; }
-  .leader-tech { font-size: 8.5px; font-weight: 800; letter-spacing: .06em; color: var(--accent);
+  .leaders-group-title { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .leader-tech { font-size: 8.5px; font-weight: 700; letter-spacing: .06em; color: var(--accent);
     border: 1px solid var(--accent-a45); border-radius: 4px; padding: 1px 4px; }
-  .leaders-meta { display: flex; align-items: center; gap: 8px; font-size: 10.5px;
-    color: var(--text-faint); margin-bottom: 8px; }
-  .leaders-meta .num { font-weight: 800; color: var(--accent); font-size: 12px; }
-  .leader-state { font-weight: 700; color: var(--up); letter-spacing: .04em; }
+  .leaders-meta { display: flex; align-items: center; gap: 8px; font-size: 10.5px; color: var(--text-faint); margin-bottom: 8px; }
+  .leaders-meta .num { font-weight: 600; color: var(--accent); font-size: 12px; }
+  .leader-state { font-weight: 600; color: var(--up); letter-spacing: .04em; }
   .leader-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .leader-chip { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11.5px;
-    font-weight: 700; background: var(--surface-alt); border: 1px solid var(--border);
-    border-radius: 6px; padding: 4px 8px; }
+  .leader-chip { font-family: var(--mono); font-size: 11.5px; font-weight: 600; background: var(--surface-alt);
+    border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; }
   .leaders-asof { font-size: 10.5px; color: var(--text-faint); text-align: center;
     border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px; }
 
-  /* ---- 우측 고정 진입 카드: M.R(Monthly Report) 전용 (2026-09-17) ----
-     구 S.A·F.L 런처는 제거됨 — 다이어그램 자체가 진입로라 중복이었음(S.A는 Phase 01
-     패널 헤더의 .flow-jump, F.L은 Focus list 노드). Monthly Report만 흐름에 낄 자리가
-     없어서 우측 고정으로 남김(사용자 요청).
-     ⚠️ 좁은 화면(<=1000px)에선 .wrap 옆 여백이 없어 가로 필(pill)로 전환 — 숨기면
-     진입 경로가 아예 사라짐(2026-09-04 모바일 지적으로 확인된 실수). */
-  .launchers { position: fixed; top: 220px; right: 28px; z-index: 4; display: flex; flex-direction: column; gap: 14px; }
-  .launcher {
-    width: 84px; height: 84px; border-radius: 14px;
-    background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
-    text-decoration: none; color: inherit;
-    transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
-  }
-  .launcher:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--shadow), 0 0 0 1px var(--accent-a20); }
-  .launcher-icon { font-size: 20px; }
-  .launcher-label { font-size: 12.5px; font-weight: 800; letter-spacing: .03em; color: var(--text); }
-  .launcher-sub { font-size: 8.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
-  @media (max-width: 1000px) {
-    .launchers {
-      position: static; flex-direction: row; justify-content: center; flex-wrap: wrap;
-      gap: 10px; margin: 14px auto 0;
-    }
-    .launcher {
-      width: fit-content; height: auto; flex-direction: row; gap: 8px;
-      padding: 9px 18px; border-radius: 999px;
-    }
-  }
-
-  footer {
-    position: relative; z-index: 1; width: 100%; margin-top: 20px;
-    border-top: 1px solid var(--border);
-    background: var(--surface-a60);
-  }
+  footer { position: relative; z-index: 1; width: 100%; border-top: 1px solid var(--border); background: var(--surface-a60); }
   footer .footer-inner {
-    max-width: 640px; margin: 0 auto; padding: 14px 24px;
-    display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;
-    text-align: center; font-size: 11px; color: var(--text-faint);
+    max-width: 1120px; margin: 0 auto; padding: 13px 24px;
+    display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap;
+    font: 11px var(--mono); color: var(--text-faint);
   }
-  footer .num { color: var(--text-muted); }
 </style>
 </head>
 <body>
@@ -372,86 +269,6 @@
 </script>
 
 <div class="bg-glow" aria-hidden="true"></div>
-<div class="bg-chart" aria-hidden="true">
-  <svg viewBox="0 0 1200 400" preserveAspectRatio="none">
-    <line class="wick" x1="20" y1="332.1" x2="20" y2="354.9"/>
-    <rect class="up" x="12.0" y="340.7" width="16" height="9.3"/>
-    <line class="wick" x1="54" y1="329.1" x2="54" y2="345.6"/>
-    <rect class="up" x="46.0" y="330.5" width="16" height="10.2"/>
-    <line class="wick" x1="88" y1="322.3" x2="88" y2="354.2"/>
-    <rect class="down" x="80.0" y="330.5" width="16" height="12.6"/>
-    <line class="wick" x1="122" y1="333.9" x2="122" y2="350.0"/>
-    <rect class="up" x="114.0" y="341.8" width="16" height="2.0"/>
-    <line class="wick" x1="156" y1="299.7" x2="156" y2="350.4"/>
-    <rect class="up" x="148.0" y="310.0" width="16" height="31.9"/>
-    <line class="wick" x1="190" y1="307.5" x2="190" y2="315.5"/>
-    <rect class="down" x="182.0" y="310.0" width="16" height="2.8"/>
-    <line class="wick" x1="224" y1="289.7" x2="224" y2="320.3"/>
-    <rect class="up" x="216.0" y="293.3" width="16" height="19.4"/>
-    <line class="wick" x1="258" y1="278.8" x2="258" y2="296.1"/>
-    <rect class="up" x="250.0" y="287.4" width="16" height="5.9"/>
-    <line class="wick" x1="292" y1="279.2" x2="292" y2="290.1"/>
-    <rect class="up" x="284.0" y="287.1" width="16" height="2.0"/>
-    <line class="wick" x1="326" y1="278.3" x2="326" y2="321.4"/>
-    <rect class="down" x="318.0" y="287.1" width="16" height="22.3"/>
-    <line class="wick" x1="360" y1="292.0" x2="360" y2="313.7"/>
-    <rect class="up" x="352.0" y="294.3" width="16" height="15.1"/>
-    <line class="wick" x1="394" y1="278.2" x2="394" y2="301.5"/>
-    <rect class="up" x="386.0" y="287.4" width="16" height="6.9"/>
-    <line class="wick" x1="428" y1="273.8" x2="428" y2="290.8"/>
-    <rect class="up" x="420.0" y="275.0" width="16" height="12.4"/>
-    <line class="wick" x1="462" y1="273.1" x2="462" y2="296.6"/>
-    <rect class="down" x="454.0" y="275.0" width="16" height="14.3"/>
-    <line class="wick" x1="496" y1="287.9" x2="496" y2="297.2"/>
-    <rect class="down" x="488.0" y="289.4" width="16" height="2.0"/>
-    <line class="wick" x1="530" y1="286.9" x2="530" y2="311.1"/>
-    <rect class="down" x="522.0" y="291.0" width="16" height="15.7"/>
-    <line class="wick" x1="564" y1="297.9" x2="564" y2="315.2"/>
-    <rect class="up" x="556.0" y="299.8" width="16" height="6.9"/>
-    <line class="wick" x1="598" y1="292.3" x2="598" y2="309.9"/>
-    <rect class="up" x="590.0" y="293.6" width="16" height="6.2"/>
-    <line class="wick" x1="632" y1="282.9" x2="632" y2="312.3"/>
-    <rect class="down" x="624.0" y="293.6" width="16" height="5.5"/>
-    <line class="wick" x1="666" y1="292.5" x2="666" y2="300.2"/>
-    <rect class="down" x="658.0" y="299.1" width="16" height="2.0"/>
-    <line class="wick" x1="700" y1="296.8" x2="700" y2="308.1"/>
-    <rect class="down" x="692.0" y="299.7" width="16" height="4.6"/>
-    <line class="wick" x1="734" y1="277.7" x2="734" y2="307.7"/>
-    <rect class="up" x="726.0" y="278.9" width="16" height="25.4"/>
-    <line class="wick" x1="768" y1="274.7" x2="768" y2="295.6"/>
-    <rect class="down" x="760.0" y="278.9" width="16" height="15.4"/>
-    <line class="wick" x1="802" y1="279.7" x2="802" y2="303.2"/>
-    <rect class="up" x="794.0" y="293.0" width="16" height="2.0"/>
-    <line class="wick" x1="836" y1="250.8" x2="836" y2="300.7"/>
-    <rect class="up" x="828.0" y="257.4" width="16" height="35.6"/>
-    <line class="wick" x1="870" y1="240.0" x2="870" y2="268.2"/>
-    <rect class="up" x="862.0" y="240.4" width="16" height="17.0"/>
-    <line class="wick" x1="904" y1="233.6" x2="904" y2="260.0"/>
-    <rect class="down" x="896.0" y="240.4" width="16" height="12.4"/>
-    <line class="wick" x1="938" y1="238.8" x2="938" y2="263.7"/>
-    <rect class="down" x="930.0" y="252.8" width="16" height="2.0"/>
-    <line class="wick" x1="972" y1="245.8" x2="972" y2="259.5"/>
-    <rect class="down" x="964.0" y="254.6" width="16" height="3.1"/>
-    <line class="wick" x1="1006" y1="246.9" x2="1006" y2="281.6"/>
-    <rect class="down" x="998.0" y="257.7" width="16" height="15.3"/>
-    <line class="wick" x1="1040" y1="233.4" x2="1040" y2="283.2"/>
-    <rect class="up" x="1032.0" y="236.2" width="16" height="36.8"/>
-    <line class="wick" x1="1074" y1="196.9" x2="1074" y2="247.3"/>
-    <rect class="up" x="1066.0" y="202.0" width="16" height="34.2"/>
-    <line class="wick" x1="1108" y1="161.8" x2="1108" y2="210.8"/>
-    <rect class="up" x="1100.0" y="175.8" width="16" height="26.2"/>
-    <line class="wick" x1="1142" y1="160.6" x2="1142" y2="185.1"/>
-    <rect class="up" x="1134.0" y="168.2" width="16" height="7.6"/>
-  </svg>
-</div>
-
-<div class="launchers">
-  <a class="launcher" href="./report.html">
-    <span class="launcher-icon">📅</span>
-    <span class="launcher-label">M.R</span>
-    <span class="launcher-sub">Monthly</span>
-  </a>
-</div>
 
 <div id="leaders-backdrop" class="leaders-backdrop hidden" onclick="closeLeadersDrawer()"></div>
 <aside id="leaders-drawer" class="leaders-drawer hidden">
@@ -473,80 +290,62 @@
   </div>
 </div>
 
-<div class="wrap">
-  <div class="eyebrow">Personal Trading Terminal</div>
-  <h1>SH Trading System</h1>
-  <p class="tagline">From situational awareness to position management &mdash; <span class="num">12</span> steps.<br>Solid boxes open a channel &middot; dashed boxes hold the rule, hover to read.</p>
-
-  <div class="flow">
-    <section class="flow-panel">
-      <div class="flow-head">
-        <span class="flow-phase">PHASE 01</span>
-        <h2 class="flow-title">Situational Awareness</h2>
-        <a class="flow-jump" href="./headline.html">&#128240; Headline &#8599;</a>
-        <a class="flow-jump" href="./awareness.html">&#129517; S.A Report &#8599;</a>
-      </div>
-
-      <div class="flow-feed">
-        <a class="flow-node" href="./pulse.html" title="스크리너 결과 → Sector/Group·Setup 후보 공급"><span class="step">FEED</span>Screener</a>
-        <span class="flow-down dash"></span>
-      </div>
-
-      <div class="flow-row">
-        <a class="flow-node" href="./condition.html" title="M01~M07 신호등 → Condition Journal"><span class="step">01</span>Market Condition</a>
-        <span class="flow-link"></span>
-        <a class="flow-node" href="./group.html" title="섹터 로테이션: 기술주(XLK·SOXX) → 방어주(XLV·XLP·XLU) / 경기민감·중간(XLI·XLF) — 금리인하 기대+리쇼어링 밸류 로테이션 가능성"><span class="step">02</span>Sector/Group</a>
-        <span class="flow-link"></span>
-        <button type="button" class="flow-node" onclick="openLeadersDrawer()" title="클릭 — 오늘의 섹터강세 리더 보기(Screener Pulse 연동)"><span class="step">03</span>Stocks</button>
-        <span class="flow-link"></span>
-        <a class="flow-node" href="./setup.html" title="주식 캐릭터(반복 행동 패턴) 분석 — 21EMA·10EMA pullback tennis ball action, -20% MDD reversal. 1st(pilot)→2nd(재시도)→3rd(관망)"><span class="step">04</span>Edge Setup</a>
-      </div>
-    </section>
-
-    <span class="flow-down"></span>
-    <!-- 2026-09-17: claude.ai 아티팩트 → 맥 로컬 앱(fl_server.py, com.neath.flserver)으로 이관.
-         localhost라 이 맥에서만 열린다 — 기기 동기화는 불필요하다고 확정된 사항. -->
-    <a class="flow-node hero" href="http://127.0.0.1:8765/" title="Focus List — 관찰 종목·진입 계획 (이 맥에서만 열림)"><span class="step">05</span>&#127919; Focus list</a>
-    <span class="flow-down"></span>
-
-    <section class="flow-panel">
-      <div class="flow-head">
-        <button type="button" class="flow-collapse" id="phase2Toggle" aria-expanded="false" aria-controls="phase2Body">
-          <span class="flow-phase">PHASE 02</span>
-          <h2 class="flow-title">Portfolio</h2>
-          <span class="flow-caret">&#9662;</span>
-        </button>
-        <a class="flow-jump desktop-only" href="http://127.0.0.1:8765/portfolio">&#128202; Allocation &#8599;</a>
-      </div>
-
-      <div id="phase2Body" class="flow-collapsible">
-      <div class="flow-row">
-        <div class="flow-node plain" title="set stop -33% · Risk structure defined · -AUM% -1~-2%"><span class="step">06</span>Stop Loss</div>
-        <span class="flow-link"></span>
-        <div class="flow-node plain" title="starter 5~10% · 강세장 초입 10% · Core conviction 20~25% · Swing 10%"><span class="step">07</span>Position size</div>
-        <span class="flow-link"></span>
-        <div class="flow-node plain" title="1) previous day bar entry 2) pullback entry 3) pivot break entry 4) anticipation entry"><span class="step">08</span>Entry</div>
-      </div>
-
-      <div class="flow-elbow"></div>
-
-      <div class="flow-row">
-        <div class="flow-node plain" title="진입 후 추가 매수 — 계획된 분할만"><span class="step">09</span>add / feed</div>
-        <span class="flow-link dual"></span>
-        <div class="flow-node plain" title="일부 익절로 리스크 제거(free roll)"><span class="step">10</span>trim / free roll</div>
-        <span class="flow-link"></span>
-        <div class="flow-node plain" title="Change of character — 고점 고거래량, 행잉맨 캔들, 연속 갭업"><span class="step">11</span>Sell</div>
-        <span class="flow-link"></span>
-        <div class="flow-node plain" title="Log → Telegram(Opus 4.8) — 룰 준수 여부·매매 성과·행동 패턴 체크"><span class="step">12</span>&#8634; Feedback</div>
-      </div>
-      </div>
-    </section>
+<main class="wrap">
+  <div class="top">
+    <div>
+      <div class="eyebrow">Personal trading terminal</div>
+      <h1>SH Trading System</h1>
+      <div class="sub">12 steps · awareness → position · last build <span id="lastUpdated">9/26 07:36 KST</span></div>
+    </div>
+    <nav class="dock" aria-label="바로가기">
+      <a href="./headline.html">Headline <small>narrative</small></a>
+      <a href="./awareness.html">S.A Report <small>DD·FTD</small></a>
+      <a href="./report.html">M.R <small>monthly</small></a>
+      <a class="desktop-only" href="http://127.0.0.1:8765/portfolio">Allocation <small>local</small></a>
+    </nav>
   </div>
 
-</div>
-<footer>
-  <div class="footer-inner">Auto-refresh Tue&ndash;Sat · Last updated <span id="lastUpdated">9/26 07:36 KST</span> · Data from internal trading DB + Notion</div></footer>
+  <section class="bay" aria-labelledby="ph1">
+    <div class="bay-h" id="ph1"><span class="ph">Phase 01</span> Situational awareness <span class="rule"></span><span class="cnt">5 channels</span></div>
+    <div class="feed">
+      <a class="mod feedmod" href="./pulse.html" title="스크리너 결과 → Sector/Group·Setup 후보 공급"><span class="n">FEED</span><span class="t">Screener</span><span class="q">스캔 11종</span><span class="go">↗</span></a>
+    </div>
+    <div class="vwire dash"></div>
+    <div class="chain">
+      <a class="mod" href="./condition.html" title="M01~M07 신호등 → Condition Journal"><span class="go">↗</span><div class="n">01</div><div class="t">Market Condition</div><div class="q">시장이 받쳐주나 · M01~M07</div></a>
+      <a class="mod" href="./group.html" title="섹터 로테이션: 기술주(XLK·SOXX) → 방어주(XLV·XLP·XLU) / 경기민감·중간(XLI·XLF) — 금리인하 기대+리쇼어링 밸류 로테이션 가능성"><span class="go">↗</span><div class="n">02</div><div class="t">Sector / Group</div><div class="q">돈이 어디로 도나 · 세부그룹 강도</div></a>
+      <button type="button" class="mod" onclick="openLeadersDrawer()" title="클릭 — 오늘의 섹터강세 리더 보기(강세그룹 페이지 연동)"><span class="go">⌄</span><div class="n">03</div><div class="t">Stocks</div><div class="q">누가 이끄나 · 오늘의 리더주</div></button>
+      <a class="mod" href="./setup.html" title="주식 캐릭터(반복 행동 패턴) 분석 — 21EMA·10EMA pullback tennis ball action, -20% MDD reversal. 1st(pilot)→2nd(재시도)→3rd(관망)"><span class="go">↗</span><div class="n">04</div><div class="t">Edge Setup</div><div class="q">먼저 자리 잡을 곳 · HTF·UPB·LB</div></a>
+    </div>
+  </section>
 
+  <div class="vwire"></div>
+  <!-- F.L은 맥 로컬 앱(fl_server.py, :8765) — 이 맥에서만 열린다 -->
+  <div class="hero"><a href="http://127.0.0.1:8765/" title="Focus List — 관찰 종목·진입 계획 (이 맥에서만 열림)"><span class="n">05</span><div><div class="t">Focus list</div><div class="q">관찰 → 진입 계획 → 체결 동기화</div></div><span class="local">this Mac</span></a></div>
+  <div class="vwire"></div>
+
+  <section class="bay collapsed">
+    <div class="bay-h">
+      <button type="button" class="bay-toggle" id="phase2Toggle" aria-expanded="false" aria-controls="phase2Body">
+        <span class="ph">Phase 02</span> Portfolio rules <span class="caret">&#9662;</span>
+        <span class="rule"></span><span class="cnt">7 rules · hover</span>
+      </button>
+    </div>
+    <div id="phase2Body" class="rules">
+      <div class="rule-m" title="set stop -33% · Risk structure defined · -AUM% -1~-2%"><div class="n">06</div><div class="t">Stop Loss</div><div class="v">−AUM 1~2%</div></div>
+      <div class="rule-m" title="starter 5~10% · 강세장 초입 10% · Core conviction 20~25% · Swing 10%"><div class="n">07</div><div class="t">Position size</div><div class="v">5~10 / 20~25%</div></div>
+      <div class="rule-m" title="1) previous day bar entry 2) pullback entry 3) pivot break entry 4) anticipation entry"><div class="n">08</div><div class="t">Entry</div><div class="v">4 types</div></div>
+      <div class="rule-m" title="진입 후 추가 매수 — 계획된 분할만"><div class="n">09</div><div class="t">Add / feed</div><div class="v">planned only</div></div>
+      <div class="rule-m" title="일부 익절로 리스크 제거(free roll)"><div class="n">10</div><div class="t">Trim</div><div class="v">free roll</div></div>
+      <div class="rule-m" title="Change of character — 고점 고거래량, 행잉맨 캔들, 연속 갭업"><div class="n">11</div><div class="t">Sell</div><div class="v">change of char.</div></div>
+      <div class="rule-m" title="Log → Telegram(Opus 4.8) — 룰 준수 여부·매매 성과·행동 패턴 체크"><div class="n">12</div><div class="t">↺ Feedback</div><div class="v">log → review</div></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner"><span>Auto-refresh Tue–Sat 07:30 KST</span><span>Data from internal trading DB</span></div>
+</footer>
 <script>
   // ---- 상단 라이브 티커 테이프 (2026-08-29) — pulse.html의 "1D% 새로고침" 버튼과 동일한
   // CORS 오픈 확인 후 클라이언트에서 직접 TradingView 스캐너 fetch. SPY/QQQ/IWM/DIA
@@ -635,13 +434,13 @@
     setInterval(tick, 1000);
   })();
 
-  // ---- Portfolio 패널 접기/펴기 (2026-09-17) — 프로세스 참조용이라 기본 접힘 ----
+  // ---- Portfolio 규칙 접기/펴기 (2026-09-17) — 프로세스 참조용이라 기본 접힘 ----
   (function () {
     var KEY = 'flowPhase2Open';
     var btn = document.getElementById('phase2Toggle');
     var body = document.getElementById('phase2Body');
     if (!btn || !body) return;
-    var panel = btn.closest('.flow-panel');
+    var panel = btn.closest('.bay');
 
     function apply(open) {
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
