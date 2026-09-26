@@ -114,8 +114,8 @@
   /* Allocation(잔고)은 로컬 서버(:8765) 전용 — 폰에서는 칩 자체를 감춘다 */
   @media (max-width: 760px), (pointer: coarse) { .desktop-only { display: none !important; } }
 
-  .bay { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); }
-  .bay-h { display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+  .bay { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px 22px; box-shadow: var(--shadow); }
+  .bay-h { display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
            font: 600 11px var(--mono); letter-spacing: .14em; color: var(--text-muted); text-transform: uppercase; }
   .bay-h .ph { color: var(--accent); }
   .bay-h .rule { flex: 1; height: 1px; background: var(--hair); }
@@ -135,6 +135,7 @@
     padding: 14px 14px 13px; cursor: pointer; appearance: none; width: 100%;
     transition: border-color .15s, transform .15s, box-shadow .15s;
   }
+  .chain > .mod { display: flex; flex-direction: column; justify-content: flex-start; }
   .mod:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
   .mod .n { font: 500 30px/1 var(--mono); color: var(--accent); letter-spacing: -.03em; }
   .mod .t { font: 600 14.5px var(--sans); margin-top: 10px; color: var(--text); }
@@ -142,18 +143,18 @@
   .mod .go { position: absolute; top: 12px; right: 12px; font: 12px var(--mono); color: var(--text-faint); }
   .mod:hover .go { color: var(--accent); }
   .feed { display: flex; justify-content: center; }
-  .mod.feedmod { width: min(280px, 100%); display: flex; gap: 14px; align-items: center; padding: 11px 36px 11px 14px; }
+  .mod.feedmod { width: min(320px, 100%); display: flex; gap: 14px; align-items: center; padding: 11px 36px 11px 14px; }
   .mod.feedmod .n { font-size: 13px; letter-spacing: .12em; }
   .mod.feedmod .t { margin: 0; }
-  .mod.feedmod .q { margin: 0 0 0 auto; }
-  .chain { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; }
+  .mod.feedmod .q { margin: 0 0 0 auto; white-space: nowrap; }
+  .chain { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 30px; }
   .chain > .mod:not(:last-child)::before {
-    content: ""; position: absolute; top: 50%; right: -23px; width: 22px; height: 1px;
+    content: ""; position: absolute; top: 50%; right: -31px; width: 30px; height: 1px;
     background: linear-gradient(90deg, transparent 0 40%, var(--accent) 50%, transparent 60% 100%), var(--border);
     background-size: 300% 100%, 100% 100%; animation: flow-h 2.8s linear infinite;
   }
   /* 흐르는 점 — 1px 선 위를 금색 하이라이트가 지나간다 */
-  .vwire { width: 1px; height: 22px; margin: 0 auto;
+  .vwire { width: 1px; height: 38px; margin: 0 auto;
            background: linear-gradient(180deg, transparent 0 40%, var(--accent) 50%, transparent 60% 100%), var(--border);
            background-size: 100% 300%, 100% 100%; animation: flow-v 2.2s linear infinite; }
   .vwire.dash { background: repeating-linear-gradient(180deg, var(--border) 0 3px, transparent 3px 6px); animation: none; }
@@ -224,9 +225,12 @@
   .leaders-meta { display: flex; align-items: center; gap: 8px; font-size: 10.5px; color: var(--text-faint); margin-bottom: 8px; }
   .leaders-meta .num { font-weight: 600; color: var(--accent); font-size: 12px; }
   .leader-state { font-weight: 600; color: var(--up); letter-spacing: .04em; }
-  .leader-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .leader-chip { font-family: var(--mono); font-size: 11.5px; font-weight: 600; background: var(--surface-alt);
-    border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; }
+  .leader-rows { display: flex; flex-direction: column; gap: 5px; }
+  .leaders-row { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px; background: var(--surface-alt); border: 1px solid var(--hair); }
+  .leaders-rank { font: 500 11px var(--mono); color: var(--text-faint); width: 12px; }
+  .leaders-ticker { font: 600 13px var(--mono); }
+  .leaders-nums { display: flex; gap: 12px; margin-left: auto; font: 11px var(--mono); color: var(--text-muted); }
+  .leaders-nums .good { color: var(--up); font-weight: 600; }
   .leaders-asof { font-size: 10.5px; color: var(--text-faint); text-align: center;
     border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px; }
 
@@ -273,8 +277,8 @@
 <div id="leaders-backdrop" class="leaders-backdrop hidden" onclick="closeLeadersDrawer()"></div>
 <aside id="leaders-drawer" class="leaders-drawer hidden">
   <div class="leaders-drawer-head">
-    <h3>🎯 오늘의 리더주</h3>
-    <div class="leaders-drawer-note">전 시장 세부그룹 중 <b>등급 A &middot; 섹터액션 OK &middot; 신호확신 HIGH</b>를 모두 만족하는 그룹의 상위 강한 종목 &middot; 강세그룹 페이지(group.html) 실시간 연동</div>
+    <h3>🎯 Leader Stocks</h3>
+    <div class="leaders-drawer-note">Groups graded <b>A &middot; Sector action OK &middot; Signal HIGH</b> &mdash; top 5 strong names per group, ranked by 3M. Live from the group page.</div>
     <button type="button" class="leaders-drawer-close" onclick="closeLeadersDrawer()" aria-label="닫기">&times;</button>
   </div>
   <div id="leaders-drawer-body" class="leaders-drawer-body"></div>
@@ -308,20 +312,20 @@
   <section class="bay" aria-labelledby="ph1">
     <div class="bay-h" id="ph1"><span class="ph">Phase 01</span> Situational awareness <span class="rule"></span><span class="cnt">5 channels</span></div>
     <div class="feed">
-      <a class="mod feedmod" href="./pulse.html" title="스크리너 결과 → Sector/Group·Setup 후보 공급"><span class="n">FEED</span><span class="t">Screener</span><span class="q">스캔 11종</span><span class="go">↗</span></a>
+      <a class="mod feedmod" href="./pulse.html" title="스크리너 결과 → Sector/Group·Setup 후보 공급"><span class="n">FEED</span><span class="t">Screener</span><span class="q">11 scans · raw flow</span><span class="go">↗</span></a>
     </div>
     <div class="vwire dash"></div>
     <div class="chain">
-      <a class="mod" href="./condition.html" title="M01~M07 신호등 → Condition Journal"><span class="go">↗</span><div class="n">01</div><div class="t">Market Condition</div><div class="q">시장이 받쳐주나 · M01~M07</div></a>
-      <a class="mod" href="./group.html" title="섹터 로테이션: 기술주(XLK·SOXX) → 방어주(XLV·XLP·XLU) / 경기민감·중간(XLI·XLF) — 금리인하 기대+리쇼어링 밸류 로테이션 가능성"><span class="go">↗</span><div class="n">02</div><div class="t">Sector / Group</div><div class="q">돈이 어디로 도나 · 세부그룹 강도</div></a>
-      <button type="button" class="mod" onclick="openLeadersDrawer()" title="클릭 — 오늘의 섹터강세 리더 보기(강세그룹 페이지 연동)"><span class="go">⌄</span><div class="n">03</div><div class="t">Stocks</div><div class="q">누가 이끄나 · 오늘의 리더주</div></button>
-      <a class="mod" href="./setup.html" title="주식 캐릭터(반복 행동 패턴) 분석 — 21EMA·10EMA pullback tennis ball action, -20% MDD reversal. 1st(pilot)→2nd(재시도)→3rd(관망)"><span class="go">↗</span><div class="n">04</div><div class="t">Edge Setup</div><div class="q">먼저 자리 잡을 곳 · HTF·UPB·LB</div></a>
+      <a class="mod" href="./condition.html" title="M01~M07 신호등 → Condition Journal"><span class="go">↗</span><div class="n">01</div><div class="t">Market Condition</div><div class="q">Read the tape · Trend &amp; breadth</div></a>
+      <a class="mod" href="./group.html" title="섹터 로테이션: 기술주(XLK·SOXX) → 방어주(XLV·XLP·XLU) / 경기민감·중간(XLI·XLF) — 금리인하 기대+리쇼어링 밸류 로테이션 가능성"><span class="go">↗</span><div class="n">02</div><div class="t">Sector / Group</div><div class="q">Focusing RS groups</div></a>
+      <button type="button" class="mod" onclick="openLeadersDrawer()" title="클릭 — A등급·섹터액션 OK·신호 HIGH 그룹의 상위 종목(강세그룹 페이지 연동)"><span class="go">⌄</span><div class="n">03</div><div class="t">Leader Stocks</div><div class="q">Top names in leading groups</div></button>
+      <a class="mod" href="./setup.html" title="주식 캐릭터(반복 행동 패턴) 분석 — 21EMA·10EMA pullback tennis ball action, -20% MDD reversal. 1st(pilot)→2nd(재시도)→3rd(관망)"><span class="go">↗</span><div class="n">04</div><div class="t">Edge Setup</div><div class="q">Where the edge lives</div></a>
     </div>
   </section>
 
   <div class="vwire"></div>
   <!-- F.L은 맥 로컬 앱(fl_server.py, :8765) — 이 맥에서만 열린다 -->
-  <div class="hero"><a href="http://127.0.0.1:8765/" title="Focus List — 관찰 종목·진입 계획 (이 맥에서만 열림)"><span class="n">05</span><div><div class="t">Focus list</div><div class="q">관찰 → 진입 계획 → 체결 동기화</div></div><span class="local">this Mac</span></a></div>
+  <div class="hero"><a href="http://127.0.0.1:8765/" title="Focus List — 관찰 종목·진입 계획 (이 맥에서만 열림)"><span class="n">05</span><div><div class="t">Focus list</div><div class="q">Watch · Plan · Execute · Sync fills</div></div><span class="local">this Mac</span></a></div>
   <div class="vwire"></div>
 
   <section class="bay collapsed">
@@ -464,6 +468,7 @@
   // 리더 기준(사용자 확정): 등급 A · 섹터액션 OK · 신호확신 HIGH를 **모두** 만족하는 그룹의 강한 종목.
   (function () {
     var leadersLoaded = false;
+    var LEADERS_PER_GROUP = 5;
 
     window.closeLeadersDrawer = function () {
       document.getElementById('leaders-drawer').classList.add('hidden');
@@ -493,12 +498,24 @@
 
       var body = document.getElementById('leaders-drawer-body');
       if (!groups.length) {
-        body.innerHTML = '<div class="leaders-empty">오늘은 세 조건을 모두 만족하는 그룹이 없습니다.</div>';
+        body.innerHTML = '<div class="leaders-empty">No group meets all three conditions today.</div>';
         return;
       }
       body.innerHTML = groups.map(function (g) {
-        var chips = (g.strongTickers || []).map(function (t) {
-          return '<span class="leader-chip">' + esc(t) + '</span>';
+        // 그룹당 상위 3~5종목만(2026-09-26 사용자 요청) — 강한 종목 중 3M 수익률 순.
+        // memberDetail = [티커, 회사명, 업종, 1W, 1M, 3M, 강세0/1, 소속경로]
+        var md = (g.memberDetail || []).filter(function (m) { return m[6]; })
+          .sort(function (a, b) { return (b[5] == null ? -1e9 : b[5]) - (a[5] == null ? -1e9 : a[5]); });
+        var top = md.length ? md.slice(0, LEADERS_PER_GROUP)
+          : (g.strongTickers || []).slice(0, LEADERS_PER_GROUP).map(function (t) { return [t]; });
+        function pct(v) { return v == null ? '&mdash;' : (v > 0 ? '+' : '') + v.toFixed(1) + '%'; }
+        var chips = top.map(function (m, i) {
+          return '<div class="leaders-row" title="' + esc(m[1] || '') + '">'
+            + '<span class="leaders-rank">' + (i + 1) + '</span>'
+            + '<span class="leaders-ticker">' + esc(m[0]) + '</span>'
+            + (m.length > 5 ? '<span class="leaders-nums"><span>1M ' + pct(m[4]) + '</span>'
+              + '<span class="good">3M ' + pct(m[5]) + '</span></span>' : '')
+            + '</div>';
         }).join('');
         return '<div class="leaders-group">'
           + '<div class="leaders-group-title">' + esc(g.name)
@@ -508,16 +525,16 @@
             + '<span class="leader-state">' + esc(g.state || '') + '</span>'
             + '<span>' + esc(g.sector || '') + '</span>'
           + '</div>'
-          + '<div class="leader-chips">' + chips + '</div>'
+          + '<div class="leader-rows">' + chips + '</div>'
           + '</div>';
-      }).join('') + '<div class="leaders-asof">기준일 ' + esc(payload.asof || '')
-        + ' · 전체 ' + (payload.groups || []).length + '개 그룹 중 ' + groups.length + '개</div>';
+      }).join('') + '<div class="leaders-asof">As of ' + esc(payload.asof || '')
+        + ' · ' + groups.length + ' of ' + (payload.groups || []).length + ' groups qualify</div>';
     }
 
     function loadLeaders() {
       var body = document.getElementById('leaders-drawer-body');
       if (leadersLoaded) return;
-      body.innerHTML = '<div class="leaders-loading">불러오는 중&hellip;</div>';
+      body.innerHTML = '<div class="leaders-loading">Loading&hellip;</div>';
       fetch('./group.html').then(function (r) {
         if (!r.ok) throw new Error('http ' + r.status);
         return r.text();
@@ -527,7 +544,7 @@
         renderLeaders(JSON.parse(m[1]));
         leadersLoaded = true;
       }).catch(function () {
-        body.innerHTML = '<div class="leaders-error">불러오기 실패 &mdash; 강세그룹 페이지를 확인해주세요.</div>';
+        body.innerHTML = '<div class="leaders-error">Could not load &mdash; check the group page.</div>';
       });
     }
   })();
